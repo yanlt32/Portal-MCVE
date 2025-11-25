@@ -11,17 +11,18 @@
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
     :root {
-      --primary: #ffd700;
-      --primary-dark: #e6c200;
-      --secondary: #2c5364;
-      --dark: #0f2027;
+      --primary: #3b82f6;
+      --primary-dark: #2563eb;
+      --secondary: #1e293b;
       --light: #ffffff;
-      --gray: #f5f5f5;
-      --text: #333333;
+      --accent: #dbeafe;
+      --text: #1f2937;
+      --card-bg: rgba(255, 255, 255, 0.12);
+      --gold: #fbbf24;
     }
     body {
       font-family: 'Montserrat', sans-serif;
-      background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
       color: var(--light);
       min-height: 100vh;
       line-height: 1.6;
@@ -36,19 +37,19 @@
       width: 100%;
       height: 100%;
       background-image: 
-        radial-gradient(circle at 20% 80%, rgba(255, 215, 0, 0.03) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.03) 0%, transparent 50%),
-        radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.02) 0%, transparent 50%);
+        radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
       z-index: -1;
       pointer-events: none;
     }
     header {
-      background: linear-gradient(to bottom, rgba(15, 32, 39, 0.95), rgba(15, 32, 39, 0.85));
-      padding: 2rem 1rem 1.5rem;
+      background: linear-gradient(to bottom, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.85));
+      padding: 1.5rem 1rem 1rem;
       text-align: center;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
     }
     header::before {
       content: '';
@@ -58,8 +59,8 @@
       width: 100%;
       height: 100%;
       background: 
-        linear-gradient(45deg, transparent 65%, rgba(255, 215, 0, 0.05) 75%, transparent 85%),
-        linear-gradient(-45deg, transparent 65%, rgba(255, 215, 0, 0.05) 75%, transparent 85%);
+        linear-gradient(45deg, transparent 65%, rgba(59, 130, 246, 0.08) 75%, transparent 85%),
+        linear-gradient(-45deg, transparent 65%, rgba(59, 130, 246, 0.08) 75%, transparent 85%);
       z-index: 1;
       pointer-events: none;
     }
@@ -71,66 +72,67 @@
       width: 120px;
       height: 120px;
       margin: 0 auto 1rem;
-      background: var(--primary);
+      background: var(--light);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 0 30px rgba(255,215,0,0.5);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
       transition: transform 0.5s ease, box-shadow 0.5s ease;
       position: relative;
       overflow: hidden;
+      border: 3px solid var(--primary);
     }
-    .logo::after {
-      content: '';
-      position: absolute;
-      top: -10px;
-      left: -10px;
-      right: -10px;
-      bottom: -10px;
-      background: radial-gradient(circle, rgba(255,215,0,0.4) 0%, transparent 70%);
+    .logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
       border-radius: 50%;
-      opacity: 0;
-      transition: opacity 0.5s ease;
     }
-    .logo:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 40px rgba(255,215,0,0.7);
+    .logo-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: var(--light);
+      border-radius: 50%;
+      color: var(--primary);
+      font-weight: bold;
+      text-align: center;
+      padding: 10px;
+      font-family: 'Playfair Display', serif;
     }
-    .logo:hover::after {
-      opacity: 1;
-    }
-    .logo i {
-      font-size: 3.5rem;
-      color: var(--dark);
-      position: relative;
-      z-index: 2;
+    .logo-placeholder i {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
     }
     h1 {
       font-family: 'Playfair Display', serif;
-      font-size: 3.2rem;
-      color: var(--primary);
-      text-shadow: 0 0 20px rgba(255,215,0,0.5);
+      font-size: 2.5rem;
+      color: var(--light);
+      text-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
       margin-bottom: 0.5rem;
       letter-spacing: 1px;
     }
     .tagline {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       opacity: 0.9;
-      margin-bottom: 1rem;
+      margin-bottom: 0.5rem;
     }
     .social-links {
       display: flex;
       justify-content: center;
-      gap: 1rem;
+      gap: 0.8rem;
       margin-top: 1rem;
     }
     .social-links a {
       color: var(--light);
-      font-size: 1.5rem;
+      font-size: 1.3rem;
       transition: all 0.3s;
-      width: 45px;
-      height: 45px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -140,20 +142,20 @@
     .social-links a:hover {
       color: var(--primary);
       transform: translateY(-3px);
-      background: rgba(255, 215, 0, 0.2);
+      background: rgba(255, 255, 255, 0.9);
     }
     .container { 
-      max-width: 1200px; 
+      max-width: 100%; 
       margin: 0 auto; 
-      padding: 2rem 1rem; 
+      padding: 1.5rem 1rem; 
     }
     .section {
-      background: rgba(255,255,255,0.08);
-      border-radius: 20px;
-      padding: 2.5rem 2rem;
-      margin-bottom: 2rem;
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 1.5rem 1.2rem;
+      margin-bottom: 1.5rem;
       backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,0.1);
+      border: 1px solid rgba(255, 255, 255, 0.15);
       transition: transform 0.3s, box-shadow 0.3s;
       position: relative;
       overflow: hidden;
@@ -165,20 +167,20 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(135deg, rgba(255,215,0,0.03) 0%, transparent 50%);
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, transparent 50%);
       pointer-events: none;
     }
     .section:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
     }
     h2 {
-      font-size: 1.8rem;
-      color: var(--primary);
+      font-size: 1.5rem;
+      color: var(--light);
       text-align: center;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.2rem;
       position: relative;
-      padding-bottom: 0.8rem;
+      padding-bottom: 0.6rem;
     }
     h2:after {
       content: '';
@@ -186,7 +188,7 @@
       bottom: 0;
       left: 50%;
       transform: translateX(-50%);
-      width: 80px;
+      width: 60px;
       height: 3px;
       background: var(--primary);
       border-radius: 3px;
@@ -194,16 +196,16 @@
     .btn {
       display: block;
       background: linear-gradient(to right, var(--primary), var(--primary-dark));
-      color: var(--dark);
-      padding: 1.2rem 2rem;
+      color: var(--light);
+      padding: 1rem 1.5rem;
       text-align: center;
       border-radius: 50px;
       font-weight: 600;
-      font-size: 1.1rem;
+      font-size: 1rem;
       text-decoration: none;
-      margin: 1.5rem auto;
-      max-width: 380px;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+      margin: 1.2rem auto;
+      max-width: 320px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
       transition: all 0.3s;
       position: relative;
       overflow: hidden;
@@ -217,69 +219,79 @@
       left: -100%;
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
       transition: 0.5s;
     }
     .btn:hover:before {
       left: 100%;
     }
     .btn:hover { 
-      transform: translateY(-5px); 
-      box-shadow: 0 15px 30px rgba(0,0,0,0.4); 
+      transform: translateY(-3px); 
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.35); 
     }
     .btn i {
       margin-right: 0.5rem;
     }
+    .btn-primary {
+      background: linear-gradient(to right, var(--light), #f8fafc);
+      color: var(--primary);
+    }
+    .btn-small {
+      padding: 0.7rem 1.2rem;
+      font-size: 0.9rem;
+      margin: 0.8rem auto;
+    }
     .versiculo {
-      font-size: 1.4rem;
+      font-size: 1.2rem;
       font-style: italic;
       text-align: center;
-      background: rgba(0,0,0,0.4);
-      padding: 2.5rem;
-      border-radius: 20px;
-      margin: 2rem 0;
-      line-height: 1.8;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 1.5rem;
+      border-radius: 16px;
+      margin: 1.5rem 0;
+      line-height: 1.6;
       position: relative;
-      border-left: 5px solid var(--primary);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+      border-left: 4px solid var(--primary);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
     }
     .versiculo:before, .versiculo:after {
       content: '"';
-      font-size: 4rem;
+      font-size: 2.5rem;
       color: var(--primary);
       opacity: 0.3;
       position: absolute;
     }
     .versiculo:before {
-      top: 10px;
-      left: 20px;
+      top: 5px;
+      left: 10px;
     }
     .versiculo:after {
-      bottom: 10px;
-      right: 20px;
+      bottom: 5px;
+      right: 10px;
     }
     .versiculo strong {
       display: block;
-      margin-top: 1rem;
-      font-size: 1.1rem;
-      color: var(--primary);
+      margin-top: 0.8rem;
+      font-size: 1rem;
+      color: var(--light);
       font-style: normal;
     }
     .features-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
-      margin-top: 2rem;
+      grid-template-columns: 1fr;
+      gap: 1.2rem;
+      margin-top: 1.5rem;
     }
     .feature-card {
-      background: rgba(255,255,255,0.05);
-      border-radius: 15px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 14px;
       padding: 1.5rem;
       text-align: center;
       transition: all 0.3s;
-      border: 1px solid rgba(255,255,255,0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       position: relative;
       overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
     }
     .feature-card::before {
       content: '';
@@ -287,7 +299,7 @@
       top: 0;
       left: 0;
       width: 100%;
-      height: 5px;
+      height: 4px;
       background: var(--primary);
       transform: scaleX(0);
       transition: transform 0.3s ease;
@@ -297,41 +309,48 @@
     }
     .feature-card:hover {
       transform: translateY(-5px);
-      background: rgba(255,255,255,0.1);
+      background: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.18);
     }
     .feature-icon {
       width: 70px;
       height: 70px;
       margin: 0 auto 1rem;
-      background: var(--primary);
+      background: var(--light);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       transition: transform 0.3s ease;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     }
     .feature-card:hover .feature-icon {
-      transform: scale(1.1);
+      transform: scale(1.1) rotate(5deg);
     }
     .feature-icon i {
       font-size: 1.8rem;
-      color: var(--dark);
+      color: var(--primary);
     }
     .feature-card h3 {
       font-size: 1.3rem;
       margin-bottom: 0.8rem;
-      color: var(--primary);
+      color: var(--light);
+    }
+    .feature-card p {
+      margin-bottom: 1rem;
+      opacity: 0.9;
     }
     .agenda-item {
       display: flex;
       align-items: center;
       padding: 1.2rem;
       margin-bottom: 1rem;
-      background: rgba(255,255,255,0.05);
+      background: rgba(255, 255, 255, 0.08);
       border-radius: 12px;
       transition: all 0.3s;
       position: relative;
       overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
     }
     .agenda-item::before {
       content: '';
@@ -348,47 +367,48 @@
       transform: scaleY(1);
     }
     .agenda-item:hover {
-      background: rgba(255,255,255,0.1);
+      background: rgba(255, 255, 255, 0.12);
       transform: translateX(5px);
     }
     .agenda-date {
-      width: 70px;
-      height: 70px;
-      background: var(--primary);
+      width: 60px;
+      height: 60px;
+      background: var(--light);
       border-radius: 10px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      margin-right: 1.5rem;
+      margin-right: 1.2rem;
       flex-shrink: 0;
       transition: transform 0.3s ease;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
     }
     .agenda-item:hover .agenda-date {
       transform: scale(1.05);
     }
     .agenda-date .day {
-      font-size: 1.8rem;
+      font-size: 1.5rem;
       font-weight: 700;
-      color: var(--dark);
+      color: var(--primary);
       line-height: 1;
     }
     .agenda-date .month {
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       font-weight: 600;
-      color: var(--dark);
+      color: var(--primary);
       text-transform: uppercase;
     }
     .agenda-content {
       flex: 1;
     }
     .agenda-content h4 {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       margin-bottom: 0.3rem;
     }
     .agenda-content p {
       opacity: 0.8;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
     }
     .highlight {
       color: var(--primary);
@@ -396,9 +416,9 @@
     }
     footer {
       text-align: center;
-      padding: 3rem 1rem;
-      background: rgba(0,0,0,0.7);
-      margin-top: 4rem;
+      padding: 2rem 1rem;
+      background: rgba(15, 23, 42, 0.9);
+      margin-top: 3rem;
       position: relative;
     }
     footer:before {
@@ -412,35 +432,140 @@
     }
     .admin-link {
       text-align: center;
-      margin-top: 2rem;
+      margin-top: 1.5rem;
     }
     .admin-link a {
-      color: var(--primary);
+      color: var(--light);
       text-decoration: none;
       font-weight: 600;
       transition: all 0.3s;
       display: inline-flex;
       align-items: center;
-      padding: 0.8rem 1.5rem;
-      background: rgba(255, 215, 0, 0.1);
+      padding: 0.7rem 1.2rem;
+      background: rgba(255, 255, 255, 0.1);
       border-radius: 50px;
     }
     .admin-link a:hover {
       text-decoration: none;
       transform: translateY(-2px);
-      background: rgba(255, 215, 0, 0.2);
-      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      background: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     }
     .admin-link i {
       margin-right: 0.5rem;
     }
-    @media (max-width: 768px) {
-      h1 { font-size: 2.5rem; }
-      .btn { font-size: 1rem; padding: 1rem 1.5rem; }
-      .features-grid { grid-template-columns: 1fr; }
-      .agenda-item { flex-direction: column; text-align: center; }
-      .agenda-date { margin-right: 0; margin-bottom: 1rem; }
-      .versiculo { font-size: 1.2rem; padding: 1.5rem; }
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.8rem;
+      margin-top: 1rem;
+    }
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1rem;
+    }
+    .contact-item i {
+      color: var(--primary);
+      width: 20px;
+      font-size: 1.1rem;
+    }
+    .ministry-leaders {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1.2rem;
+    }
+    .leader-card {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(30, 64, 175, 0.1));
+      border-radius: 12px;
+      padding: 1.2rem;
+      text-align: center;
+      width: 100%;
+      max-width: 160px;
+      transition: all 0.3s;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    .leader-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .leader-card:hover::before {
+      opacity: 1;
+    }
+    .leader-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--primary);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    }
+    .leader-icon {
+      width: 50px;
+      height: 50px;
+      margin: 0 auto 0.8rem;
+      background: var(--primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s ease;
+    }
+    .leader-card:hover .leader-icon {
+      transform: scale(1.1);
+    }
+    .leader-icon i {
+      font-size: 1.2rem;
+      color: var(--light);
+    }
+    .leader-card h4 {
+      color: var(--light);
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+    }
+    .leader-card p {
+      font-size: 0.85rem;
+      opacity: 0.9;
+    }
+    .badge-container {
+      display: flex;
+      justify-content: center;
+      gap: 0.8rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+    .badge {
+      background: rgba(59, 130, 246, 0.2);
+      padding: 0.5rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+    .badge i {
+      font-size: 0.9rem;
+      color: var(--primary);
+    }
+
+    /* Layout para dois líderes lado a lado */
+    .double-leaders {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      width: 100%;
     }
 
     /* Efeitos de partículas sutis no fundo */
@@ -455,7 +580,7 @@
     }
     .particle {
       position: absolute;
-      background: rgba(255, 215, 0, 0.1);
+      background: rgba(255, 255, 255, 0.08);
       border-radius: 50%;
       animation: float 15s infinite linear;
     }
@@ -475,6 +600,22 @@
         opacity: 0;
       }
     }
+
+    /* Melhorias para telas maiores */
+    @media (min-width: 768px) {
+      .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .leader-card {
+        width: 180px;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .features-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
   </style>
 </head>
 <body>
@@ -485,7 +626,9 @@
   <header>
     <div class="header-content">
       <div class="logo">
-        <i class="fas fa-cross"></i>
+
+        <!-- Para usar o logo real, descomente a linha abaixo -->
+       <img src="logo.jpeg" alt="MCVE Logo">
       </div>
       <h1>MCVE</h1>
       <p class="tagline">Igreja Missionária Caminho da Vida Eternal</p>
@@ -494,7 +637,7 @@
         <a href="https://www.instagram.com/mcvesede" target="_blank"><i class="fab fa-instagram"></i></a>
         <a href="https://www.facebook.com/MCVEOFICIAL" target="_blank"><i class="fab fa-facebook"></i></a>
         <a href="https://www.youtube.com/c/CristoAVIVAEsperan%C3%A7a/streams" target="_blank"><i class="fab fa-youtube"></i></a>
-        <a href="#" target="_blank"><i class="fab fa-whatsapp"></i></a>
+        <a href="https://wa.me/5511991167256?text=Olá,%20gostaria%20de%20mais%20informações%20sobre%20a%20MCVE" target="_blank"><i class="fab fa-whatsapp"></i></a>
       </div>
     </div>
   </header>
@@ -516,7 +659,7 @@
           </div>
           <h3>Pedido de Oração</h3>
           <p>Compartilhe seus pedidos de oração. Nossa equipe intercessora vai orar por você.</p>
-          <a href="https://forms.gle/SEU_LINK_ORACAO" target="_blank" class="btn" style="margin: 1rem auto 0; padding: 0.8rem 1.5rem; font-size: 0.9rem;">
+          <a href="https://forms.gle/SEU_LINK_ORACAO" target="_blank" class="btn btn-small">
             <i class="fas fa-pray"></i> Enviar Pedido
           </a>
         </div>
@@ -527,7 +670,7 @@
           </div>
           <h3>Aconselhamento</h3>
           <p>Precisa de orientação espiritual? Agende um momento com nossos líderes.</p>
-          <a href="https://forms.gle/SEU_LINK_ACONSELHAMENTO" target="_blank" class="btn" style="margin: 1rem auto 0; padding: 0.8rem 1.5rem; font-size: 0.9rem;">
+          <a href="https://forms.gle/SEU_LINK_ACONSELHAMENTO" target="_blank" class="btn btn-small">
             <i class="fas fa-comments"></i> Solicitar
           </a>
         </div>
@@ -538,7 +681,7 @@
           </div>
           <h3>Estudos Bíblicos</h3>
           <p>Acesse nossos estudos e materiais para crescimento espiritual.</p>
-          <a href="#" class="btn" style="margin: 1rem auto 0; padding: 0.8rem 1.5rem; font-size: 0.9rem;">
+          <a href="#" class="btn btn-small">
             <i class="fas fa-book-open"></i> Acessar
           </a>
         </div>
@@ -548,15 +691,12 @@
     <!-- Palavra da Semana -->
     <div class="section">
       <h2>Palavra da Semana</h2>
-      <p style="text-align:center; font-size:1.3rem; line-height:1.8; font-style: italic;" id="palavraSemana">
+      <p style="text-align:center; font-size:1.2rem; line-height:1.6; font-style: italic;" id="palavraSemana">
         Carregando mensagem...
       </p>
       <div style="text-align: center; margin-top: 1.5rem;">
-        <a href="#" class="btn" style="display: inline-block; margin: 0 0.5rem; padding: 0.8rem 1.5rem; font-size: 0.9rem;">
+        <a href="https://www.youtube.com/c/CristoAVIVAEsperan%C3%A7a/streams" target="_blank" class="btn" style="display: inline-block; margin: 0 0.5rem; padding: 0.8rem 1.5rem; font-size: 0.9rem;">
           <i class="fas fa-play-circle"></i> Assistir Pregação
-        </a>
-        <a href="#" class="btn" style="display: inline-block; margin: 0 0.5rem; padding: 0.8rem 1.5rem; font-size: 0.9rem; background: rgba(255,255,255,0.1); color: white;">
-          <i class="fas fa-download"></i> Baixar Esboço
         </a>
       </div>
     </div>
@@ -570,14 +710,14 @@
       <a href="https://forms.gle/SEU_LINK_VISITANTE" target="_blank" class="btn">
         <i class="fas fa-user-plus"></i> Sou visitante – Preencher formulário
       </a>
-      <div style="display: flex; justify-content: center; gap: 1rem; margin-top: 1rem; flex-wrap: wrap;">
-        <span style="background: rgba(255,215,0,0.2); padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem;">
+      <div class="badge-container">
+        <span class="badge">
           <i class="fas fa-home"></i> Visita em casa
         </span>
-        <span style="background: rgba(255,215,0,0.2); padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem;">
+        <span class="badge">
           <i class="fab fa-whatsapp"></i> Grupo no WhatsApp
         </span>
-        <span style="background: rgba(255,215,0,0.2); padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem;">
+        <span class="badge">
           <i class="fas fa-hands"></i> Discipulado
         </span>
       </div>
@@ -594,9 +734,26 @@
     <!-- Informações da Igreja -->
     <div class="section">
       <h2>Nossos Contatos</h2>
-      <div id="infoIgreja" style="text-align:center; line-height:2; font-size:1.1rem;"></div>
-      <div style="text-align: center; margin-top: 2rem;">
-        <a href="https://www.mcve.com.br" style="color:#ffd700; font-size:1.2rem; font-weight: 600;">
+      <div class="contact-info">
+        <div class="contact-item">
+          <i class="fas fa-phone-alt"></i>
+          <span>Secretaria: <strong>(11) 99116-7256</strong></span>
+        </div>
+        <div class="contact-item">
+          <i class="fas fa-map-marker-alt"></i>
+          <span>Rua Exemplo, 123 – Centro – Sua Cidade</span>
+        </div>
+        <div class="contact-item">
+          <i class="fas fa-user"></i>
+          <span>Pastor Principal: Nome do Pastor</span>
+        </div>
+        <div class="contact-item">
+          <i class="fas fa-clock"></i>
+          <span>Segunda a Sexta: 8h às 18h</span>
+        </div>
+      </div>
+      <div style="text-align: center; margin-top: 1.5rem;">
+        <a href="https://www.mcve.com.br" style="color:#ffffff; font-size:1.1rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem;">
           <i class="fas fa-globe"></i> www.mcve.com.br
         </a>
       </div>
@@ -607,203 +764,282 @@
       <h2>Nossos Ministérios</h2>
       <div class="features-grid">
         <div class="feature-card">
-          <div class="feature-icon" style="background: #e74c3c;">
+          <div class="feature-icon">
             <i class="fas fa-fire"></i>
           </div>
-          <h3>MCVE Jovens</h3>
+          <h3>Aviva Jovens</h3>
           <p>Encontros semanais para jovens que buscam uma vida com propósito em Deus.</p>
+          <div class="ministry-leaders">
+            <div class="double-leaders">
+              <div class="leader-card">
+                <div class="leader-icon">
+                  <i class="fas fa-user"></i>
+                </div>
+                <h4>Pastor</h4>
+                <p>Willian</p>
+              </div>
+              <div class="leader-card">
+                <div class="leader-icon">
+                  <i class="fas fa-user"></i>
+                </div>
+                <h4>Pastora</h4>
+                <p>Tatiani</p>
+              </div>
+            </div>
+          </div>
         </div>
         
         <div class="feature-card">
-          <div class="feature-icon" style="background: #3498db;">
+          <div class="feature-icon">
             <i class="fas fa-child"></i>
           </div>
-          <h3>MCVE Kids</h3>
+          <h3>Aviva Kids</h3>
           <p>Ministério infantil com ensino bíblico criativo e divertido para crianças.</p>
+          <div class="ministry-leaders">
+            <div class="double-leaders">
+              <div class="leader-card">
+                <div class="leader-icon">
+                  <i class="fas fa-user"></i>
+                </div>
+                <h4>Pastora</h4>
+                <p>Rose</p>
+              </div>
+              <div class="leader-card">
+                <div class="leader-icon">
+                  <i class="fas fa-user"></i>
+                </div>
+                <h4>Obreira</h4>
+                <p>Juliane</p>
+              </div>
+            </div>
+          </div>
         </div>
         
         <div class="feature-card">
-          <div class="feature-icon" style="background: #9b59b6;">
+          <div class="feature-icon">
             <i class="fas fa-heart"></i>
           </div>
-          <h3>Casais</h3>
+          <h3>Aviva Casais</h3>
           <p>Encontros e aconselhamento para fortalecer relacionamentos e famílias.</p>
+          <div class="ministry-leaders">
+            <div class="double-leaders">
+              <div class="leader-card">
+                <div class="leader-icon">
+                  <i class="fas fa-user"></i>
+                </div>
+                <h4>Presbítero</h4>
+                <p>Fabiano</p>
+              </div>
+              <div class="leader-card">
+                <div class="leader-icon">
+                  <i class="fas fa-user"></i>
+                </div>
+                <h4>Presbítera</h4>
+                <p>Vanessa</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="features-grid" style="margin-top: 1.5rem;">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <h3>Aviva Teens</h3>
+          <p>Ministério voltado para adolescentes com linguagem e atividades específicas.</p>
+          <div class="ministry-leaders">
+            <div class="double-leaders">
+              <div class="leader-card">
+                <div class="leader-icon">
+                  <i class="fas fa-user"></i>
+                </div>
+                <h4>Líder</h4>
+                <p>Bruno</p>
+              </div>
+              <div class="leader-card">
+                <div class="leader-icon">
+                  <i class="fas fa-user"></i>
+                </div>
+                <h4>Líder</h4>
+                <p>Caroline</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-music"></i>
+          </div>
+          <h3>Louvor e Adoração</h3>
+          <p>Ministério responsável pela adoração e música nos cultos.</p>
+          <div class="ministry-leaders">
+            <div class="leader-card">
+              <div class="leader-icon">
+                <i class="fas fa-user"></i>
+              </div>
+              <h4>Presbítero</h4>
+              <p>Dejair</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-hands-helping"></i>
+          </div>
+          <h3>Aviva Obreiros</h3>
+          <p>Treinamento e capacitação para obreiros e líderes em formação.</p>
+          <div class="ministry-leaders">
+            <div class="leader-card">
+              <div class="leader-icon">
+                <i class="fas fa-user"></i>
+              </div>
+              <h4>Presbítera</h4>
+              <p>Stefane</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Link do Painel Administrativo -->
-   <!--- <div class="admin-link">
-      <a href="admin.html">
-        <i class="fas fa-lock"></i> Área exclusiva para líderes (painel administrativo)
+    <!-- Termômetro da Alma -->
+    <div class="section">
+      <h2>Termômetro da Alma</h2>
+      <p style="text-align:center; margin-bottom:1rem; font-size: 1.1rem;">
+        Se você não está bem, deixe uma mensagem que entraremos em contato com você.
+      </p>
+      <div class="contact-info">
+        <div class="contact-item">
+          <i class="fas fa-phone-alt"></i>
+          <span>Número para contato: <strong>(11) 99116-7256</strong></span>
+        </div>
+      </div>
+      <a href="https://wa.me/5511991167256?text=Olá,%20gostaria%20de%20conversar%20sobre%20apoio%20espiritual" target="_blank" class="btn btn-primary">
+        <i class="fas fa-comment-dots"></i> Deixar Mensagem
       </a>
+      <div class="ministry-leaders">
+        <div class="double-leaders">
+          <div class="leader-card">
+            <div class="leader-icon">
+              <i class="fas fa-home"></i>
+            </div>
+            <h4>Visita Domiciliar</h4>
+            <p>Obreiros Rodrigo e Dayane</p>
+          </div>
+          <div class="leader-card">
+            <div class="leader-icon">
+              <i class="fas fa-hands"></i>
+            </div>
+            <h4>Recepção de Visitante</h4>
+            <p>Presbítera Silvana e Diácono Valdir</p>
+          </div>
+        </div>
+      </div>
     </div>
-  -->
   </div>
 
   <footer>
     <p>© 2025 MCVE - Igreja Missionária Caminho da Vida Eternal<br>
     <span style="color: var(--primary);">"Vida, Caminho e Verdade"</span><br>
-    Feito com amor para a obra do Senhor ❤️</p>
+    Feito com amor para a obra do Senhor</p>
   </footer>
 
   <script>
-    // =============== CONEXÃO COM JSONBIN ===============
-const JSONBIN_ID = '69253ffcd0ea881f40fe88e5';
-const JSONBIN_API_KEY = '$2a$10$rj/J6ubE2jiF4iQgjQoAKO8mgs0fbwy9MIxf5AWWfQaGuKFAOdYfO';
-
-// Função para carregar dados online
-async function carregarDadosOnline() {
-  try {
-    console.log('🔄 Buscando dados online...');
-    
-    const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}/latest`, {
-      headers: {
-        'X-Master-Key': JSONBIN_API_KEY
-      }
-    });
-    
-    if (response.ok) {
-      const data = await response.json();
-      const dadosOnline = data.record;
+    // Função para criar partículas de fundo
+    function createParticles() {
+      const particlesContainer = document.getElementById('particles');
+      const particleCount = 15;
       
-      console.log('✅ Dados online carregados:', dadosOnline);
-      
-      // Atualiza os elementos com dados online
-      if (dadosOnline.versiculo) {
-        document.getElementById('versiculo').innerHTML = dadosOnline.versiculo;
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        
+        // Tamanho aleatório
+        const size = Math.random() * 8 + 4;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        
+        // Posição inicial aleatória
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.top = `${Math.random() * 100}%`;
+        
+        // Atraso de animação aleatório
+        particle.style.animationDelay = `${Math.random() * 15}s`;
+        
+        particlesContainer.appendChild(particle);
       }
-      if (dadosOnline.palavraSemana) {
-        document.getElementById('palavraSemana').innerHTML = dadosOnline.palavraSemana;
-      }
-      if (dadosOnline.infoIgreja) {
-        document.getElementById('infoIgreja').innerHTML = dadosOnline.infoIgreja;
-      }
-      if (dadosOnline.agenda) {
-        document.getElementById('agenda').innerHTML = dadosOnline.agenda;
-      }
-      
-      // Salva localmente como backup
-      localStorage.setItem('mcvePortal', JSON.stringify(dadosOnline));
-      
-    } else {
-      console.log('❌ Erro na resposta da API');
-      usarDadosLocais();
     }
-  } catch (error) {
-    console.log('🌐 API offline, usando dados locais');
-    usarDadosLocais();
-  }
-}
 
-// Função fallback para dados locais
-function usarDadosLocais() {
-  const dadosLocais = JSON.parse(localStorage.getItem('mcvePortal') || '{}');
-  
-  if (!dadosLocais.versiculo) {
-    // Se não há dados locais, usa os padrões do código original
-    return;
-  }
-  
-  // Usa dados locais se disponíveis
-  if (dadosLocais.versiculo) {
-    document.getElementById('versiculo').innerHTML = dadosLocais.versiculo;
-  }
-  if (dadosLocais.palavraSemana) {
-    document.getElementById('palavraSemana').innerHTML = dadosLocais.palavraSemana;
-  }
-  if (dadosLocais.infoIgreja) {
-    document.getElementById('infoIgreja').innerHTML = dadosLocais.infoIgreja;
-  }
-  if (dadosLocais.agenda) {
-    document.getElementById('agenda').innerHTML = dadosLocais.agenda;
-  }
-}
+    // Carrega dados quando a página abre
+    window.addEventListener('load', function() {
+      // Versículo do dia
+      document.getElementById('versiculo').innerHTML = 
+        'Porque eu bem sei os pensamentos que penso de vós, diz o Senhor; pensamentos de paz, e não de mal, para vos dar o fim que esperais.<br><strong>Jeremias 29:11</strong>';
 
-// Carrega dados online quando a página abre
-window.addEventListener('load', function() {
-  // Primeiro carrega os dados locais (rápido)
-  const dadosLocais = JSON.parse(localStorage.getItem('mcvePortal') || '{}');
-  
-  // Versículo do dia
-  document.getElementById('versiculo').innerHTML = dadosLocais.versiculo || 
-    'Porque eu bem sei os pensamentos que penso de vós, diz o Senhor; pensamentos de paz, e não de mal, para vos dar o fim que esperais.<br><strong>Jeremias 29:11</strong>';
+      // Palavra da semana
+      document.getElementById('palavraSemana').innerHTML = 
+        'Deus está restaurando sonhos que você já havia enterrado. Creia: o tempo do milagre chegou!';
 
-  // Palavra da semana
-  document.getElementById('palavraSemana').innerHTML = dadosLocais.palavraSemana || 
-    'Deus está restaurando sonhos que você já havia enterrado. Creia: o tempo do milagre chegou!';
-
-  // Agenda
-  const agendaHTML = dadosLocais.agenda || `
-    <div class="agenda-item">
-      <div class="agenda-date">
-        <div class="day">20</div>
-        <div class="month">Nov</div>
-      </div>
-      <div class="agenda-content">
-        <h4>Culto de Ensino <span class="highlight">• 19h30</span></h4>
-        <p>Terça-feira | Templo Principal</p>
-      </div>
-    </div>
-    <div class="agenda-item">
-      <div class="agenda-date">
-        <div class="day">22</div>
-        <div class="month">Nov</div>
-      </div>
-      <div class="agenda-content">
-        <h4>Culto de Libertação <span class="highlight">• 19h30</span></h4>
-        <p>Quinta-feira | Templo Principal</p>
-      </div>
-    </div>
-    <div class="agenda-item">
-      <div class="agenda-date">
-        <div class="day">24</div>
-        <div class="month">Nov</div>
-      </div>
-      <div class="agenda-content">
-        <h4>Culto Jovem <span class="highlight">• 19h30</span></h4>
-        <p>Sábado | Templo Principal</p>
-      </div>
-    </div>
-    <div class="agenda-item">
-      <div class="agenda-date">
-        <div class="day">25</div>
-        <div class="month">Nov</div>
-      </div>
-      <div class="agenda-content">
-        <h4>Culto da Família <span class="highlight">• 9h e 18h</span></h4>
-        <p>Domingo | Templo Principal</p>
-      </div>
-    </div>
-    <div class="agenda-item" style="background: rgba(255,215,0,0.15); border: 1px solid rgba(255,215,0,0.3);">
-      <div class="agenda-date" style="background: #e74c3c;">
-        <div class="day">29</div>
-        <div class="month">Nov</div>
-      </div>
-      <div class="agenda-content">
-        <h4>Vigília da Virada de Vitória <span class="highlight">• 22h</span></h4>
-        <p>Sexta-feira | Templo Principal - Venha buscar sua vitória!</p>
-      </div>
-    </div>
-  `;
-  document.getElementById('agenda').innerHTML = agendaHTML;
-
-  // Informações da igreja
-  document.getElementById('infoIgreja').innerHTML = dadosLocais.infoIgreja || `
-    <p><i class="fas fa-map-marker-alt" style="color: var(--primary); margin-right: 0.5rem;"></i> Rua Exemplo, 123 – Centro – Sua Cidade</p>
-    <p><i class="fab fa-whatsapp" style="color: var(--primary); margin-right: 0.5rem;"></i> (11) 98765-4321</p>
-    <p><i class="fas fa-user" style="color: var(--primary); margin-right: 0.5rem;"></i> Pastor Principal: Nome do Pastor</p>
-    <p><i class="fas fa-clock" style="color: var(--primary); margin-right: 0.5rem;"></i> Segunda a Sexta: 8h às 18h</p>
-  `;
-
-  // Depois tenta carregar dados online (atualização)
-  setTimeout(carregarDadosOnline, 1000);
-  
-  createParticles();
-});
-
-// Remove o carregamento duplicado de partículas
-// Já está sendo chamado no load acima
+      // Agenda
+      const agendaHTML = `
+        <div class="agenda-item">
+          <div class="agenda-date">
+            <div class="day">20</div>
+            <div class="month">Nov</div>
+          </div>
+          <div class="agenda-content">
+            <h4>Culto de Ensino <span class="highlight">• 19h30</span></h4>
+            <p>Terça-feira | Templo Principal</p>
+          </div>
+        </div>
+        <div class="agenda-item">
+          <div class="agenda-date">
+            <div class="day">22</div>
+            <div class="month">Nov</div>
+          </div>
+          <div class="agenda-content">
+            <h4>Culto de Libertação <span class="highlight">• 19h30</span></h4>
+            <p>Quinta-feira | Templo Principal</p>
+          </div>
+        </div>
+        <div class="agenda-item">
+          <div class="agenda-date">
+            <div class="day">24</div>
+            <div class="month">Nov</div>
+          </div>
+          <div class="agenda-content">
+            <h4>Culto Jovem <span class="highlight">• 19h30</span></h4>
+            <p>Sábado | Templo Principal</p>
+          </div>
+        </div>
+        <div class="agenda-item">
+          <div class="agenda-date">
+            <div class="day">25</div>
+            <div class="month">Nov</div>
+          </div>
+          <div class="agenda-content">
+            <h4>Culto da Família <span class="highlight">• 9h e 18h</span></h4>
+            <p>Domingo | Templo Principal</p>
+          </div>
+        </div>
+        <div class="agenda-item" style="background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.3);">
+          <div class="agenda-date" style="background: var(--primary);">
+            <div class="day" style="color: white;">29</div>
+            <div class="month" style="color: white;">Nov</div>
+          </div>
+          <div class="agenda-content">
+            <h4>Vigília da Virada de Vitória <span class="highlight">• 22h</span></h4>
+            <p>Sexta-feira | Templo Principal - Venha buscar sua vitória!</p>
+          </div>
+        </div>
+      `;
+      document.getElementById('agenda').innerHTML = agendaHTML;
+      
+      createParticles();
+    });
   </script>
 </body>
 </html>
