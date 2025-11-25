@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel Admin - MCVE</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --primary: #ffd700;
+      --primary-dark: #e6c200;
+      --secondary: #2c5364;
+      --dark: #0f2027;
+      --light: #ffffff;
+      --gray: #f5f5f5;
+      --text: #333333;
+      --danger: #e74c3c;
+      --success: #2ecc71;
+      --warning: #f39c12;
+    }
+    
+    * { margin:0; padding:0; box-sizing:border-box; }
+    
+    body { 
+      font-family: 'Montserrat', sans-serif; 
+      background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+      color: var(--light); 
+      min-height: 100vh;
+      padding: 1rem;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        radial-gradient(circle at 20% 80%, rgba(255, 215, 0, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
+      z-index: -1;
+      pointer-events: none;
+    }
+    
+    .container { 
+      max-width: 1000px; 
+      margin: 0 auto; 
+      background: rgba(255,255,255,0.08); 
+      padding: 2rem; 
+      border-radius: 15px; 
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    
+    h1 {
+      font-family: 'Playfair Display', serif;
+      text-align: center; 
+      color: var(--primary); 
+      margin-bottom: 1.5rem;
+      font-size: 2.5rem;
+      text-shadow: 0 0 10px rgba(255,215,0,0.3);
+    }
+    
+    h2 {
+      color: var(--primary);
+      margin: 2rem 0 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid rgba(255,215,0,0.3);
+      position: relative;
+    }
+
+    h2::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 50px;
+      height: 2px;
+      background: var(--primary);
+    }
+    
+    .login { 
+      text-align: center; 
+      margin: 2rem auto;
+      max-width: 500px;
+      padding: 2rem;
+      background: rgba(255,255,255,0.08);
+      border-radius: 15px;
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .login-logo {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 1rem;
+      background: var(--primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 20px rgba(255,215,0,0.5);
+    }
+
+    .login-logo i {
+      font-size: 2rem;
+      color: var(--dark);
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+    
+    label { 
+      display: block; 
+      margin-bottom: 0.5rem; 
+      font-weight: 600;
+      color: var(--primary);
+    }
+    
+    input, textarea, select { 
+      width: 100%; 
+      padding: 1rem; 
+      margin: 0.5rem 0; 
+      border-radius: 8px; 
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(0,0,0,0.3);
+      color: var(--light);
+      font-size: 1rem;
+      font-family: 'Montserrat', sans-serif;
+      transition: all 0.3s;
+    }
+    
+    textarea { 
+      height: 150px; 
+      resize: vertical; 
+    }
+    
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(255,215,0,0.2);
+      transform: translateY(-2px);
+    }
+    
+    button { 
+      background: linear-gradient(to right, var(--primary), var(--primary-dark));
+      color: var(--dark); 
+      padding: 1rem 2rem; 
+      border: none; 
+      border-radius: 50px; 
+      font-weight: bold; 
+      cursor: pointer; 
+      font-size: 1.1rem;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin: 0.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: 0.5s;
+    }
+
+    button:hover::before {
+      left: 100%;
+    }
+    
+    button:hover { 
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+    
+    button.secondary {
+      background: rgba(255,255,255,0.1);
+      color: var(--light);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    
+    button.secondary:hover {
+      background: rgba(255,255,255,0.2);
+    }
+    
+    button.warning {
+      background: var(--warning);
+      color: var(--dark);
+    }
+    
+    button.danger {
+      background: var(--danger);
+      color: var(--light);
+    }
+    
+    button:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .tab-container {
+      margin-top: 2rem;
+    }
+    
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding-bottom: 1rem;
+    }
+    
+    .tab {
+      padding: 0.8rem 1.5rem;
+      background: rgba(255,255,255,0.05);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-weight: 500;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tab::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,215,0,0.1), transparent);
+      transition: 0.5s;
+    }
+
+    .tab:hover::before {
+      left: 100%;
+    }
+    
+    .tab.active {
+      background: var(--primary);
+      color: var(--dark);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .status {
+      text-align: center; 
+      margin-top: 20px; 
+      padding: 1rem;
+      border-radius: 8px;
+      font-weight: 600;
+      animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateY(-20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    
+    .success {
+      background: rgba(46, 204, 113, 0.2);
+      color: var(--success);
+      border: 1px solid rgba(46, 204, 113, 0.3);
+    }
+    
+    .error {
+      background: rgba(231, 76, 60, 0.2);
+      color: var(--danger);
+      border: 1px solid rgba(231, 76, 60, 0.3);
+    }
+    
+    .warning-status {
+      background: rgba(243, 156, 18, 0.2);
+      color: var(--warning);
+      border: 1px solid rgba(243, 156, 18, 0.3);
+    }
+    
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+    
+    .reset-section {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 2px solid rgba(255,255,255,0.1);
+    }
+    
+    .reset-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    
+    .reset-card {
+      background: rgba(255,255,255,0.05);
+      padding: 1.5rem;
+      border-radius: 10px;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .reset-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--primary);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+
+    .reset-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .reset-card:hover {
+      transform: translateY(-5px);
+      background: rgba(255,255,255,0.08);
+    }
+    
+    .reset-card h3 {
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+    
+    .logout {
+      text-align: center;
+      margin-top: 2rem;
+    }
+    
+    .logout a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.3s;
+      padding: 0.5rem 1rem;
+      border-radius: 50px;
+      background: rgba(255,215,0,0.1);
+    }
+    
+    .logout a:hover {
+      text-decoration: none;
+      background: rgba(255,215,0,0.2);
+      transform: translateY(-2px);
+    }
+    
+    .agenda-item {
+      background: rgba(255,255,255,0.05);
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      transition: all 0.3s;
+      border-left: 3px solid transparent;
+    }
+
+    .agenda-item:hover {
+      background: rgba(255,255,255,0.08);
+      border-left-color: var(--primary);
+      transform: translateX(5px);
+    }
+    
+    .agenda-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+    
+    .remove-btn {
+      background: var(--danger);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: all 0.3s;
+    }
+
+    .remove-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
+    }
+    
+    #historicoInfo {
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+    
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.3s ease;
+    }
+    
+    .modal-content {
+      background: var(--dark);
+      padding: 2rem;
+      border-radius: 15px;
+      max-width: 500px;
+      width: 90%;
+      text-align: center;
+      border: 2px solid var(--primary);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+      animation: scaleIn 0.3s ease;
+    }
+
+    @keyframes scaleIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    
+    .modal-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 1.5rem;
+    }
+
+    .connection-status {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .online {
+      background: rgba(46, 204, 113, 0.2);
+      color: var(--success);
+      border: 1px solid rgba(46, 204, 113, 0.3);
+    }
+
+    .offline {
+      background: rgba(231, 76, 60, 0.2);
+      color: var(--danger);
+      border: 1px solid rgba(231, 76, 60, 0.3);
+    }
+
+    .quick-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      justify-content: center;
+    }
+
+    .quick-btn {
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+    }
+
+    .evento-form {
+      background: rgba(255,255,255,0.05);
+      padding: 1.5rem;
+      border-radius: 10px;
+      margin-bottom: 1.5rem;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .evento-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr auto;
+      gap: 0.5rem;
+      align-items: end;
+    }
+
+    @media (max-width: 768px) {
+      .container { padding: 1rem; }
+      h1 { font-size: 2rem; }
+      .form-grid { grid-template-columns: 1fr; }
+      .actions { flex-direction: column; }
+      button { width: 100%; }
+      .reset-options { grid-template-columns: 1fr; }
+      .modal-buttons { flex-direction: column; }
+      .evento-grid { grid-template-columns: 1fr; }
+      .tabs { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Status de Conexão -->
+  <div class="connection-status" id="connectionStatus">
+    <i class="fas fa-wifi"></i>
+    <span>Conectando...</span>
+  </div>
+
+  <!-- TELA DE LOGIN -->
+  <div class="login" id="loginScreen">
+    <div class="login-logo">
+      <i class="fas fa-cross"></i>
+    </div>
+    <h1>Painel Administrativo MCVE</h1>
+    <p>Digite a senha para acessar:</p>
+    <div class="form-group">
+      <input type="password" id="senha" placeholder="Senha de acesso" autocomplete="current-password" />
+    </div>
+    <button onclick="verificarSenha()">
+      <i class="fas fa-sign-in-alt"></i> Entrar
+    </button>
+    <p style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.8;">
+      Dica: a senha padrão é <strong>mcve2025</strong>
+    </p>
+  </div>
+
+  <!-- PAINEL PRINCIPAL -->
+  <div class="container" id="painel" style="display:none;">
+    <h1>Painel Administrativo MCVE</h1>
+    <p style="text-align:center; margin-bottom: 1rem;">
+      <i class="fas fa-sync-alt"></i> Todas as alterações são salvas automaticamente e ficam disponíveis para todos imediatamente!
+    </p>
+
+    <!-- Ações Rápidas -->
+    <div class="quick-actions">
+      <button onclick="salvarTudo()" class="quick-btn">
+        <i class="fas fa-save"></i> Salvar Tudo
+      </button>
+      <button onclick="carregarDados()" class="quick-btn secondary">
+        <i class="fas fa-sync"></i> Recarregar
+      </button>
+      <button onclick="exportarDados()" class="quick-btn secondary">
+        <i class="fas fa-download"></i> Backup
+      </button>
+    </div>
+
+    <div class="tab-container">
+      <div class="tabs">
+        <div class="tab active" data-tab="conteudo">
+          <i class="fas fa-home"></i> Conteúdo
+        </div>
+        <div class="tab" data-tab="links">
+          <i class="fas fa-link"></i> Links
+        </div>
+        <div class="tab" data-tab="agenda">
+          <i class="fas fa-calendar"></i> Agenda
+        </div>
+        <div class="tab" data-tab="midias">
+          <i class="fas fa-share-alt"></i> Redes Sociais
+        </div>
+        <div class="tab" data-tab="ministerios">
+          <i class="fas fa-users"></i> Ministérios
+        </div>
+        <div class="tab" data-tab="reset">
+          <i class="fas fa-cog"></i> Configurações
+        </div>
+      </div>
+
+      <!-- ABA CONTEÚDO PRINCIPAL -->
+      <div class="tab-content active" id="conteudo-tab">
+        <h2>Conteúdo Principal</h2>
+        <div class="form-group">
+          <label><i class="fas fa-bible"></i> Versículo do Dia</label>
+          <textarea id="versiculo" placeholder="Digite o versículo do dia..."></textarea>
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-bullhorn"></i> Palavra/Mensagem da Semana</label>
+          <textarea id="palavraSemana" placeholder="Digite a mensagem da semana..."></textarea>
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-info-circle"></i> Informações da Igreja</label>
+          <textarea id="infoIgreja" placeholder="Endereço, telefone, WhatsApp, pastor..."></textarea>
+        </div>
+      </div>
+
+      <!-- ABA LINKS -->
+      <div class="tab-content" id="links-tab">
+        <h2>Links e Formulários</h2>
+        <div class="form-grid">
+          <div class="form-group">
+            <label><i class="fas fa-user-plus"></i> Link Formulário Visitantes</label>
+            <input type="url" id="linkVisitante" placeholder="https://forms.gle/...">
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-pray"></i> Link Formulário de Oração</label>
+            <input type="url" id="linkOracao" placeholder="https://forms.gle/...">
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-comments"></i> Link Aconselhamento</label>
+            <input type="url" id="linkAconselhamento" placeholder="https://forms.gle/...">
+          </div>
+          <div class="form-group">
+            <label><i class="fab fa-youtube"></i> Link YouTube</label>
+            <input type="url" id="linkYoutube" placeholder="https://youtube.com/...">
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-globe"></i> Link Site Principal</label>
+            <input type="url" id="linkSite" placeholder="https://www.mcve.com.br">
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-donate"></i> Link Dízimos/Ofertas</label>
+            <input type="url" id="linkDoacao" placeholder="https://...">
+          </div>
+        </div>
+      </div>
+
+      <!-- ABA AGENDA -->
+      <div class="tab-content" id="agenda-tab">
+        <h2>Agenda de Cultos e Eventos</h2>
+        
+        <div class="evento-form">
+          <h3><i class="fas fa-plus-circle"></i> Adicionar Novo Evento</h3>
+          <div class="evento-grid">
+            <div>
+              <label>Título do Evento</label>
+              <input type="text" id="novoEventoTitulo" placeholder="Ex: Culto de Libertação">
+            </div>
+            <div>
+              <label>Data</label>
+              <input type="text" id="novoEventoData" placeholder="Ex: 25/11">
+            </div>
+            <div>
+              <label>Horário</label>
+              <input type="text" id="novoEventoHorario" placeholder="Ex: 19h30">
+            </div>
+            <div>
+              <label>Local</label>
+              <input type="text" id="novoEventoLocal" placeholder="Ex: Templo Principal">
+            </div>
+            <div>
+              <button onclick="adicionarEvento()" class="secondary" style="margin: 0;">
+                <i class="fas fa-plus"></i> Adicionar
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div id="listaEventos"></div>
+        
+        <div class="form-group">
+          <label><i class="fas fa-calendar-alt"></i> Texto da Agenda (alternativo)</label>
+          <textarea id="agendaTexto" placeholder="Ou digite a agenda completa aqui..."></textarea>
+        </div>
+      </div>
+
+      <!-- ABA REDES SOCIAIS -->
+      <div class="tab-content" id="midias-tab">
+        <h2>Redes Sociais</h2>
+        <div class="form-grid">
+          <div class="form-group">
+            <label><i class="fab fa-instagram"></i> Instagram</label>
+            <input type="url" id="linkInstagram" placeholder="https://instagram.com/...">
+          </div>
+          <div class="form-group">
+            <label><i class="fab fa-facebook"></i> Facebook</label>
+            <input type="url" id="linkFacebook" placeholder="https://facebook.com/...">
+          </div>
+          <div class="form-group">
+            <label><i class="fab fa-youtube"></i> YouTube</label>
+            <input type="url" id="linkYoutubeSocial" placeholder="https://youtube.com/...">
+          </div>
+          <div class="form-group">
+            <label><i class="fab fa-whatsapp"></i> Número WhatsApp</label>
+            <input type="text" id="whatsappNumero" placeholder="(11) 98765-4321">
+          </div>
+          <div class="form-group">
+            <label><i class="fab fa-whatsapp"></i> Link WhatsApp</label>
+            <input type="url" id="linkWhatsapp" placeholder="https://wa.me/...">
+          </div>
+        </div>
+      </div>
+
+      <!-- ABA MINISTÉRIOS -->
+      <div class="tab-content" id="ministerios-tab">
+        <h2>Ministérios</h2>
+        <div class="form-grid">
+          <div class="form-group">
+            <label><i class="fas fa-fire"></i> MCVE Jovens</label>
+            <textarea id="ministerioJovens" placeholder="Descrição do ministério..."></textarea>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-child"></i> MCVE Kids</label>
+            <textarea id="ministerioKids" placeholder="Descrição do ministério..."></textarea>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-heart"></i> Casais</label>
+            <textarea id="ministerioCasais" placeholder="Descrição do ministério..."></textarea>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-female"></i> Mulheres</label>
+            <textarea id="ministerioMulheres" placeholder="Descrição do ministério..."></textarea>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-male"></i> Homens</label>
+            <textarea id="ministerioHomens" placeholder="Descrição do ministério..."></textarea>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-hands-praying"></i> Intercessão</label>
+            <textarea id="ministerioIntercessao" placeholder="Descrição do ministério..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- ABA RESET -->
+      <div class="tab-content" id="reset-tab">
+        <h2>Configurações e Backup</h2>
+        
+        <div class="reset-options">
+          <div class="reset-card">
+            <h3><i class="fas fa-undo"></i> Reset Parcial</h3>
+            <p>Restaura apenas uma seção específica</p>
+            <select id="secaoReset" style="margin: 1rem 0; width: 100%;">
+              <option value="">Selecione uma seção</option>
+              <option value="conteudo">Conteúdo Principal</option>
+              <option value="links">Links e Formulários</option>
+              <option value="agenda">Agenda e Eventos</option>
+              <option value="midias">Redes Sociais</option>
+              <option value="ministerios">Ministérios</option>
+            </select>
+            <button onclick="resetSecao()" class="warning">
+              <i class="fas fa-sync"></i> Resetar Seção
+            </button>
+          </div>
+          
+          <div class="reset-card">
+            <h3><i class="fas fa-broom"></i> Limpar Tudo</h3>
+            <p>Remove todo o conteúdo personalizado</p>
+            <button onclick="mostrarModal('limpar')" class="warning">
+              <i class="fas fa-eraser"></i> Limpar Tudo
+            </button>
+          </div>
+          
+          <div class="reset-card">
+            <h3><i class="fas fa-history"></i> Restaurar Original</h3>
+            <p>Volta para o conteúdo original completo</p>
+            <button onclick="mostrarModal('restaurar')" class="warning">
+              <i class="fas fa-history"></i> Restaurar Original
+            </button>
+          </div>
+        </div>
+        
+        <div class="form-group" style="margin-top: 2rem;">
+          <label><i class="fas fa-file-import"></i> Importar Backup</label>
+          <input type="file" id="importBackup" accept=".json">
+          <button onclick="importarBackup()" class="secondary" style="margin-top: 1rem;">
+            <i class="fas fa-file-import"></i> Importar Backup
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="status" id="status"></div>
+
+    <div class="logout">
+      <a href="index.html"><i class="fas fa-arrow-left"></i> Voltar ao portal dos membros</a><br><br>
+      <a href="#" onclick="sair()"><i class="fas fa-sign-out-alt"></i> Sair do Painel</a>
+    </div>
+  </div>
+
+  <!-- MODAL DE CONFIRMAÇÃO -->
+  <div class="modal" id="modalConfirmacao">
+    <div class="modal-content">
+      <h2 id="modalTitulo">Confirmar Ação</h2>
+      <p id="modalMensagem">Tem certeza que deseja realizar esta ação?</p>
+      <div class="modal-buttons">
+        <button onclick="confirmarAcao()" class="danger" id="btnConfirmar">Confirmar</button>
+        <button onclick="fecharModal()" class="secondary">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // =============== CONFIGURAÇÃO JSONBIN ===============
+    const JSONBIN_ID = '69253ffcd0ea881f40fe88e5';
+    const JSONBIN_API_KEY = '$2a$10$rj/J6ubE2jiF4iQgjQoAKO8mgs0fbwy9MIxf5AWWfQaGuKFAOdYfO';
+    
+    // =============== CONFIGURAÇÃO ===============
+    const senhaCorreta = "mcve2025";
+    let isOnline = true;
+    
+    // Conteúdo original padrão
+    const conteudoOriginal = {
+      versiculo: 'Porque eu bem sei os pensamentos que penso de vós, diz o Senhor; pensamentos de paz, e não de mal, para vos dar o fim que esperais.<br><strong>Jeremias 29:11</strong>',
+      palavraSemana: 'Deus está restaurando sonhos que você já havia enterrado. Creia: o tempo do milagre chegou!',
+      infoIgreja: 'Endereço: Rua Exemplo, 123 – Centro – Sua Cidade<br>WhatsApp: (11) 98765-4321<br>Pastor Principal: Nome do Pastor',
+      linkVisitante: 'https://forms.gle/SEU_LINK_VISITANTE',
+      linkOracao: 'https://forms.gle/SEU_LINK_ORACAO',
+      linkAconselhamento: 'https://forms.gle/SEU_LINK_ACONSELHAMENTO',
+      linkYoutube: 'https://youtube.com/c/MCVE',
+      linkSite: 'https://www.mcve.com.br',
+      linkDoacao: '#',
+      agendaTexto: '↠ Terça-feira – Culto de Ensino – 19h30<br>↠ Quinta-feira – Culto de Libertação – 19h30<br>↠ Sábado – Culto Jovem – 19h30<br>↠ Domingo – Culto da Família – 9h e 18h<br><br><strong style="color:#ffd700;">29/11 – Vigília da Virada de Vitória – 22h</strong>',
+      eventos: [],
+      linkInstagram: 'https://www.instagram.com/mcvesede',
+      linkFacebook: '#',
+      linkYoutubeSocial: 'https://youtube.com/c/MCVE',
+      whatsappNumero: '(11) 98765-4321',
+      linkWhatsapp: '#',
+      ministerioJovens: 'Encontros semanais para jovens que buscam uma vida com propósito em Deus.',
+      ministerioKids: 'Ministério infantil com ensino bíblico criativo e divertido para crianças.',
+      ministerioCasais: 'Encontros e aconselhamento para fortalecer relacionamentos e famílias.',
+      ministerioMulheres: '',
+      ministerioHomens: '',
+      ministerioIntercessao: ''
+    };
+
+    let acaoPendente = null;
+
+    // =============== VERIFICAÇÃO DE CONEXÃO ===============
+    function verificarConexao() {
+      const statusEl = document.getElementById('connectionStatus');
+      if (navigator.onLine) {
+        isOnline = true;
+        statusEl.className = 'connection-status online';
+        statusEl.innerHTML = '<i class="fas fa-wifi"></i><span>Online</span>';
+      } else {
+        isOnline = false;
+        statusEl.className = 'connection-status offline';
+        statusEl.innerHTML = '<i class="fas fa-wifi-slash"></i><span>Offline</span>';
+      }
+    }
+
+    // =============== AUTENTICAÇÃO ===============
+    function verificarLogin() {
+      return localStorage.getItem('mcveAdminLogado') === 'true';
+    }
+
+    function verificarSenha() {
+      const senhaInput = document.getElementById('senha');
+      if (senhaInput.value === senhaCorreta) {
+        localStorage.setItem('mcveAdminLogado', 'true');
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('painel').style.display = 'block';
+        verificarConexao();
+        carregarDados();
+        inicializarTabs();
+        mostrarStatus("Login realizado com sucesso!", "success");
+      } else {
+        mostrarStatus("Senha incorreta!", "error");
+        senhaInput.focus();
+      }
+    }
+
+    function sair() {
+      localStorage.removeItem('mcveAdminLogado');
+      document.getElementById('loginScreen').style.display = 'block';
+      document.getElementById('painel').style.display = 'none';
+      document.getElementById('senha').value = '';
+    }
+
+    // =============== TABS ===============
+    function inicializarTabs() {
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+          tab.classList.add('active');
+          document.getElementById(tab.dataset.tab + '-tab').classList.add('active');
+        });
+      });
+    }
+
+    // =============== CARREGAR / SALVAR DADOS ===============
+    function obterDadosAtuais() {
+      return {
+        versiculo: document.getElementById('versiculo').value,
+        palavraSemana: document.getElementById('palavraSemana').value,
+        infoIgreja: document.getElementById('infoIgreja').value,
+        linkVisitante: document.getElementById('linkVisitante').value,
+        linkOracao: document.getElementById('linkOracao').value,
+        linkAconselhamento: document.getElementById('linkAconselhamento').value,
+        linkYoutube: document.getElementById('linkYoutube').value,
+        linkSite: document.getElementById('linkSite').value,
+        linkDoacao: document.getElementById('linkDoacao').value,
+        agendaTexto: document.getElementById('agendaTexto').value,
+        eventos: JSON.parse(localStorage.getItem('mcvePortal') || '{}').eventos || [],
+        linkInstagram: document.getElementById('linkInstagram').value,
+        linkFacebook: document.getElementById('linkFacebook').value,
+        linkYoutubeSocial: document.getElementById('linkYoutubeSocial').value,
+        whatsappNumero: document.getElementById('whatsappNumero').value,
+        linkWhatsapp: document.getElementById('linkWhatsapp').value,
+        ministerioJovens: document.getElementById('ministerioJovens').value,
+        ministerioKids: document.getElementById('ministerioKids').value,
+        ministerioCasais: document.getElementById('ministerioCasais').value,
+        ministerioMulheres: document.getElementById('ministerioMulheres').value,
+        ministerioHomens: document.getElementById('ministerioHomens').value,
+        ministerioIntercessao: document.getElementById('ministerioIntercessao').value
+      };
+    }
+
+    function preencherCampos(dados) {
+      document.getElementById('versiculo').value = dados.versiculo || '';
+      document.getElementById('palavraSemana').value = dados.palavraSemana || '';
+      document.getElementById('infoIgreja').value = dados.infoIgreja || '';
+      document.getElementById('linkVisitante').value = dados.linkVisitante || '';
+      document.getElementById('linkOracao').value = dados.linkOracao || '';
+      document.getElementById('linkAconselhamento').value = dados.linkAconselhamento || '';
+      document.getElementById('linkYoutube').value = dados.linkYoutube || '';
+      document.getElementById('linkSite').value = dados.linkSite || '';
+      document.getElementById('linkDoacao').value = dados.linkDoacao || '';
+      document.getElementById('agendaTexto').value = dados.agendaTexto || '';
+      document.getElementById('linkInstagram').value = dados.linkInstagram || '';
+      document.getElementById('linkFacebook').value = dados.linkFacebook || '';
+      document.getElementById('linkYoutubeSocial').value = dados.linkYoutubeSocial || '';
+      document.getElementById('whatsappNumero').value = dados.whatsappNumero || '';
+      document.getElementById('linkWhatsapp').value = dados.linkWhatsapp || '';
+      document.getElementById('ministerioJovens').value = dados.ministerioJovens || '';
+      document.getElementById('ministerioKids').value = dados.ministerioKids || '';
+      document.getElementById('ministerioCasais').value = dados.ministerioCasais || '';
+      document.getElementById('ministerioMulheres').value = dados.ministerioMulheres || '';
+      document.getElementById('ministerioHomens').value = dados.ministerioHomens || '';
+      document.getElementById('ministerioIntercessao').value = dados.ministerioIntercessao || '';
+    }
+
+    // =============== FUNÇÕES DE SINCRONIZAÇÃO JSONBIN ===============
+    async function carregarDados() {
+      try {
+        console.log('🔄 Carregando dados do JSONBin...');
+        
+        const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}/latest`, {
+          headers: {
+            'X-Master-Key': JSONBIN_API_KEY
+          }
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          const dadosOnline = data.record;
+          
+          console.log('✅ Dados carregados:', dadosOnline);
+          preencherCampos(dadosOnline);
+          renderizarEventos(dadosOnline.eventos || []);
+          
+          // Salva localmente como backup
+          localStorage.setItem('mcvePortal', JSON.stringify(dadosOnline));
+          
+          mostrarStatus("✅ Dados carregados do JSONBin!", "success");
+        } else {
+          throw new Error('Erro na resposta da API');
+        }
+      } catch (error) {
+        console.log('🌐 JSONBin offline, usando dados locais');
+        const dadosLocais = JSON.parse(localStorage.getItem('mcvePortal') || '{}');
+        preencherCampos(dadosLocais);
+        renderizarEventos(dadosLocais.eventos || []);
+        mostrarStatus("⚠️ Usando dados locais (JSONBin offline)", "warning");
+      }
+    }
+
+    async function salvarTudo() {
+      const dadosAtuais = obterDadosAtuais();
+      
+      try {
+        console.log('💾 Salvando no JSONBin...', dadosAtuais);
+        
+        // Salva no JSONBin
+        const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Master-Key': JSONBIN_API_KEY
+          },
+          body: JSON.stringify(dadosAtuais)
+        });
+        
+        if (response.ok) {
+          // Salva localmente também
+          localStorage.setItem('mcvePortal', JSON.stringify(dadosAtuais));
+          mostrarStatus("✅ Tudo salvo ONLINE! Já está disponível para todos!", "success");
+          return true;
+        } else {
+          throw new Error('Erro ao salvar no JSONBin');
+        }
+      } catch (error) {
+        console.log('❌ Erro ao salvar online:', error);
+        // Fallback: salva apenas localmente
+        localStorage.setItem('mcvePortal', JSON.stringify(dadosAtuais));
+        mostrarStatus("💾 Salvo localmente (JSONBin offline)", "warning");
+        return false;
+      }
+    }
+
+    // =============== AGENDA ===============
+    async function adicionarEvento() {
+      const titulo = document.getElementById('novoEventoTitulo').value.trim();
+      const data = document.getElementById('novoEventoData').value.trim();
+      const horario = document.getElementById('novoEventoHorario').value.trim();
+      const local = document.getElementById('novoEventoLocal').value.trim();
+
+      if (!titulo || !data) {
+        mostrarStatus("⚠️ Preencha pelo menos o título e a data!", "warning");
+        return;
+      }
+
+      const novoEvento = {
+        id: Date.now().toString(),
+        titulo,
+        data,
+        horario: horario || "Horário a definir",
+        local: local || "Local a definir"
+      };
+
+      try {
+        // Adiciona localmente
+        const dadosLocais = JSON.parse(localStorage.getItem('mcvePortal') || '{}');
+        dadosLocais.eventos = dadosLocais.eventos || [];
+        dadosLocais.eventos.push(novoEvento);
+        localStorage.setItem('mcvePortal', JSON.stringify(dadosLocais));
+
+        // Limpa os campos
+        document.getElementById('novoEventoTitulo').value = '';
+        document.getElementById('novoEventoData').value = '';
+        document.getElementById('novoEventoHorario').value = '';
+        document.getElementById('novoEventoLocal').value = '';
+
+        // Salva tudo (incluindo o novo evento)
+        await salvarTudo();
+        mostrarStatus("✅ Evento adicionado com sucesso!", "success");
+      } catch (error) {
+        console.error("Erro ao adicionar evento:", error);
+        mostrarStatus("❌ Erro ao adicionar evento", "error");
+      }
+    }
+
+    async function removerEvento(id) {
+      try {
+        // Remove localmente
+        const dadosLocais = JSON.parse(localStorage.getItem('mcvePortal') || '{}');
+        dadosLocais.eventos = (dadosLocais.eventos || []).filter(e => e.id !== id);
+        localStorage.setItem('mcvePortal', JSON.stringify(dadosLocais));
+
+        // Salva tudo
+        await salvarTudo();
+        mostrarStatus("✅ Evento removido!", "success");
+      } catch (error) {
+        console.error("Erro ao remover evento:", error);
+        mostrarStatus("❌ Erro ao remover evento", "error");
+      }
+    }
+
+    function renderizarEventos(eventos = []) {
+      const container = document.getElementById('listaEventos');
+      if (eventos.length === 0) {
+        container.innerHTML = '<p style="text-align:center; opacity:0.7; padding: 2rem;">Nenhum evento adicionado ainda.</p>';
+        return;
+      }
+
+      container.innerHTML = '';
+      eventos.sort((a, b) => a.data.localeCompare(b.data)).forEach(evento => {
+        const div = document.createElement('div');
+        div.className = 'agenda-item';
+        div.innerHTML = `
+          <div class="agenda-item-header">
+            <div>
+              <strong>${evento.titulo}</strong><br>
+              <small>${evento.data} • ${evento.horario} • ${evento.local}</small>
+            </div>
+            <button class="remove-btn" onclick="removerEvento('${evento.id}')" title="Remover">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    // =============== MODAL DE CONFIRMAÇÃO ===============
+    function mostrarModal(tipo) {
+      acaoPendente = tipo;
+      const titulo = document.getElementById('modalTitulo');
+      const mensagem = document.getElementById('modalMensagem');
+
+      if (tipo === 'limpar') {
+        titulo.textContent = "Limpar Todo o Conteúdo";
+        mensagem.innerHTML = "Isso vai <strong>apagar tudo</strong> que você editou (exceto eventos).<br>Tem certeza?";
+      } else if (tipo === 'restaurar') {
+        titulo.textContent = "Restaurar Conteúdo Original";
+        mensagem.innerHTML = "Todo o conteúdo voltará ao padrão original.<br>Os eventos da agenda serão mantidos.<br>Deseja continuar?";
+      }
+
+      document.getElementById('modalConfirmacao').style.display = 'flex';
+    }
+
+    function fecharModal() {
+      document.getElementById('modalConfirmacao').style.display = 'none';
+      acaoPendente = null;
+    }
+
+    async function confirmarAcao() {
+      fecharModal();
+      if (acaoPendente === 'limpar') {
+        preencherCampos({
+          versiculo: '', palavraSemana: '', infoIgreja: '',
+          linkVisitante: '', linkOracao: '', linkAconselhamento: '',
+          linkYoutube: '', linkSite: '', linkDoacao: '',
+          agendaTexto: '',
+          linkInstagram: '', linkFacebook: '', linkYoutubeSocial: '',
+          whatsappNumero: '', linkWhatsapp: '',
+          ministerioJovens: '', ministerioKids: '', ministerioCasais: '',
+          ministerioMulheres: '', ministerioHomens: '', ministerioIntercessao: ''
+        });
+        await salvarTudo();
+        mostrarStatus("🧹 Todo conteúdo limpo!", "warning");
+      } else if (acaoPendente === 'restaurar') {
+        preencherCampos(conteudoOriginal);
+        document.getElementById('agendaTexto').value = conteudoOriginal.agendaTexto;
+        await salvarTudo();
+        mostrarStatus("✅ Conteúdo original restaurado!", "success");
+      }
+    }
+
+    // =============== RESET POR SEÇÃO ===============
+    async function resetSecao() {
+      const secao = document.getElementById('secaoReset').value;
+      if (!secao) {
+        mostrarStatus("⚠️ Selecione uma seção para resetar!", "warning");
+        return;
+      }
+
+      const dadosReset = {};
+      if (secao === 'conteudo') {
+        dadosReset.versiculo = conteudoOriginal.versiculo;
+        dadosReset.palavraSemana = conteudoOriginal.palavraSemana;
+        dadosReset.infoIgreja = conteudoOriginal.infoIgreja;
+      } else if (secao === 'links') {
+        Object.keys(conteudoOriginal).filter(k => k.includes('link') && k !== 'linkWhatsapp').forEach(k => {
+          dadosReset[k] = conteudoOriginal[k];
+        });
+      } else if (secao === 'agenda') {
+        dadosReset.agendaTexto = conteudoOriginal.agendaTexto;
+      } else if (secao === 'midias') {
+        dadosReset.linkInstagram = conteudoOriginal.linkInstagram;
+        dadosReset.linkFacebook = conteudoOriginal.linkFacebook;
+        dadosReset.linkYoutubeSocial = conteudoOriginal.linkYoutubeSocial;
+        dadosReset.whatsappNumero = conteudoOriginal.whatsappNumero;
+        dadosReset.linkWhatsapp = conteudoOriginal.linkWhatsapp;
+      } else if (secao === 'ministerios') {
+        dadosReset.ministerioJovens = conteudoOriginal.ministerioJovens;
+        dadosReset.ministerioKids = conteudoOriginal.ministerioKids;
+        dadosReset.ministerioCasais = conteudoOriginal.ministerioCasais;
+        dadosReset.ministerioMulheres = conteudoOriginal.ministerioMulheres;
+        dadosReset.ministerioHomens = conteudoOriginal.ministerioHomens;
+        dadosReset.ministerioIntercessao = conteudoOriginal.ministerioIntercessao;
+      }
+
+      // Aplica no formulário
+      Object.keys(dadosReset).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = dadosReset[id];
+      });
+
+      // Salva
+      await salvarTudo();
+      mostrarStatus(`✅ Seção "${secao}" restaurada!`, "success");
+    }
+
+    // =============== EXPORTAR / IMPORTAR BACKUP ===============
+    function exportarDados() {
+      const dados = obterDadosAtuais();
+      dados.eventos = JSON.parse(localStorage.getItem('mcvePortal') || '{}').eventos || [];
+      const dataStr = JSON.stringify(dados, null, 2);
+      const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+
+      const exportFileDefaultName = `backup-mcve-${new Date().toISOString().slice(0,10)}.json`;
+
+      const linkElement = document.createElement('a');
+      linkElement.setAttribute('href', dataUri);
+      linkElement.setAttribute('download', exportFileDefaultName);
+      linkElement.style.display = 'none';
+      document.body.appendChild(linkElement);
+      linkElement.click();
+      document.body.removeChild(linkElement);
+
+      mostrarStatus("✅ Backup exportado com sucesso!", "success");
+    }
+
+    function importarBackup() {
+      const input = document.getElementById('importBackup');
+      if (!input.files || input.files.length === 0) {
+        mostrarStatus("⚠️ Selecione um arquivo JSON", "warning");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = async function(e) {
+        try {
+          const dados = JSON.parse(e.target.result);
+          preencherCampos(dados);
+          if (dados.agendaTexto) document.getElementById('agendaTexto').value = dados.agendaTexto;
+
+          // Salva
+          await salvarTudo();
+          renderizarEventos(dados.eventos || []);
+          mostrarStatus("✅ Backup importado com sucesso!", "success");
+        } catch (err) {
+          console.error("Erro ao importar:", err);
+          mostrarStatus("❌ Arquivo inválido ou corrompido", "error");
+        }
+      };
+      reader.readAsText(input.files[0]);
+    }
+
+    // =============== STATUS ===============
+    function mostrarStatus(texto, tipo = "success") {
+      const status = document.getElementById('status');
+      status.textContent = texto;
+      status.className = `status ${tipo}`;
+      
+      setTimeout(() => {
+        status.textContent = '';
+        status.className = 'status';
+      }, 5000);
+    }
+
+    // =============== INICIALIZAÇÃO ===============
+    window.onload = function() {
+      // Configura listeners de conexão
+      window.addEventListener('online', verificarConexao);
+      window.addEventListener('offline', verificarConexao);
+      
+      // Verifica login
+      if (verificarLogin()) {
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('painel').style.display = 'block';
+        verificarConexao();
+        carregarDados();
+        inicializarTabs();
+      } else {
+        // Foca no campo de senha
+        document.getElementById('senha').focus();
+      }
+      
+      // Configura auto-save em alguns campos
+      const camposAutoSave = ['versiculo', 'palavraSemana', 'infoIgreja', 'agendaTexto'];
+      camposAutoSave.forEach(id => {
+        const campo = document.getElementById(id);
+        if (campo) {
+          campo.addEventListener('blur', salvarTudo);
+        }
+      });
+    };
+
+    // Configuração para tecla Enter no login
+    document.getElementById('senha').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        verificarSenha();
+      }
+    });
+  </script>
+</body>
+</html>
