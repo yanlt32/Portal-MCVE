@@ -122,6 +122,14 @@
       background: #dc2626;
     }
     
+    .btn-warning {
+      background: #f59e0b;
+    }
+    
+    .btn-warning:hover {
+      background: #d97706;
+    }
+    
     .agenda-item {
       background: rgba(255, 255, 255, 0.05);
       padding: 1rem;
@@ -157,6 +165,11 @@
     .message.error {
       background: rgba(239, 68, 68, 0.2);
       border: 1px solid #ef4444;
+    }
+    
+    .message.warning {
+      background: rgba(245, 158, 11, 0.2);
+      border: 1px solid #f59e0b;
     }
     
     .contact-item {
@@ -195,130 +208,299 @@
     .back-link a:hover {
       text-decoration: underline;
     }
+
+    /* Tela de Login */
+    .login-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 80vh;
+    }
+    
+    .login-card {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 2rem;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      width: 100%;
+      max-width: 400px;
+    }
+    
+    .login-card h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: #3b82f6;
+    }
+    
+    .hidden {
+      display: none;
+    }
+
+    .link-item {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .link-info h4 {
+      margin-bottom: 0.25rem;
+      color: #3b82f6;
+    }
+    
+    .link-info p {
+      opacity: 0.8;
+      font-size: 0.9rem;
+      word-break: break-all;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>Painel Administrativo</h1>
-      <p class="subtitle">AVIVA - Ministério Cristo a Viva Esperança</p>
-    </header>
-
-    <div id="messageContainer"></div>
-
-    <div class="admin-grid">
-      <!-- Versículo do Dia -->
-      <div class="admin-card">
-        <h2>Versículo do Dia</h2>
-        <form id="versiculoForm">
-          <div class="form-group">
-            <label for="versiculoTexto">Texto do Versículo</label>
-            <textarea id="versiculoTexto" required></textarea>
-          </div>
-          <div class="form-group">
-            <label for="versiculoReferencia">Referência</label>
-            <input type="text" id="versiculoReferencia" required>
-          </div>
-          <button type="submit" class="btn">Atualizar Versículo</button>
-        </form>
-      </div>
-
-      <!-- Palavra da Semana -->
-      <div class="admin-card">
-        <h2>Palavra da Semana</h2>
-        <form id="palavraSemanaForm">
-          <div class="form-group">
-            <label for="palavraTitulo">Título</label>
-            <input type="text" id="palavraTitulo" required>
-          </div>
-          <div class="form-group">
-            <label for="palavraMensagem">Mensagem Completa</label>
-            <textarea id="palavraMensagem" required></textarea>
-          </div>
-          <button type="submit" class="btn">Atualizar Palavra</button>
-        </form>
-      </div>
-
-      <!-- Agenda -->
-      <div class="admin-card">
-        <h2>Agenda de Eventos</h2>
-        <form id="agendaForm">
-          <div class="form-group">
-            <label for="eventoTipo">Tipo de Evento</label>
-            <select id="eventoTipo" required>
-              <option value="recorrente">Recorrente</option>
-              <option value="especial">Especial</option>
-            </select>
-          </div>
-          <div class="form-group" id="dataField" style="display: none;">
-            <label for="eventoData">Data (DD/MM)</label>
-            <input type="text" id="eventoData" placeholder="Ex: 25/12">
-          </div>
-          <div class="form-group">
-            <label for="eventoTitulo">Título</label>
-            <input type="text" id="eventoTitulo" required>
-          </div>
-          <div class="form-group">
-            <label for="eventoHorario">Horário</label>
-            <input type="text" id="eventoHorario" required placeholder="Ex: 20h">
-          </div>
-          <div class="form-group">
-            <label for="eventoDescricao">Descrição</label>
-            <input type="text" id="eventoDescricao" required>
-          </div>
-          <button type="submit" class="btn btn-success">Adicionar Evento</button>
-        </form>
-        
-        <div id="listaAgenda" style="margin-top: 1.5rem;">
-          <!-- Lista de eventos será carregada aqui -->
+  <!-- Tela de Login -->
+  <div id="loginScreen" class="login-container">
+    <div class="login-card">
+      <h2>Acesso Administrativo</h2>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="senha">Senha de Acesso</label>
+          <input type="password" id="senha" required placeholder="Digite a senha">
         </div>
-      </div>
-
-      <!-- Contatos -->
-      <div class="admin-card">
-        <h2>Contatos dos Líderes</h2>
-        <form id="contatoForm">
-          <div class="form-group">
-            <label for="contatoNome">Nome</label>
-            <input type="text" id="contatoNome" required>
-          </div>
-          <div class="form-group">
-            <label for="contatoCargo">Cargo</label>
-            <input type="text" id="contatoCargo" required>
-          </div>
-          <div class="form-group">
-            <label for="contatoNumero">Número</label>
-            <input type="text" id="contatoNumero" required>
-          </div>
-          <button type="submit" class="btn btn-success">Adicionar Contato</button>
-        </form>
-        
-        <div id="listaContatos" style="margin-top: 1.5rem;">
-          <!-- Lista de contatos será carregada aqui -->
-        </div>
+        <button type="submit" class="btn" style="width: 100%;">Entrar no Painel</button>
+      </form>
+      <div class="back-link" style="margin-top: 1rem;">
+        <a href="/">
+          <i class="fas fa-arrow-left"></i> Voltar para o Site
+        </a>
       </div>
     </div>
+  </div>
 
-    <div class="back-link">
-      <a href="/">
-        <i class="fas fa-arrow-left"></i> Voltar para o Site Principal
-      </a>
+  <!-- Painel Administrativo (inicialmente escondido) -->
+  <div id="adminPanel" class="hidden">
+    <div class="container">
+      <header>
+        <h1>Painel Administrativo</h1>
+        <p class="subtitle">AVIVA - Ministério Cristo a Viva Esperança</p>
+        <button id="logoutBtn" class="btn btn-warning" style="margin-top: 1rem;">
+          <i class="fas fa-sign-out-alt"></i> Sair
+        </button>
+      </header>
+
+      <div id="messageContainer"></div>
+
+      <div class="admin-grid">
+        <!-- Versículo do Dia -->
+        <div class="admin-card">
+          <h2>Versículo do Dia</h2>
+          <form id="versiculoForm">
+            <div class="form-group">
+              <label for="versiculoTexto">Texto do Versículo</label>
+              <textarea id="versiculoTexto" required></textarea>
+            </div>
+            <div class="form-group">
+              <label for="versiculoReferencia">Referência</label>
+              <input type="text" id="versiculoReferencia" required>
+            </div>
+            <button type="submit" class="btn">Atualizar Versículo</button>
+          </form>
+        </div>
+
+        <!-- Palavra da Semana -->
+        <div class="admin-card">
+          <h2>Palavra da Semana</h2>
+          <form id="palavraSemanaForm">
+            <div class="form-group">
+              <label for="palavraTitulo">Título</label>
+              <input type="text" id="palavraTitulo" required>
+            </div>
+            <div class="form-group">
+              <label for="palavraMensagem">Mensagem Completa</label>
+              <textarea id="palavraMensagem" required></textarea>
+            </div>
+            <button type="submit" class="btn">Atualizar Palavra</button>
+          </form>
+        </div>
+
+        <!-- Links Externos -->
+        <div class="admin-card">
+          <h2>Links Externos</h2>
+          <form id="linksForm">
+            <div class="form-group">
+              <label for="linkOracao">Formulário de Oração</label>
+              <input type="url" id="linkOracao" placeholder="https://forms.gle/...">
+            </div>
+            <div class="form-group">
+              <label for="linkAconselhamento">Formulário de Aconselhamento</label>
+              <input type="url" id="linkAconselhamento" placeholder="https://forms.gle/...">
+            </div>
+            <div class="form-group">
+              <label for="linkVisitante">Formulário de Visitante</label>
+              <input type="url" id="linkVisitante" placeholder="https://forms.gle/...">
+            </div>
+            <div class="form-group">
+              <label for="linkYouTube">Canal do YouTube</label>
+              <input type="url" id="linkYouTube" placeholder="https://youtube.com/...">
+            </div>
+            <button type="submit" class="btn">Atualizar Links</button>
+          </form>
+          
+          <div id="listaLinks" style="margin-top: 1.5rem;">
+            <!-- Lista de links será carregada aqui -->
+          </div>
+        </div>
+
+        <!-- Agenda -->
+        <div class="admin-card">
+          <h2>Agenda de Eventos</h2>
+          <form id="agendaForm">
+            <div class="form-group">
+              <label for="eventoTipo">Tipo de Evento</label>
+              <select id="eventoTipo" required>
+                <option value="recorrente">Recorrente</option>
+                <option value="especial">Especial</option>
+              </select>
+            </div>
+            <div class="form-group" id="dataField" style="display: none;">
+              <label for="eventoData">Data (DD/MM)</label>
+              <input type="text" id="eventoData" placeholder="Ex: 25/12">
+            </div>
+            <div class="form-group">
+              <label for="eventoTitulo">Título</label>
+              <input type="text" id="eventoTitulo" required>
+            </div>
+            <div class="form-group">
+              <label for="eventoHorario">Horário</label>
+              <input type="text" id="eventoHorario" required placeholder="Ex: 20h">
+            </div>
+            <div class="form-group">
+              <label for="eventoDescricao">Descrição</label>
+              <input type="text" id="eventoDescricao" required>
+            </div>
+            <button type="submit" class="btn btn-success">Adicionar Evento</button>
+          </form>
+          
+          <div id="listaAgenda" style="margin-top: 1.5rem;">
+            <!-- Lista de eventos será carregada aqui -->
+          </div>
+        </div>
+
+        <!-- Contatos -->
+        <div class="admin-card">
+          <h2>Contatos dos Líderes</h2>
+          <form id="contatoForm">
+            <div class="form-group">
+              <label for="contatoNome">Nome</label>
+              <input type="text" id="contatoNome" required>
+            </div>
+            <div class="form-group">
+              <label for="contatoCargo">Cargo</label>
+              <input type="text" id="contatoCargo" required>
+            </div>
+            <div class="form-group">
+              <label for="contatoNumero">Número</label>
+              <input type="text" id="contatoNumero" required>
+            </div>
+            <button type="submit" class="btn btn-success">Adicionar Contato</button>
+          </form>
+          
+          <div id="listaContatos" style="margin-top: 1.5rem;">
+            <!-- Lista de contatos será carregada aqui -->
+          </div>
+        </div>
+
+        <!-- Configurações -->
+        <div class="admin-card">
+          <h2>Configurações de Segurança</h2>
+          <form id="configForm">
+            <div class="form-group">
+              <label for="novaSenha">Nova Senha</label>
+              <input type="password" id="novaSenha" placeholder="Deixe em branco para manter atual">
+            </div>
+            <div class="form-group">
+              <label for="confirmarSenha">Confirmar Nova Senha</label>
+              <input type="password" id="confirmarSenha" placeholder="Confirme a nova senha">
+            </div>
+            <button type="submit" class="btn btn-warning">Alterar Senha</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="back-link">
+        <a href="/">
+          <i class="fas fa-arrow-left"></i> Voltar para o Site Principal
+        </a>
+      </div>
     </div>
   </div>
 
   <script>
+    // Sistema de Autenticação
+    const ADMIN_PASSWORD = 'aviva2024'; // Senha padrão - pode ser alterada depois
+
     // Elementos do DOM
+    const loginScreen = document.getElementById('loginScreen');
+    const adminPanel = document.getElementById('adminPanel');
     const messageContainer = document.getElementById('messageContainer');
+    const logoutBtn = document.getElementById('logoutBtn');
     
     // Formulários
+    const loginForm = document.getElementById('loginForm');
     const versiculoForm = document.getElementById('versiculoForm');
     const palavraSemanaForm = document.getElementById('palavraSemanaForm');
+    const linksForm = document.getElementById('linksForm');
     const agendaForm = document.getElementById('agendaForm');
     const contatoForm = document.getElementById('contatoForm');
+    const configForm = document.getElementById('configForm');
     
     // Campos da agenda
     const eventoTipo = document.getElementById('eventoTipo');
     const dataField = document.getElementById('dataField');
+
+    // Verificar se usuário já está logado
+    function checkAuth() {
+      const isLoggedIn = localStorage.getItem('aviva_admin_loggedin');
+      if (isLoggedIn === 'true') {
+        showAdminPanel();
+      } else {
+        showLoginScreen();
+      }
+    }
+
+    function showLoginScreen() {
+      loginScreen.classList.remove('hidden');
+      adminPanel.classList.add('hidden');
+    }
+
+    function showAdminPanel() {
+      loginScreen.classList.add('hidden');
+      adminPanel.classList.remove('hidden');
+      loadData();
+    }
+
+    // Login
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const senha = document.getElementById('senha').value;
+      
+      if (senha === ADMIN_PASSWORD) {
+        localStorage.setItem('aviva_admin_loggedin', 'true');
+        showAdminPanel();
+        showMessage('Login realizado com sucesso!', 'success');
+      } else {
+        showMessage('Senha incorreta!', 'error');
+      }
+    });
+
+    // Logout
+    logoutBtn.addEventListener('click', () => {
+      localStorage.removeItem('aviva_admin_loggedin');
+      showLoginScreen();
+      showMessage('Logout realizado com sucesso!', 'success');
+    });
 
     // Mostrar/ocultar campo de data baseado no tipo de evento
     eventoTipo.addEventListener('change', function() {
@@ -351,11 +533,22 @@
         document.getElementById('palavraTitulo').value = data.palavraSemana.titulo;
         document.getElementById('palavraMensagem').value = data.palavraSemana.mensagem;
         
+        // Preencher links
+        if (data.links) {
+          document.getElementById('linkOracao').value = data.links.oracao || '';
+          document.getElementById('linkAconselhamento').value = data.links.aconselhamento || '';
+          document.getElementById('linkVisitante').value = data.links.visitante || '';
+          document.getElementById('linkYouTube').value = data.links.youtube || '';
+        }
+        
         // Carregar agenda
         renderAgenda(data.agenda);
         
         // Carregar contatos
         renderContatos(data.contatos);
+        
+        // Carregar links
+        renderLinks(data.links || {});
         
       } catch (error) {
         showMessage('Erro ao carregar dados: ' + error.message, 'error');
@@ -407,6 +600,38 @@
       });
     }
 
+    // Renderizar links
+    function renderLinks(links) {
+      const listaLinks = document.getElementById('listaLinks');
+      listaLinks.innerHTML = '';
+      
+      const linksData = [
+        { nome: 'Oração', url: links.oracao, id: 'oracao' },
+        { nome: 'Aconselhamento', url: links.aconselhamento, id: 'aconselhamento' },
+        { nome: 'Visitante', url: links.visitante, id: 'visitante' },
+        { nome: 'YouTube', url: links.youtube, id: 'youtube' }
+      ];
+      
+      linksData.forEach(link => {
+        if (link.url) {
+          const linkEl = document.createElement('div');
+          linkEl.className = 'link-item';
+          linkEl.innerHTML = `
+            <div class="link-info">
+              <h4>${link.nome}</h4>
+              <p>${link.url}</p>
+            </div>
+            <div class="agenda-actions">
+              <a href="${link.url}" target="_blank" class="btn btn-success">
+                <i class="fas fa-external-link-alt"></i> Abrir
+              </a>
+            </div>
+          `;
+          listaLinks.appendChild(linkEl);
+        }
+      });
+    }
+
     // Remover evento
     async function removerEvento(index) {
       try {
@@ -453,7 +678,7 @@
       }
     }
 
-    // Event Listeners
+    // Event Listeners para formulários
     versiculoForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       
@@ -497,6 +722,37 @@
         }
       } catch (error) {
         showMessage('Erro ao atualizar palavra da semana: ' + error.message, 'error');
+      }
+    });
+
+    linksForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const linksData = {
+        oracao: document.getElementById('linkOracao').value,
+        aconselhamento: document.getElementById('linkAconselhamento').value,
+        visitante: document.getElementById('linkVisitante').value,
+        youtube: document.getElementById('linkYouTube').value
+      };
+      
+      try {
+        const response = await fetch('/api/data');
+        const data = await response.json();
+        
+        data.links = linksData;
+        
+        const updateResponse = await fetch('/api/links', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data.links)
+        });
+        
+        if (updateResponse.ok) {
+          renderLinks(data.links);
+          showMessage('Links atualizados com sucesso!');
+        }
+      } catch (error) {
+        showMessage('Erro ao atualizar links: ' + error.message, 'error');
       }
     });
 
@@ -568,8 +824,27 @@
       }
     });
 
-    // Carregar dados quando a página abrir
-    document.addEventListener('DOMContentLoaded', loadData);
+    configForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const novaSenha = document.getElementById('novaSenha').value;
+      const confirmarSenha = document.getElementById('confirmarSenha').value;
+      
+      if (novaSenha && novaSenha !== confirmarSenha) {
+        showMessage('As senhas não coincidem!', 'error');
+        return;
+      }
+      
+      if (novaSenha) {
+        // Aqui você implementaria a mudança de senha no servidor
+        showMessage('Funcionalidade de alteração de senha será implementada no servidor', 'warning');
+        configForm.reset();
+      } else {
+        showMessage('Digite uma nova senha para alterar', 'warning');
+      }
+    });
+
+    // Inicializar
+    document.addEventListener('DOMContentLoaded', checkAuth);
   </script>
 </body>
 </html>
