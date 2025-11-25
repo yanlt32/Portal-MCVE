@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>MCVE - Portal dos Membros</title>
-  <meta name="description" content="Portal da Igreja Missionária Caminho da Vida Eternal"/>
+  <title>AVIVA - Portal dos Membros</title>
+  <meta name="description" content="Portal do Ministério Cristo a Viva Esperança"/>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="shortcut icon" href="logo.jpeg" type="image/x-icon">
@@ -241,6 +241,16 @@
       font-size: 0.9rem;
       margin: 0.8rem auto;
     }
+    .btn-whatsapp {
+      background: linear-gradient(to right, #25D366, #128C7E);
+      color: white;
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+      margin: 0.5rem auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
     .versiculo {
       font-size: 1.2rem;
       font-style: italic;
@@ -373,7 +383,7 @@
     .agenda-date {
       width: 60px;
       height: 60px;
-      background: var(--light);
+      background: var(--primary);
       border-radius: 10px;
       display: flex;
       flex-direction: column;
@@ -390,13 +400,13 @@
     .agenda-date .day {
       font-size: 1.5rem;
       font-weight: 700;
-      color: var(--primary);
+      color: var(--light);
       line-height: 1;
     }
     .agenda-date .month {
       font-size: 0.8rem;
       font-weight: 600;
-      color: var(--primary);
+      color: var(--light);
       text-transform: uppercase;
     }
     .agenda-content {
@@ -601,6 +611,170 @@
       }
     }
 
+    /* Estilos do Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+      overflow-y: auto;
+    }
+    .modal-content {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      margin: 5% auto;
+      padding: 2rem;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 800px;
+      position: relative;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+    .close-modal {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 2rem;
+      color: var(--light);
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+    .close-modal:hover {
+      color: var(--primary);
+    }
+    .modal-header {
+      text-align: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .modal-header h2 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    .modal-header p {
+      font-size: 1.2rem;
+      color: var(--primary);
+      font-weight: 600;
+    }
+    .modal-section {
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      border-left: 4px solid var(--primary);
+    }
+    .modal-section h3 {
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+      color: var(--light);
+    }
+    .modal-section p {
+      margin-bottom: 1rem;
+      line-height: 1.6;
+    }
+    .modal-section .verse {
+      font-style: italic;
+      color: var(--primary);
+      font-weight: 500;
+      margin: 1rem 0;
+      padding-left: 1rem;
+      border-left: 3px solid var(--primary);
+    }
+    .modal-section .conclusion {
+      background: rgba(59, 130, 246, 0.1);
+      padding: 1.5rem;
+      border-radius: 10px;
+      margin-top: 1.5rem;
+      border: 1px solid rgba(59, 130, 246, 0.2);
+    }
+
+    /* Botão global de WhatsApp */
+    .whatsapp-global {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 100;
+      background: #25D366;
+      color: white;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+    .whatsapp-global:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 16px rgba(37, 211, 102, 0.6);
+    }
+
+    /* Modal de contatos */
+    .contact-modal-content {
+      max-width: 500px;
+    }
+    .contact-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .contact-item-modal {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      transition: all 0.3s;
+    }
+    .contact-item-modal:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    .contact-info-modal {
+      display: flex;
+      flex-direction: column;
+    }
+    .contact-name {
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+    .contact-role {
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+    .contact-number {
+      font-size: 0.85rem;
+      margin-top: 0.3rem;
+    }
+
+    /* Agenda com ícones */
+    .agenda-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 1.2rem;
+      flex-shrink: 0;
+      background: var(--primary);
+      color: white;
+      font-size: 1.2rem;
+    }
+    .agenda-recurrent {
+      background: rgba(59, 130, 246, 0.15);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
     /* Melhorias para telas maiores */
     @media (min-width: 768px) {
       .features-grid {
@@ -623,21 +797,25 @@
   <!-- Partículas de fundo -->
   <div class="particles" id="particles"></div>
 
+  <!-- Botão global do WhatsApp -->
+  <div class="whatsapp-global" id="whatsappGlobal">
+    <i class="fab fa-whatsapp"></i>
+  </div>
+
   <header>
     <div class="header-content">
       <div class="logo">
-
         <!-- Para usar o logo real, descomente a linha abaixo -->
-       <img src="logo.jpeg" alt="MCVE Logo">
+        <img src="logo.jpeg" alt="AVIVA Logo">
       </div>
-      <h1>MCVE</h1>
-      <p class="tagline">Igreja Missionária Caminho da Vida Eternal</p>
+      <h1>AVIVA</h1>
+      <p class="tagline">Ministério Cristo a Viva Esperança</p>
       <p>"Vida, Caminho e Verdade"</p>
       <div class="social-links">
         <a href="https://www.instagram.com/mcvesede" target="_blank"><i class="fab fa-instagram"></i></a>
         <a href="https://www.facebook.com/MCVEOFICIAL" target="_blank"><i class="fab fa-facebook"></i></a>
         <a href="https://www.youtube.com/c/CristoAVIVAEsperan%C3%A7a/streams" target="_blank"><i class="fab fa-youtube"></i></a>
-        <a href="https://wa.me/5511991167256?text=Olá,%20gostaria%20de%20mais%20informações%20sobre%20a%20MCVE" target="_blank"><i class="fab fa-whatsapp"></i></a>
+        <a href="https://wa.me/5511991167256?text=Olá,%20gostaria%20de%20mais%20informações%20sobre%20a%20AVIVA" target="_blank"><i class="fab fa-whatsapp"></i></a>
       </div>
     </div>
   </header>
@@ -646,7 +824,7 @@
 
     <!-- Versículo do Dia -->
     <div class="versiculo" id="versiculo">
-      Carregando versículo do dia...
+      Bendito seja o Deus e Pai de nosso Senhor Jesus Cristo, que, segundo a sua grande misericórdia, nos gerou de novo para uma viva esperança, pela ressurreição de Jesus Cristo dentre os mortos.<br><strong>1 Pedro 1:3</strong>
     </div>
 
     <!-- Recursos para Membros -->
@@ -692,18 +870,69 @@
     <div class="section">
       <h2>Palavra da Semana</h2>
       <p style="text-align:center; font-size:1.2rem; line-height:1.6; font-style: italic;" id="palavraSemana">
-        Carregando mensagem...
+        O FIM É MELHOR DO QUE O COMEÇO
       </p>
       <div style="text-align: center; margin-top: 1.5rem;">
+        <button id="openModal" class="btn" style="display: inline-block; margin: 0 0.5rem; padding: 0.8rem 1.5rem; font-size: 0.9rem;">
+          <i class="fas fa-book-open"></i> Ler Mensagem Completa
+        </button>
         <a href="https://www.youtube.com/c/CristoAVIVAEsperan%C3%A7a/streams" target="_blank" class="btn" style="display: inline-block; margin: 0 0.5rem; padding: 0.8rem 1.5rem; font-size: 0.9rem;">
           <i class="fas fa-play-circle"></i> Assistir Pregação
         </a>
       </div>
     </div>
 
+    <!-- Modal para Palavra da Semana -->
+    <div id="modalPalavraSemana" class="modal">
+      <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <div class="modal-header">
+          <h2>O FIM É MELHOR DO QUE O COMEÇO</h2>
+          <p>Eclesiastes 7:8</p>
+        </div>
+        
+        <div class="modal-section">
+          <h3>1. O Fim Revela o Propósito</h3>
+          <p><em>Introdução:</em> "Melhor é o fim das coisas do que o princípio delas..." (Ec 7:8)</p>
+          <p><em>Explicação:</em> No início, ainda não entendemos o propósito completo daquilo que Deus está fazendo. O começo pode parecer confuso, difícil ou incerto. Mas o fim revela aquilo que Deus estava construindo silenciosamente.</p>
+          <p class="verse">"Sabemos que todas as coisas cooperam para o bem daqueles que amam a Deus..." (Rm 8:28)</p>
+          <p><em>Aplicação:</em> Confie que Deus está trabalhando mesmo quando você não vê o resultado. Não julgue sua caminhada pelos primeiros capítulos—Deus está escrevendo o final.</p>
+        </div>
+        
+        <div class="modal-section">
+          <h3>2. A Paciência Forja o Caráter</h3>
+          <p><em>Texto-base:</em> "...melhor é o paciente de espírito do que o altivo de espírito." (Ec 7:8)</p>
+          <p><em>Introdução:</em> Quem é paciente permite que Deus o molde durante o processo. O altivo quer resultados imediatos; o paciente amadurece enquanto espera.</p>
+          <p class="verse">"Mas tenha a paciência a sua obra perfeita, para que sejais perfeitos e completos..." (Tg 1:4)</p>
+          <p><em>Aplicação:</em> Deixe que o processo transforme você. A demora não é castigo, é construção. A maturidade surge na espera.</p>
+        </div>
+        
+        <div class="modal-section">
+          <h3>3. Deus Vê o Final Desde o Princípio</h3>
+          <p><em>Explicação:</em> Deus não está limitado ao tempo. Ele conhece o final de cada história, e por isso podemos descansar mesmo no início, quando tudo parece incerto.</p>
+          <p class="verse">"Eu anuncio o fim desde o princípio..." (Is 46:10)</p>
+          <p><em>Aplicação:</em> Descanso espiritual vem quando lembramos que Deus já viu sua vitória antes mesmo de você enfrentar a batalha. Ele sabe aonde quer te levar.</p>
+        </div>
+        
+        <div class="modal-section">
+          <h3>4. O Final de Deus Sempre Supera o Começo Humano</h3>
+          <p><em>Introdução:</em> O fim que Deus prepara sempre é melhor do que o começo que nós mesmos planejamos. Ele transforma lágrimas em risos e desespero em esperança.</p>
+          <p class="verse">"O fim das coisas é melhor que o princípio delas." (Ec 7:8)</p>
+          <p class="verse">"A glória desta última casa será maior do que a da primeira..." (Ag 2:9)</p>
+          <div class="conclusion">
+            <p><em>Conclusão:</em> Creia que Deus pode terminar sua história melhor do que você começou. O que começa pequeno pode terminar glorioso nas mãos de Deus. Sua vida não será definida pelo seu início, mas pelo final que Deus prepara.</p>
+          </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 2rem;">
+          <p><strong>Ministério Cristo a Viva Esperança</strong></p>
+        </div>
+      </div>
+    </div>
+
     <!-- Visitante - Primeira Vez -->
     <div class="section">
-      <h2>É a sua primeira vez na MCVE?</h2>
+      <h2>É a sua primeira vez na AVIVA?</h2>
       <p style="text-align:center; margin-bottom:1rem; font-size: 1.1rem;">
         Queremos te conhecer e te acolher como família! Preencha nosso formulário de visitante.
       </p>
@@ -741,15 +970,15 @@
         </div>
         <div class="contact-item">
           <i class="fas fa-map-marker-alt"></i>
-          <span>Rua Exemplo, 123 – Centro – Sua Cidade</span>
+          <span>Rua Alto Belo 475 - Vila Antonieta - CEP 03478-040</span>
         </div>
         <div class="contact-item">
           <i class="fas fa-user"></i>
-          <span>Pastor Principal: Nome do Pastor</span>
+          <span>Pastor Presidente: Ideir Noronha</span>
         </div>
         <div class="contact-item">
           <i class="fas fa-clock"></i>
-          <span>Segunda a Sexta: 8h às 18h</span>
+          <span>Segunda a Sexta: 9h às 17h</span>
         </div>
       </div>
       <div style="text-align: center; margin-top: 1.5rem;">
@@ -941,8 +1170,22 @@
     </div>
   </div>
 
+  <!-- Modal de Contatos -->
+  <div id="modalContatos" class="modal">
+    <div class="modal-content contact-modal-content">
+      <span class="close-modal">&times;</span>
+      <div class="modal-header">
+        <h2>Contatos dos Líderes</h2>
+        <p>Entre em contato com nossos líderes de ministérios</p>
+      </div>
+      <div class="contact-list" id="contactList">
+        <!-- Lista de contatos será carregada via JavaScript -->
+      </div>
+    </div>
+  </div>
+
   <footer>
-    <p>© 2025 MCVE - Igreja Missionária Caminho da Vida Eternal<br>
+    <p>© 2025 AVIVA - Ministério Cristo a Viva Esperança<br>
     <span style="color: var(--primary);">"Vida, Caminho e Verdade"</span><br>
     Feito com amor para a obra do Senhor</p>
   </footer>
@@ -973,72 +1216,143 @@
       }
     }
 
+    // Funções para controlar o modal
+    function openModal(modalId) {
+      document.getElementById(modalId).style.display = 'block';
+    }
+    
+    function closeModal(modalId) {
+      document.getElementById(modalId).style.display = 'none';
+    }
+    
+    // Fechar modal ao clicar fora do conteúdo
+    window.onclick = function(event) {
+      const modals = document.querySelectorAll('.modal');
+      modals.forEach(modal => {
+        if (event.target === modal) {
+          modal.style.display = 'none';
+        }
+      });
+    }
+
+    // Lista de contatos
+    const contatos = [
+      { nome: "Bruno Dos Santos", cargo: "Líder - Aviva Teens", numero: "+55 11 96354-4213" },
+      { nome: "Caroline Dos Santos", cargo: "Líder - Aviva Teens", numero: "+55 11 98205-3122" },
+      { nome: "Dejair", cargo: "Presbítero - Louvor e Adoração", numero: "+55 69 9381-6282" },
+      { nome: "Fabiano", cargo: "Presbítero - Aviva Casais", numero: "+55 11 94736-5680" },
+      { nome: "Juliane Lirio Farias", cargo: "Obreira - Aviva Kids", numero: "+55 11 99107-8595" },
+      { nome: "Pr Will", cargo: "Pastor - Aviva Jovens", numero: "+55 11 98268-5622" },
+      { nome: "Pra Tatiani", cargo: "Pastora - Aviva Jovens", numero: "+55 11 95984-4501" },
+      { nome: "Rose Ribeiro", cargo: "Pastora - Aviva Kids", numero: "+55 11 98956-4020" },
+      { nome: "Stefane", cargo: "Presbítera - Aviva Obreiros", numero: "+55 11 94069-6532" },
+      { nome: "Vanessa Sede", cargo: "Presbítera - Aviva Casais", numero: "+55 11 97663-2641" }
+    ];
+
     // Carrega dados quando a página abre
     window.addEventListener('load', function() {
-      // Versículo do dia
-      document.getElementById('versiculo').innerHTML = 
-        'Porque eu bem sei os pensamentos que penso de vós, diz o Senhor; pensamentos de paz, e não de mal, para vos dar o fim que esperais.<br><strong>Jeremias 29:11</strong>';
-
       // Palavra da semana
       document.getElementById('palavraSemana').innerHTML = 
-        'Deus está restaurando sonhos que você já havia enterrado. Creia: o tempo do milagre chegou!';
+        'O FIM É MELHOR DO QUE O COMEÇO';
 
       // Agenda
       const agendaHTML = `
-        <div class="agenda-item">
-          <div class="agenda-date">
-            <div class="day">20</div>
-            <div class="month">Nov</div>
+        <div class="agenda-item agenda-recurrent">
+          <div class="agenda-icon">
+            <i class="fas fa-church"></i>
           </div>
           <div class="agenda-content">
-            <h4>Culto de Ensino <span class="highlight">• 19h30</span></h4>
-            <p>Terça-feira | Templo Principal</p>
+            <h4>Culto às Quintas <span class="highlight">• 20h</span></h4>
+            <p>Todas as quintas-feiras | Templo Principal</p>
           </div>
         </div>
-        <div class="agenda-item">
-          <div class="agenda-date">
-            <div class="day">22</div>
-            <div class="month">Nov</div>
+        <div class="agenda-item agenda-recurrent">
+          <div class="agenda-icon">
+            <i class="fas fa-church"></i>
           </div>
           <div class="agenda-content">
-            <h4>Culto de Libertação <span class="highlight">• 19h30</span></h4>
-            <p>Quinta-feira | Templo Principal</p>
+            <h4>Culto aos Domingos <span class="highlight">• 18h</span></h4>
+            <p>Todos os domingos | Templo Principal</p>
           </div>
         </div>
-        <div class="agenda-item">
-          <div class="agenda-date">
-            <div class="day">24</div>
-            <div class="month">Nov</div>
+        <div class="agenda-item agenda-recurrent">
+          <div class="agenda-icon">
+            <i class="fas fa-pray"></i>
           </div>
           <div class="agenda-content">
-            <h4>Culto Jovem <span class="highlight">• 19h30</span></h4>
-            <p>Sábado | Templo Principal</p>
+            <h4>Oração Diária <span class="highlight">• 8h</span></h4>
+            <p>Todos os dias | Presencial na Igreja</p>
           </div>
         </div>
-        <div class="agenda-item">
-          <div class="agenda-date">
-            <div class="day">25</div>
-            <div class="month">Nov</div>
+        <div class="agenda-item agenda-recurrent">
+          <div class="agenda-icon">
+            <i class="fas fa-praying-hands"></i>
           </div>
           <div class="agenda-content">
-            <h4>Culto da Família <span class="highlight">• 9h e 18h</span></h4>
-            <p>Domingo | Templo Principal</p>
+            <h4>Oração Quarta-feira <span class="highlight">• 5h</span></h4>
+            <p>Todas as quartas-feiras | Presencial na Igreja</p>
           </div>
         </div>
         <div class="agenda-item" style="background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.3);">
-          <div class="agenda-date" style="background: var(--primary);">
-            <div class="day" style="color: white;">29</div>
-            <div class="month" style="color: white;">Nov</div>
+          <div class="agenda-date">
+            <div class="day">02</div>
+            <div class="month">Dez</div>
           </div>
           <div class="agenda-content">
-            <h4>Vigília da Virada de Vitória <span class="highlight">• 22h</span></h4>
-            <p>Sexta-feira | Templo Principal - Venha buscar sua vitória!</p>
+            <h4>Formatura do Rever <span class="highlight">• 20h</span></h4>
+            <p>Templo Principal</p>
+          </div>
+        </div>
+        <div class="agenda-item" style="background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.3);">
+          <div class="agenda-date">
+            <div class="day">06</div>
+            <div class="month">Dez</div>
+          </div>
+          <div class="agenda-content">
+            <h4>Aviva Teens <span class="highlight">• 18h</span></h4>
+            <p>Templo Principal</p>
           </div>
         </div>
       `;
       document.getElementById('agenda').innerHTML = agendaHTML;
       
+      // Lista de contatos no modal
+      let contactListHTML = '';
+      contatos.forEach(contato => {
+        const numeroFormatado = contato.numero.replace(/\D/g, '');
+        contactListHTML += `
+          <div class="contact-item-modal">
+            <div class="contact-info-modal">
+              <span class="contact-name">${contato.nome}</span>
+              <span class="contact-role">${contato.cargo}</span>
+              <span class="contact-number">${contato.numero}</span>
+            </div>
+            <a href="https://wa.me/${numeroFormatado}?text=Olá,%20gostaria%20de%20mais%20informações%20sobre%20o%20ministério" target="_blank" class="btn-whatsapp">
+              <i class="fab fa-whatsapp"></i> WhatsApp
+            </a>
+          </div>
+        `;
+      });
+      document.getElementById('contactList').innerHTML = contactListHTML;
+      
       createParticles();
+      
+      // Configurar eventos do modal
+      document.getElementById('openModal').addEventListener('click', function() {
+        openModal('modalPalavraSemana');
+      });
+      
+      document.querySelectorAll('.close-modal').forEach(closeBtn => {
+        closeBtn.addEventListener('click', function() {
+          const modal = this.closest('.modal');
+          modal.style.display = 'none';
+        });
+      });
+      
+      // Configurar botão global do WhatsApp
+      document.getElementById('whatsappGlobal').addEventListener('click', function() {
+        openModal('modalContatos');
+      });
     });
   </script>
 </body>
