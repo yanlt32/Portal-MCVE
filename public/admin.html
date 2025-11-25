@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel Admin - AVIVA</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: #fff;
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid #3b82f6;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      color: #3b82f6;
+    }
+    
+    .subtitle {
+      font-size: 1.2rem;
+      opacity: 0.8;
+    }
+    
+    .admin-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+    
+    .admin-card {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 1.5rem;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .admin-card h2 {
+      color: #3b82f6;
+      margin-bottom: 1rem;
+      font-size: 1.4rem;
+    }
+    
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+    
+    input, textarea, select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      font-size: 1rem;
+    }
+    
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+    
+    .btn {
+      background: #3b82f6;
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    
+    .btn:hover {
+      background: #2563eb;
+      transform: translateY(-2px);
+    }
+    
+    .btn-success {
+      background: #10b981;
+    }
+    
+    .btn-success:hover {
+      background: #059669;
+    }
+    
+    .btn-danger {
+      background: #ef4444;
+    }
+    
+    .btn-danger:hover {
+      background: #dc2626;
+    }
+    
+    .agenda-item {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      border-left: 4px solid #3b82f6;
+    }
+    
+    .agenda-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+    
+    .agenda-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .message {
+      padding: 1rem;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+    
+    .message.success {
+      background: rgba(16, 185, 129, 0.2);
+      border: 1px solid #10b981;
+    }
+    
+    .message.error {
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid #ef4444;
+    }
+    
+    .contact-item {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .contact-info h4 {
+      margin-bottom: 0.25rem;
+    }
+    
+    .contact-info p {
+      opacity: 0.8;
+      font-size: 0.9rem;
+    }
+
+    .back-link {
+      text-align: center;
+      margin-top: 2rem;
+    }
+    
+    .back-link a {
+      color: #3b82f6;
+      text-decoration: none;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .back-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Painel Administrativo</h1>
+      <p class="subtitle">AVIVA - Ministério Cristo a Viva Esperança</p>
+    </header>
+
+    <div id="messageContainer"></div>
+
+    <div class="admin-grid">
+      <!-- Versículo do Dia -->
+      <div class="admin-card">
+        <h2>Versículo do Dia</h2>
+        <form id="versiculoForm">
+          <div class="form-group">
+            <label for="versiculoTexto">Texto do Versículo</label>
+            <textarea id="versiculoTexto" required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="versiculoReferencia">Referência</label>
+            <input type="text" id="versiculoReferencia" required>
+          </div>
+          <button type="submit" class="btn">Atualizar Versículo</button>
+        </form>
+      </div>
+
+      <!-- Palavra da Semana -->
+      <div class="admin-card">
+        <h2>Palavra da Semana</h2>
+        <form id="palavraSemanaForm">
+          <div class="form-group">
+            <label for="palavraTitulo">Título</label>
+            <input type="text" id="palavraTitulo" required>
+          </div>
+          <div class="form-group">
+            <label for="palavraMensagem">Mensagem Completa</label>
+            <textarea id="palavraMensagem" required></textarea>
+          </div>
+          <button type="submit" class="btn">Atualizar Palavra</button>
+        </form>
+      </div>
+
+      <!-- Agenda -->
+      <div class="admin-card">
+        <h2>Agenda de Eventos</h2>
+        <form id="agendaForm">
+          <div class="form-group">
+            <label for="eventoTipo">Tipo de Evento</label>
+            <select id="eventoTipo" required>
+              <option value="recorrente">Recorrente</option>
+              <option value="especial">Especial</option>
+            </select>
+          </div>
+          <div class="form-group" id="dataField" style="display: none;">
+            <label for="eventoData">Data (DD/MM)</label>
+            <input type="text" id="eventoData" placeholder="Ex: 25/12">
+          </div>
+          <div class="form-group">
+            <label for="eventoTitulo">Título</label>
+            <input type="text" id="eventoTitulo" required>
+          </div>
+          <div class="form-group">
+            <label for="eventoHorario">Horário</label>
+            <input type="text" id="eventoHorario" required placeholder="Ex: 20h">
+          </div>
+          <div class="form-group">
+            <label for="eventoDescricao">Descrição</label>
+            <input type="text" id="eventoDescricao" required>
+          </div>
+          <button type="submit" class="btn btn-success">Adicionar Evento</button>
+        </form>
+        
+        <div id="listaAgenda" style="margin-top: 1.5rem;">
+          <!-- Lista de eventos será carregada aqui -->
+        </div>
+      </div>
+
+      <!-- Contatos -->
+      <div class="admin-card">
+        <h2>Contatos dos Líderes</h2>
+        <form id="contatoForm">
+          <div class="form-group">
+            <label for="contatoNome">Nome</label>
+            <input type="text" id="contatoNome" required>
+          </div>
+          <div class="form-group">
+            <label for="contatoCargo">Cargo</label>
+            <input type="text" id="contatoCargo" required>
+          </div>
+          <div class="form-group">
+            <label for="contatoNumero">Número</label>
+            <input type="text" id="contatoNumero" required>
+          </div>
+          <button type="submit" class="btn btn-success">Adicionar Contato</button>
+        </form>
+        
+        <div id="listaContatos" style="margin-top: 1.5rem;">
+          <!-- Lista de contatos será carregada aqui -->
+        </div>
+      </div>
+    </div>
+
+    <div class="back-link">
+      <a href="/">
+        <i class="fas fa-arrow-left"></i> Voltar para o Site Principal
+      </a>
+    </div>
+  </div>
+
+  <script>
+    // Elementos do DOM
+    const messageContainer = document.getElementById('messageContainer');
+    
+    // Formulários
+    const versiculoForm = document.getElementById('versiculoForm');
+    const palavraSemanaForm = document.getElementById('palavraSemanaForm');
+    const agendaForm = document.getElementById('agendaForm');
+    const contatoForm = document.getElementById('contatoForm');
+    
+    // Campos da agenda
+    const eventoTipo = document.getElementById('eventoTipo');
+    const dataField = document.getElementById('dataField');
+
+    // Mostrar/ocultar campo de data baseado no tipo de evento
+    eventoTipo.addEventListener('change', function() {
+      dataField.style.display = this.value === 'especial' ? 'block' : 'none';
+    });
+
+    // Função para mostrar mensagens
+    function showMessage(message, type = 'success') {
+      const messageEl = document.createElement('div');
+      messageEl.className = `message ${type}`;
+      messageEl.textContent = message;
+      messageContainer.appendChild(messageEl);
+      
+      setTimeout(() => {
+        messageEl.remove();
+      }, 5000);
+    }
+
+    // Carregar dados iniciais
+    async function loadData() {
+      try {
+        const response = await fetch('/api/data');
+        const data = await response.json();
+        
+        // Preencher versículo
+        document.getElementById('versiculoTexto').value = data.versiculo.texto;
+        document.getElementById('versiculoReferencia').value = data.versiculo.referencia;
+        
+        // Preencher palavra da semana
+        document.getElementById('palavraTitulo').value = data.palavraSemana.titulo;
+        document.getElementById('palavraMensagem').value = data.palavraSemana.mensagem;
+        
+        // Carregar agenda
+        renderAgenda(data.agenda);
+        
+        // Carregar contatos
+        renderContatos(data.contatos);
+        
+      } catch (error) {
+        showMessage('Erro ao carregar dados: ' + error.message, 'error');
+      }
+    }
+
+    // Renderizar agenda
+    function renderAgenda(agenda) {
+      const listaAgenda = document.getElementById('listaAgenda');
+      listaAgenda.innerHTML = '';
+      
+      agenda.forEach((evento, index) => {
+        const eventoEl = document.createElement('div');
+        eventoEl.className = 'agenda-item';
+        eventoEl.innerHTML = `
+          <div class="agenda-header">
+            <div>
+              <strong>${evento.titulo}</strong> • ${evento.horario}
+              ${evento.data ? ` • ${evento.data}` : ''}
+            </div>
+            <div class="agenda-actions">
+              <button type="button" class="btn btn-danger" onclick="removerEvento(${index})">Remover</button>
+            </div>
+          </div>
+          <div>${evento.descricao}</div>
+        `;
+        listaAgenda.appendChild(eventoEl);
+      });
+    }
+
+    // Renderizar contatos
+    function renderContatos(contatos) {
+      const listaContatos = document.getElementById('listaContatos');
+      listaContatos.innerHTML = '';
+      
+      contatos.forEach((contato, index) => {
+        const contatoEl = document.createElement('div');
+        contatoEl.className = 'contact-item';
+        contatoEl.innerHTML = `
+          <div class="contact-info">
+            <h4>${contato.nome}</h4>
+            <p>${contato.cargo} • ${contato.numero}</p>
+          </div>
+          <div class="agenda-actions">
+            <button type="button" class="btn btn-danger" onclick="removerContato(${index})">Remover</button>
+          </div>
+        `;
+        listaContatos.appendChild(contatoEl);
+      });
+    }
+
+    // Remover evento
+    async function removerEvento(index) {
+      try {
+        const response = await fetch('/api/data');
+        const data = await response.json();
+        
+        data.agenda.splice(index, 1);
+        
+        const updateResponse = await fetch('/api/agenda', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data.agenda)
+        });
+        
+        if (updateResponse.ok) {
+          renderAgenda(data.agenda);
+          showMessage('Evento removido com sucesso');
+        }
+      } catch (error) {
+        showMessage('Erro ao remover evento: ' + error.message, 'error');
+      }
+    }
+
+    // Remover contato
+    async function removerContato(index) {
+      try {
+        const response = await fetch('/api/data');
+        const data = await response.json();
+        
+        data.contatos.splice(index, 1);
+        
+        const updateResponse = await fetch('/api/contatos', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data.contatos)
+        });
+        
+        if (updateResponse.ok) {
+          renderContatos(data.contatos);
+          showMessage('Contato removido com sucesso');
+        }
+      } catch (error) {
+        showMessage('Erro ao remover contato: ' + error.message, 'error');
+      }
+    }
+
+    // Event Listeners
+    versiculoForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const versiculoData = {
+        texto: document.getElementById('versiculoTexto').value,
+        referencia: document.getElementById('versiculoReferencia').value
+      };
+      
+      try {
+        const response = await fetch('/api/versiculo', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(versiculoData)
+        });
+        
+        if (response.ok) {
+          showMessage('Versículo atualizado com sucesso!');
+        }
+      } catch (error) {
+        showMessage('Erro ao atualizar versículo: ' + error.message, 'error');
+      }
+    });
+
+    palavraSemanaForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const palavraData = {
+        titulo: document.getElementById('palavraTitulo').value,
+        mensagem: document.getElementById('palavraMensagem').value
+      };
+      
+      try {
+        const response = await fetch('/api/palavra-semana', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(palavraData)
+        });
+        
+        if (response.ok) {
+          showMessage('Palavra da semana atualizada com sucesso!');
+        }
+      } catch (error) {
+        showMessage('Erro ao atualizar palavra da semana: ' + error.message, 'error');
+      }
+    });
+
+    agendaForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const eventoData = {
+        tipo: document.getElementById('eventoTipo').value,
+        titulo: document.getElementById('eventoTitulo').value,
+        horario: document.getElementById('eventoHorario').value,
+        descricao: document.getElementById('eventoDescricao').value
+      };
+      
+      if (eventoData.tipo === 'especial') {
+        eventoData.data = document.getElementById('eventoData').value;
+      }
+      
+      try {
+        const response = await fetch('/api/data');
+        const data = await response.json();
+        
+        data.agenda.push(eventoData);
+        
+        const updateResponse = await fetch('/api/agenda', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data.agenda)
+        });
+        
+        if (updateResponse.ok) {
+          renderAgenda(data.agenda);
+          agendaForm.reset();
+          dataField.style.display = 'none';
+          showMessage('Evento adicionado com sucesso!');
+        }
+      } catch (error) {
+        showMessage('Erro ao adicionar evento: ' + error.message, 'error');
+      }
+    });
+
+    contatoForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const contatoData = {
+        nome: document.getElementById('contatoNome').value,
+        cargo: document.getElementById('contatoCargo').value,
+        numero: document.getElementById('contatoNumero').value
+      };
+      
+      try {
+        const response = await fetch('/api/data');
+        const data = await response.json();
+        
+        data.contatos.push(contatoData);
+        
+        const updateResponse = await fetch('/api/contatos', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data.contatos)
+        });
+        
+        if (updateResponse.ok) {
+          renderContatos(data.contatos);
+          contatoForm.reset();
+          showMessage('Contato adicionado com sucesso!');
+        }
+      } catch (error) {
+        showMessage('Erro ao adicionar contato: ' + error.message, 'error');
+      }
+    });
+
+    // Carregar dados quando a página abrir
+    document.addEventListener('DOMContentLoaded', loadData);
+  </script>
+</body>
+</html>
