@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Meditação Diária - AVIVA</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    :root {
+      --primary: #3b82f6;
+      --primary-dark: #2563eb;
+      --secondary: #1e293b;
+      --light: #ffffff;
+      --accent: #dbeafe;
+      --success: #10b981;
+      --warning: #f59e0b;
+    }
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: var(--light);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+      position: relative;
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+      margin-bottom: 2rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: 50px;
+      background: rgba(255, 255, 255, 0.1);
+      transition: all 0.3s;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .back-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem;
+      color: var(--light);
+      margin-bottom: 0.5rem;
+      text-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+    }
+    .subtitle {
+      font-size: 1.3rem;
+      opacity: 0.9;
+      margin-bottom: 1rem;
+    }
+    .description {
+      font-size: 1.1rem;
+      opacity: 0.8;
+      max-width: 600px;
+      margin: 0 auto 2rem;
+      line-height: 1.6;
+    }
+
+    /* Filtros e Busca */
+    .filters-section {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .filters-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .search-box {
+      position: relative;
+      margin-bottom: 1rem;
+    }
+    .search-box input {
+      width: 100%;
+      padding: 0.75rem 1rem 0.75rem 3rem;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50px;
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--light);
+      font-size: 1rem;
+    }
+    .search-box i {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--primary);
+    }
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .filter-group label {
+      font-weight: 600;
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+    .filter-group select {
+      padding: 0.75rem;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--light);
+      font-size: 1rem;
+    }
+    .stats {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+    .stat-item {
+      background: rgba(59, 130, 246, 0.2);
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    /* Grid de Vídeos */
+    .videos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    .video-card {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      position: relative;
+    }
+    .video-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      border-color: var(--primary);
+    }
+    .video-thumbnail {
+      width: 100%;
+      height: 200px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .video-thumbnail::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(45deg, transparent 50%, rgba(255,255,255,0.1) 50%);
+      background-size: 10px 10px;
+    }
+    .video-duration {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .video-category {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(16, 185, 129, 0.9);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .video-info {
+      padding: 1.5rem;
+    }
+    .video-title {
+      font-size: 1.2rem;
+      margin-bottom: 0.75rem;
+      color: var(--light);
+      line-height: 1.3;
+      font-weight: 600;
+    }
+    .video-description {
+      opacity: 0.8;
+      margin-bottom: 1rem;
+      line-height: 1.5;
+      font-size: 0.95rem;
+    }
+    .video-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      font-size: 0.85rem;
+      opacity: 0.7;
+    }
+    .play-btn {
+      background: linear-gradient(to right, var(--primary), var(--primary-dark));
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-size: 1rem;
+    }
+    .play-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+    }
+
+    /* Modal do Player */
+    .video-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .video-modal-content {
+      background: #1e293b;
+      border-radius: 16px;
+      padding: 2rem;
+      width: 90%;
+      max-width: 900px;
+      position: relative;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+    }
+    .close-modal {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 2rem;
+      color: var(--light);
+      cursor: pointer;
+      transition: color 0.3s;
+      z-index: 1001;
+      background: rgba(0, 0, 0, 0.7);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .close-modal:hover {
+      color: var(--primary);
+      background: rgba(0, 0, 0, 0.9);
+    }
+    .video-player {
+      width: 100%;
+      height: 500px;
+      border-radius: 12px;
+      background: #000;
+    }
+    .video-modal-info {
+      margin-top: 1.5rem;
+    }
+    .video-modal-title {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      color: var(--light);
+    }
+    .video-modal-description {
+      opacity: 0.8;
+      line-height: 1.5;
+    }
+
+    /* Estados Vazios */
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      opacity: 0.7;
+    }
+    .empty-state i {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      color: var(--primary);
+    }
+    .empty-state h3 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Categorias */
+    .categories-grid {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 2rem 0;
+    }
+    .category-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: var(--light);
+      padding: 0.75rem 1.5rem;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-weight: 600;
+    }
+    .category-btn.active,
+    .category-btn:hover {
+      background: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    /* Responsivo */
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+      .videos-grid {
+        grid-template-columns: 1fr;
+      }
+      .video-player {
+        height: 300px;
+      }
+      .filters-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Animações */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .video-card {
+      animation: fadeIn 0.6s ease-out;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 3rem;
+    }
+    .loading-spinner {
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top: 4px solid var(--primary);
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <a href="/" class="back-btn">
+        <i class="fas fa-arrow-left"></i> Voltar para o Site
+      </a>
+      <h1>🧘 Meditação Diária</h1>
+      <p class="subtitle">Encontre paz e renovação para sua alma</p>
+      <p class="description">
+        Momentos especiais de conexão com Deus através de meditações curtas e poderosas. 
+        Reserve alguns minutos do seu dia para renovar suas forças espirituais.
+      </p>
+    </header>
+
+    <!-- Filtros e Estatísticas -->
+    <div class="filters-section">
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" id="searchInput" placeholder="Buscar meditações...">
+      </div>
+      
+      <div class="filters-grid">
+        <div class="filter-group">
+          <label for="categoryFilter"><i class="fas fa-tags"></i> Categoria</label>
+          <select id="categoryFilter">
+            <option value="">Todas as categorias</option>
+            <option value="Paz">Paz</option>
+            <option value="Renovação">Renovação</option>
+            <option value="Fé">Fé</option>
+            <option value="Gratidão">Gratidão</option>
+            <option value="Esperança">Esperança</option>
+          </select>
+        </div>
+        
+        <div class="filter-group">
+          <label for="durationFilter"><i class="fas fa-clock"></i> Duração</label>
+          <select id="durationFilter">
+            <option value="">Todas as durações</option>
+            <option value="30 seg">Até 30 segundos</option>
+            <option value="1 min">1 minuto</option>
+            <option value="2 min">2 minutos</option>
+            <option value="5 min">5 minutos ou mais</option>
+          </select>
+        </div>
+        
+        <div class="filter-group">
+          <label for="sortFilter"><i class="fas fa-sort"></i> Ordenar por</label>
+          <select id="sortFilter">
+            <option value="newest">Mais recentes</option>
+            <option value="oldest">Mais antigos</option>
+            <option value="title">Título (A-Z)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="stats" id="statsContainer">
+        <!-- Estatísticas serão carregadas via JavaScript -->
+      </div>
+    </div>
+
+    <!-- Categorias Rápidas -->
+    <div class="categories-grid" id="categoriesContainer">
+      <!-- Categorias serão carregadas via JavaScript -->
+    </div>
+
+    <!-- Grid de Vídeos -->
+    <div class="videos-grid" id="videosContainer">
+      <div class="loading">
+        <div class="loading-spinner"></div>
+        <p>Carregando meditações...</p>
+      </div>
+    </div>
+
+    <!-- Modal do Player de Vídeo -->
+    <div id="videoModal" class="video-modal">
+      <div class="video-modal-content">
+        <span class="close-modal" onclick="closeVideoModal()">&times;</span>
+        <div id="videoPlayerContainer">
+          <!-- Player de vídeo será carregado aqui -->
+        </div>
+        <div class="video-modal-info" id="videoModalInfo">
+          <!-- Informações do vídeo serão carregadas aqui -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let allVideos = [];
+    let currentFilter = 'all';
+    let currentSearch = '';
+    let currentCategory = '';
+    let currentDuration = '';
+    let currentSort = 'newest';
+
+    // Inicializar a página
+    document.addEventListener('DOMContentLoaded', function() {
+      loadVideosFromServer();
+      setupEventListeners();
+    });
+
+    // Carregar vídeos do servidor
+    async function loadVideosFromServer() {
+      try {
+        const response = await fetch('/api/data');
+        if (!response.ok) {
+          throw new Error('Erro ao carregar dados do servidor');
+        }
+        
+        const data = await response.json();
+        allVideos = data.meditacaoDiaria || [];
+        
+        renderVideos();
+        updateStats();
+        renderCategories();
+        
+      } catch (error) {
+        console.error('Erro ao carregar vídeos:', error);
+        showErrorMessage('Erro ao carregar meditações. Tente novamente mais tarde.');
+      }
+    }
+
+    // Configurar event listeners
+    function setupEventListeners() {
+      // Busca
+      document.getElementById('searchInput').addEventListener('input', function(e) {
+        currentSearch = e.target.value;
+        renderVideos();
+        updateStats();
+      });
+
+      // Filtros
+      document.getElementById('categoryFilter').addEventListener('change', function(e) {
+        currentCategory = e.target.value;
+        renderVideos();
+        updateStats();
+      });
+
+      document.getElementById('durationFilter').addEventListener('change', function(e) {
+        currentDuration = e.target.value;
+        renderVideos();
+        updateStats();
+      });
+
+      document.getElementById('sortFilter').addEventListener('change', function(e) {
+        currentSort = e.target.value;
+        renderVideos();
+      });
+    }
+
+    function renderVideos() {
+      const container = document.getElementById('videosContainer');
+      
+      // Mostrar loading se ainda não carregou
+      if (allVideos.length === 0) {
+        container.innerHTML = `
+          <div class="loading">
+            <div class="loading-spinner"></div>
+            <p>Carregando meditações...</p>
+          </div>
+        `;
+        return;
+      }
+
+      let filteredVideos = [...allVideos];
+
+      // Aplicar filtros
+      if (currentSearch) {
+        filteredVideos = filteredVideos.filter(video => 
+          video.titulo.toLowerCase().includes(currentSearch.toLowerCase()) ||
+          video.descricao.toLowerCase().includes(currentSearch.toLowerCase())
+        );
+      }
+
+      if (currentCategory) {
+        filteredVideos = filteredVideos.filter(video => 
+          video.categoria === currentCategory
+        );
+      }
+
+      if (currentDuration) {
+        if (currentDuration === '30 seg') {
+          filteredVideos = filteredVideos.filter(video => video.duracao === '30 seg');
+        } else if (currentDuration === '1 min') {
+          filteredVideos = filteredVideos.filter(video => video.duracao === '1 min');
+        } else if (currentDuration === '2 min') {
+          filteredVideos = filteredVideos.filter(video => video.duracao === '2 min');
+        } else if (currentDuration === '5 min') {
+          filteredVideos = filteredVideos.filter(video => 
+            video.duracao === '5 min' || parseInt(video.duracao) >= 5
+          );
+        }
+      }
+
+      // Aplicar ordenação
+      filteredVideos.sort((a, b) => {
+        if (currentSort === 'newest') {
+          return new Date(b.data) - new Date(a.data);
+        } else if (currentSort === 'oldest') {
+          return new Date(a.data) - new Date(b.data);
+        } else if (currentSort === 'title') {
+          return a.titulo.localeCompare(b.titulo);
+        }
+        return 0;
+      });
+
+      // Renderizar vídeos
+      if (filteredVideos.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-video-slash"></i>
+            <h3>Nenhuma meditação encontrada</h3>
+            <p>Tente ajustar os filtros ou termos de busca</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filteredVideos.map(video => `
+        <div class="video-card" data-id="${video.id}">
+          <div class="video-thumbnail">
+            <i class="fas fa-play-circle"></i>
+            <div class="video-duration">${video.duracao}</div>
+            <div class="video-category">${video.categoria}</div>
+          </div>
+          <div class="video-info">
+            <h3 class="video-title">${video.titulo}</h3>
+            <p class="video-description">${video.descricao}</p>
+            <div class="video-meta">
+              <span><i class="far fa-calendar"></i> ${formatDate(video.data)}</span>
+              <span><i class="fas fa-tag"></i> ${video.categoria}</span>
+            </div>
+            <button class="play-btn" onclick="playVideo(${video.id})">
+              <i class="fas fa-play"></i> Assistir Agora
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderCategories() {
+      const categoriesContainer = document.getElementById('categoriesContainer');
+      const categories = [...new Set(allVideos.map(video => video.categoria))];
+      
+      categoriesContainer.innerHTML = `
+        <button class="category-btn ${currentCategory === '' ? 'active' : ''}" 
+                onclick="setCategory('')">
+          Todas
+        </button>
+        ${categories.map(category => `
+          <button class="category-btn ${currentCategory === category ? 'active' : ''}" 
+                  onclick="setCategory('${category}')">
+            ${category}
+          </button>
+        `).join('')}
+      `;
+    }
+
+    function setCategory(category) {
+      currentCategory = category;
+      document.getElementById('categoryFilter').value = category;
+      renderVideos();
+      updateStats();
+    }
+
+    function updateStats() {
+      const statsContainer = document.getElementById('statsContainer');
+      let filteredVideos = [...allVideos];
+
+      if (currentSearch) {
+        filteredVideos = filteredVideos.filter(video => 
+          video.titulo.toLowerCase().includes(currentSearch.toLowerCase()) ||
+          video.descricao.toLowerCase().includes(currentSearch.toLowerCase())
+        );
+      }
+
+      if (currentCategory) {
+        filteredVideos = filteredVideos.filter(video => 
+          video.categoria === currentCategory
+        );
+      }
+
+      if (currentDuration) {
+        if (currentDuration === '30 seg') {
+          filteredVideos = filteredVideos.filter(video => video.duracao === '30 seg');
+        } else if (currentDuration === '1 min') {
+          filteredVideos = filteredVideos.filter(video => video.duracao === '1 min');
+        } else if (currentDuration === '2 min') {
+          filteredVideos = filteredVideos.filter(video => video.duracao === '2 min');
+        } else if (currentDuration === '5 min') {
+          filteredVideos = filteredVideos.filter(video => 
+            video.duracao === '5 min' || parseInt(video.duracao) >= 5
+          );
+        }
+      }
+
+      const totalDuration = filteredVideos.reduce((total, video) => {
+        const minutes = parseInt(video.duracao);
+        return total + (isNaN(minutes) ? 0 : minutes);
+      }, 0);
+
+      statsContainer.innerHTML = `
+        <div class="stat-item">
+          <i class="fas fa-video"></i> ${filteredVideos.length} meditações
+        </div>
+        <div class="stat-item">
+          <i class="fas fa-clock"></i> ${totalDuration} min total
+        </div>
+        <div class="stat-item">
+          <i class="fas fa-tags"></i> ${[...new Set(filteredVideos.map(v => v.categoria))].length} categorias
+        </div>
+      `;
+    }
+
+    function formatDate(dateString) {
+      try {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('pt-BR');
+      } catch (error) {
+        return dateString;
+      }
+    }
+
+    function playVideo(videoId) {
+      const video = allVideos.find(v => v.id === videoId);
+      if (!video) return;
+
+      const modal = document.getElementById('videoModal');
+      const playerContainer = document.getElementById('videoPlayerContainer');
+      const modalInfo = document.getElementById('videoModalInfo');
+
+      // Verificar se é um vídeo do YouTube ou upload local
+      let playerHTML = '';
+      if (video.tipo === 'upload' && video.url) {
+        // Vídeo upload local
+        playerHTML = `
+          <video class="video-player" controls autoplay>
+            <source src="${video.url}" type="video/mp4">
+            Seu navegador não suporta o elemento de vídeo.
+          </video>
+        `;
+      } else {
+        // Vídeo do YouTube
+        playerHTML = `
+          <iframe 
+            class="video-player"
+            src="${video.url}" 
+            title="${video.titulo}"
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen>
+          </iframe>
+        `;
+      }
+
+      playerContainer.innerHTML = playerHTML;
+
+      modalInfo.innerHTML = `
+        <h2 class="video-modal-title">${video.titulo}</h2>
+        <p class="video-modal-description">${video.descricao}</p>
+        <div style="margin-top: 1rem; display: flex; gap: 1rem; font-size: 0.9rem; opacity: 0.8;">
+          <span><i class="fas fa-clock"></i> ${video.duracao}</span>
+          <span><i class="fas fa-tag"></i> ${video.categoria}</span>
+          <span><i class="far fa-calendar"></i> ${formatDate(video.data)}</span>
+        </div>
+      `;
+
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeVideoModal() {
+      const modal = document.getElementById('videoModal');
+      const playerContainer = document.getElementById('videoPlayerContainer');
+      
+      modal.style.display = 'none';
+      document.body.style.overflow = 'auto';
+      
+      // Para o vídeo
+      playerContainer.innerHTML = '';
+    }
+
+    function showErrorMessage(message) {
+      const container = document.getElementById('videosContainer');
+      container.innerHTML = `
+        <div class="empty-state">
+          <i class="fas fa-exclamation-triangle"></i>
+          <h3>Erro ao carregar</h3>
+          <p>${message}</p>
+          <button class="play-btn" onclick="loadVideosFromServer()" style="margin-top: 1rem; width: auto;">
+            <i class="fas fa-redo"></i> Tentar Novamente
+          </button>
+        </div>
+      `;
+    }
+
+    // Fechar modal ao clicar fora
+    document.getElementById('videoModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeVideoModal();
+      }
+    });
+
+    // Fechar modal com ESC
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeVideoModal();
+      }
+    });
+  </script>
+</body>
+</html>

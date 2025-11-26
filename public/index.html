@@ -7,6 +7,7 @@
   <meta name="description" content="Portal do Ministério Cristo a Viva Esperança"/>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="shortcut icon" href="logo.jpeg" type="image/x-icon">
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
     :root {
@@ -18,6 +19,9 @@
       --text: #1f2937;
       --card-bg: rgba(255, 255, 255, 0.12);
       --gold: #fbbf24;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
     }
     body {
       font-family: 'Montserrat', sans-serif;
@@ -87,6 +91,7 @@
       height: 100%;
       object-fit: cover;
       border-radius: 50%;
+      display: block;
     }
     .logo-placeholder {
       width: 100%;
@@ -144,15 +149,15 @@
       background: rgba(255, 255, 255, 0.9);
     }
     .container { 
-      max-width: 100%; 
+      max-width: 1200px; 
       margin: 0 auto; 
       padding: 1.5rem 1rem; 
     }
     .section {
       background: var(--card-bg);
-      border-radius: 16px;
-      padding: 1.5rem 1.2rem;
-      margin-bottom: 1.5rem;
+      border-radius: 20px;
+      padding: 2rem 1.5rem;
+      margin-bottom: 2rem;
       backdrop-filter: blur(12px);
       border: 1px solid rgba(255, 255, 255, 0.15);
       transition: transform 0.3s, box-shadow 0.3s;
@@ -170,16 +175,17 @@
       pointer-events: none;
     }
     .section:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
     }
     h2 {
-      font-size: 1.5rem;
+      font-size: 1.8rem;
       color: var(--light);
       text-align: center;
-      margin-bottom: 1.2rem;
+      margin-bottom: 1.5rem;
       position: relative;
-      padding-bottom: 0.6rem;
+      padding-bottom: 0.8rem;
+      font-family: 'Playfair Display', serif;
     }
     h2:after {
       content: '';
@@ -187,29 +193,31 @@
       bottom: 0;
       left: 50%;
       transform: translateX(-50%);
-      width: 60px;
-      height: 3px;
+      width: 80px;
+      height: 4px;
       background: var(--primary);
-      border-radius: 3px;
+      border-radius: 4px;
     }
     .btn {
-      display: block;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       background: linear-gradient(to right, var(--primary), var(--primary-dark));
       color: var(--light);
-      padding: 1rem 1.5rem;
+      padding: 1rem 2rem;
       text-align: center;
       border-radius: 50px;
       font-weight: 600;
       font-size: 1rem;
       text-decoration: none;
-      margin: 1.2rem auto;
-      max-width: 320px;
+      margin: 0.5rem;
       box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
       transition: all 0.3s;
       position: relative;
       overflow: hidden;
       border: none;
       cursor: pointer;
+      gap: 0.5rem;
     }
     .btn:before {
       content: '';
@@ -228,24 +236,28 @@
       transform: translateY(-3px); 
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.35); 
     }
-    .btn i {
-      margin-right: 0.5rem;
-    }
     .btn-primary {
       background: linear-gradient(to right, var(--light), #f8fafc);
       color: var(--primary);
     }
+    .btn-success {
+      background: linear-gradient(to right, var(--success), #059669);
+    }
+    .btn-warning {
+      background: linear-gradient(to right, var(--warning), #d97706);
+    }
+    .btn-danger {
+      background: linear-gradient(to right, var(--danger), #dc2626);
+    }
     .btn-small {
-      padding: 0.7rem 1.2rem;
+      padding: 0.8rem 1.5rem;
       font-size: 0.9rem;
-      margin: 0.8rem auto;
     }
     .btn-whatsapp {
       background: linear-gradient(to right, #25D366, #128C7E);
       color: white;
-      padding: 0.5rem 1rem;
+      padding: 0.6rem 1.2rem;
       font-size: 0.85rem;
-      margin: 0.5rem auto;
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
@@ -255,7 +267,7 @@
       font-style: italic;
       text-align: center;
       background: rgba(0, 0, 0, 0.3);
-      padding: 1.5rem;
+      padding: 2rem;
       border-radius: 16px;
       margin: 1.5rem 0;
       line-height: 1.6;
@@ -287,14 +299,14 @@
     }
     .features-grid {
       display: grid;
-      grid-template-columns: 1fr;
-      gap: 1.2rem;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
       margin-top: 1.5rem;
     }
     .feature-card {
       background: rgba(255, 255, 255, 0.1);
-      border-radius: 14px;
-      padding: 1.5rem;
+      border-radius: 16px;
+      padding: 2rem;
       text-align: center;
       transition: all 0.3s;
       border: 1px solid rgba(255, 255, 255, 0.2);
@@ -322,9 +334,9 @@
       box-shadow: 0 8px 16px rgba(0, 0, 0, 0.18);
     }
     .feature-icon {
-      width: 70px;
-      height: 70px;
-      margin: 0 auto 1rem;
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 1.5rem;
       background: var(--light);
       border-radius: 50%;
       display: flex;
@@ -337,25 +349,27 @@
       transform: scale(1.1) rotate(5deg);
     }
     .feature-icon i {
-      font-size: 1.8rem;
+      font-size: 2rem;
       color: var(--primary);
     }
     .feature-card h3 {
-      font-size: 1.3rem;
-      margin-bottom: 0.8rem;
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
       color: var(--light);
+      font-family: 'Playfair Display', serif;
     }
     .feature-card p {
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
       opacity: 0.9;
+      line-height: 1.6;
     }
     .agenda-item {
       display: flex;
       align-items: center;
-      padding: 1.2rem;
+      padding: 1.5rem;
       margin-bottom: 1rem;
       background: rgba(255, 255, 255, 0.08);
-      border-radius: 12px;
+      border-radius: 14px;
       transition: all 0.3s;
       position: relative;
       overflow: hidden;
@@ -380,15 +394,15 @@
       transform: translateX(5px);
     }
     .agenda-date {
-      width: 60px;
-      height: 60px;
+      width: 70px;
+      height: 70px;
       background: var(--primary);
-      border-radius: 10px;
+      border-radius: 12px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      margin-right: 1.2rem;
+      margin-right: 1.5rem;
       flex-shrink: 0;
       transition: transform 0.3s ease;
       box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
@@ -397,13 +411,13 @@
       transform: scale(1.05);
     }
     .agenda-date .day {
-      font-size: 1.5rem;
+      font-size: 1.6rem;
       font-weight: 700;
       color: var(--light);
       line-height: 1;
     }
     .agenda-date .month {
-      font-size: 0.8rem;
+      font-size: 0.9rem;
       font-weight: 600;
       color: var(--light);
       text-transform: uppercase;
@@ -412,12 +426,13 @@
       flex: 1;
     }
     .agenda-content h4 {
-      font-size: 1.1rem;
-      margin-bottom: 0.3rem;
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+      color: var(--light);
     }
     .agenda-content p {
       opacity: 0.8;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
     }
     .highlight {
       color: var(--primary);
@@ -425,7 +440,7 @@
     }
     footer {
       text-align: center;
-      padding: 2rem 1rem;
+      padding: 3rem 1rem;
       background: rgba(15, 23, 42, 0.9);
       margin-top: 3rem;
       position: relative;
@@ -441,7 +456,7 @@
     }
     .admin-link {
       text-align: center;
-      margin-top: 1.5rem;
+      margin-top: 2rem;
     }
     .admin-link a {
       color: var(--light);
@@ -450,7 +465,7 @@
       transition: all 0.3s;
       display: inline-flex;
       align-items: center;
-      padding: 0.7rem 1.2rem;
+      padding: 0.8rem 1.5rem;
       background: rgba(255, 255, 255, 0.1);
       border-radius: 50px;
     }
@@ -467,34 +482,34 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.8rem;
-      margin-top: 1rem;
+      gap: 1rem;
+      margin-top: 1.5rem;
     }
     .contact-item {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      font-size: 1rem;
+      gap: 0.8rem;
+      font-size: 1.1rem;
     }
     .contact-item i {
       color: var(--primary);
-      width: 20px;
-      font-size: 1.1rem;
+      width: 24px;
+      font-size: 1.2rem;
     }
     .ministry-leaders {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       gap: 1rem;
-      margin-top: 1.2rem;
+      margin-top: 1.5rem;
     }
     .leader-card {
       background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(30, 64, 175, 0.1));
-      border-radius: 12px;
-      padding: 1.2rem;
+      border-radius: 14px;
+      padding: 1.5rem;
       text-align: center;
       width: 100%;
-      max-width: 160px;
+      max-width: 180px;
       transition: all 0.3s;
       border: 1px solid rgba(59, 130, 246, 0.3);
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -521,9 +536,9 @@
       box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
     }
     .leader-icon {
-      width: 50px;
-      height: 50px;
-      margin: 0 auto 0.8rem;
+      width: 60px;
+      height: 60px;
+      margin: 0 auto 1rem;
       background: var(--primary);
       border-radius: 50%;
       display: flex;
@@ -535,37 +550,37 @@
       transform: scale(1.1);
     }
     .leader-icon i {
-      font-size: 1.2rem;
+      font-size: 1.4rem;
       color: var(--light);
     }
     .leader-card h4 {
       color: var(--light);
       margin-bottom: 0.5rem;
-      font-size: 1rem;
+      font-size: 1.1rem;
     }
     .leader-card p {
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       opacity: 0.9;
     }
     .badge-container {
       display: flex;
       justify-content: center;
-      gap: 0.8rem;
-      margin-top: 1rem;
+      gap: 1rem;
+      margin-top: 1.5rem;
       flex-wrap: wrap;
     }
     .badge {
       background: rgba(59, 130, 246, 0.2);
-      padding: 0.5rem 0.8rem;
+      padding: 0.6rem 1rem;
       border-radius: 20px;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       display: flex;
       align-items: center;
-      gap: 0.3rem;
+      gap: 0.5rem;
       border: 1px solid rgba(59, 130, 246, 0.3);
     }
     .badge i {
-      font-size: 0.9rem;
+      font-size: 1rem;
       color: var(--primary);
     }
 
@@ -625,22 +640,23 @@
     .modal-content {
       background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
       margin: 5% auto;
-      padding: 2rem;
-      border-radius: 16px;
+      padding: 2.5rem;
+      border-radius: 20px;
       width: 90%;
       max-width: 800px;
       position: relative;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
       border: 1px solid rgba(59, 130, 246, 0.3);
     }
     .close-modal {
       position: absolute;
-      top: 15px;
-      right: 20px;
-      font-size: 2rem;
+      top: 20px;
+      right: 25px;
+      font-size: 2.2rem;
       color: var(--light);
       cursor: pointer;
       transition: color 0.3s;
+      z-index: 1001;
     }
     .close-modal:hover {
       color: var(--primary);
@@ -648,15 +664,15 @@
     .modal-header {
       text-align: center;
       margin-bottom: 2rem;
-      padding-bottom: 1rem;
+      padding-bottom: 1.5rem;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
     .modal-header h2 {
-      font-size: 2rem;
+      font-size: 2.2rem;
       margin-bottom: 0.5rem;
     }
     .modal-header p {
-      font-size: 1.2rem;
+      font-size: 1.3rem;
       color: var(--primary);
       font-weight: 600;
     }
@@ -664,13 +680,14 @@
       margin-bottom: 2rem;
       padding: 1.5rem;
       background: rgba(255, 255, 255, 0.05);
-      border-radius: 12px;
+      border-radius: 14px;
       border-left: 4px solid var(--primary);
     }
     .modal-section h3 {
-      font-size: 1.4rem;
+      font-size: 1.5rem;
       margin-bottom: 1rem;
       color: var(--light);
+      font-family: 'Playfair Display', serif;
     }
     .modal-section p {
       margin-bottom: 1rem;
@@ -687,7 +704,7 @@
     .modal-section .conclusion {
       background: rgba(59, 130, 246, 0.1);
       padding: 1.5rem;
-      border-radius: 10px;
+      border-radius: 12px;
       margin-top: 1.5rem;
       border: 1px solid rgba(59, 130, 246, 0.2);
     }
@@ -695,30 +712,30 @@
     /* Botão global de WhatsApp */
     .whatsapp-global {
       position: fixed;
-      bottom: 20px;
-      right: 20px;
+      bottom: 25px;
+      right: 25px;
       z-index: 100;
       background: #25D366;
       color: white;
-      width: 60px;
-      height: 60px;
+      width: 65px;
+      height: 65px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.8rem;
-      box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
+      font-size: 2rem;
+      box-shadow: 0 6px 15px rgba(37, 211, 102, 0.4);
       transition: all 0.3s;
       cursor: pointer;
     }
     .whatsapp-global:hover {
       transform: scale(1.1);
-      box-shadow: 0 6px 16px rgba(37, 211, 102, 0.6);
+      box-shadow: 0 8px 20px rgba(37, 211, 102, 0.6);
     }
 
     /* Modal de contatos */
     .contact-modal-content {
-      max-width: 500px;
+      max-width: 550px;
     }
     .contact-list {
       display: flex;
@@ -730,13 +747,14 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 1rem;
+      padding: 1.2rem;
       background: rgba(255, 255, 255, 0.05);
-      border-radius: 10px;
+      border-radius: 12px;
       transition: all 0.3s;
     }
     .contact-item-modal:hover {
       background: rgba(255, 255, 255, 0.1);
+      transform: translateX(5px);
     }
     .contact-info-modal {
       display: flex;
@@ -744,64 +762,250 @@
     }
     .contact-name {
       font-weight: 600;
-      font-size: 1.1rem;
+      font-size: 1.2rem;
     }
     .contact-role {
-      font-size: 0.9rem;
+      font-size: 1rem;
       opacity: 0.8;
     }
     .contact-number {
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       margin-top: 0.3rem;
     }
 
     /* Agenda com ícones */
     .agenda-icon {
-      width: 50px;
-      height: 50px;
-      border-radius: 10px;
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-right: 1.2rem;
+      margin-right: 1.5rem;
       flex-shrink: 0;
       background: var(--primary);
       color: white;
-      font-size: 1.2rem;
+      font-size: 1.4rem;
     }
     .agenda-recurrent {
       background: rgba(59, 130, 246, 0.15);
       border: 1px solid rgba(59, 130, 246, 0.3);
     }
 
-    /* CORREÇÃO: Botões da Palavra da Semana */
+    /* Botões da Palavra da Semana */
     .palavra-semana-buttons {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       gap: 1rem;
-      margin-top: 1.5rem;
+      margin-top: 2rem;
     }
-    .palavra-semana-buttons .btn {
+
+    /* Seção Meditação - MELHORADA */
+    .meditacao-preview {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    .video-preview {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: all 0.3s;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    .video-preview:hover {
+      transform: translateY(-5px);
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    }
+    .video-preview i {
+      font-size: 2.5rem;
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+    .video-preview h4 {
+      margin-bottom: 0.8rem;
+      font-size: 1.1rem;
+      color: var(--light);
+    }
+    .video-preview .duracao {
+      background: rgba(59, 130, 246, 0.2);
+      padding: 0.3rem 0.8rem;
+      border-radius: 15px;
+      font-size: 0.85rem;
       display: inline-block;
-      margin: 0;
-      flex: 1;
-      min-width: 200px;
+      margin-bottom: 0.8rem;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+    .video-preview .categoria {
+      background: rgba(16, 185, 129, 0.2);
+      padding: 0.2rem 0.6rem;
+      border-radius: 10px;
+      font-size: 0.75rem;
+      display: inline-block;
+      margin-left: 0.5rem;
+      border: 1px solid rgba(16, 185, 129, 0.3);
     }
 
-    /* Melhorias para telas maiores */
-    @media (min-width: 768px) {
-      .features-grid {
-        grid-template-columns: repeat(2, 1fr);
+    /* Form styles */
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 0.8rem;
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+    .form-group input, .form-group textarea {
+      width: 100%;
+      padding: 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      font-size: 1rem;
+      transition: all 0.3s;
+    }
+    .form-group input:focus, .form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: rgba(255, 255, 255, 0.15);
+    }
+    .form-group textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    /* EVENTOS ESPECIAIS - NOVO DESIGN */
+    .eventos-especiais {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(217, 119, 6, 0.1));
+      border: 2px solid var(--warning);
+      position: relative;
+      overflow: hidden;
+    }
+    .eventos-especiais::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 20%, rgba(245, 158, 11, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(245, 158, 11, 0.1) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .eventos-especiais h2 {
+      color: var(--warning);
+    }
+    .eventos-especiais h2:after {
+      background: var(--warning);
+    }
+    .evento-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .evento-periodo {
+      font-size: 1.8rem;
+      color: var(--warning);
+      font-weight: 700;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .evento-titulo {
+      font-size: 2.2rem;
+      color: var(--light);
+      margin-bottom: 1rem;
+      font-family: 'Playfair Display', serif;
+    }
+    .evento-tema {
+      font-size: 1.5rem;
+      color: var(--primary);
+      margin-bottom: 2rem;
+      font-weight: 600;
+    }
+    .evento-actions {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
       }
-      .leader-card {
-        width: 180px;
+      .section {
+        padding: 1.5rem 1rem;
+        margin-bottom: 1.5rem;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+      h2 {
+        font-size: 1.5rem;
+      }
+      .features-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      .meditacao-preview {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      .agenda-item {
+        flex-direction: column;
+        text-align: center;
+        padding: 1.2rem;
+      }
+      .agenda-date, .agenda-icon {
+        margin-right: 0;
+        margin-bottom: 1rem;
+      }
+      .evento-actions {
+        flex-direction: column;
+        align-items: center;
+      }
+      .evento-actions .btn {
+        width: 100%;
+        max-width: 300px;
+      }
+      .modal-content {
+        padding: 1.5rem;
+        margin: 10% auto;
+      }
+      .palavra-semana-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+      .palavra-semana-buttons .btn {
+        width: 100%;
+        max-width: 300px;
       }
     }
 
-    @media (min-width: 1024px) {
-      .features-grid {
-        grid-template-columns: repeat(3, 1fr);
+    @media (max-width: 480px) {
+      .logo {
+        width: 100px;
+        height: 100px;
+      }
+      .evento-titulo {
+        font-size: 1.8rem;
+      }
+      .evento-tema {
+        font-size: 1.2rem;
+      }
+      .evento-periodo {
+        font-size: 1.4rem;
       }
     }
   </style>
@@ -816,349 +1020,435 @@
     <i class="fab fa-whatsapp"></i>
   </div>
 
-<header>
-  <div class="header-content">
-    <div class="logo">
-      <img src="logo.jpeg" alt="AVIVA - Ministério Cristo a Viva Esperança" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-      <div class="logo-placeholder" style="display: none;">
-        <i class="fas fa-church"></i>
-        <span>AVIVA</span>
+  <header>
+    <div class="header-content">
+      <div class="logo">
+        <img src="logo.jpeg" alt="AVIVA - Ministério Cristo a Viva Esperança" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="logo-placeholder" style="display: none;">
+          <i class="fas fa-church"></i>
+          <span>AVIVA</span>
+        </div>
+      </div>
+      <h1>AVIVA</h1>
+      <p class="tagline">Ministério Cristo a Viva Esperança</p>
+      <p>"Uma família vivendo o amor em Cristo"</p>
+      <div class="social-links">
+        <a href="https://www.instagram.com/mcvesede" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.facebook.com/MCVEOFICIAL" target="_blank"><i class="fab fa-facebook"></i></a>
+        <a href="https://www.youtube.com/c/CristoAVIVAEsperan%C3%A7a/streams" target="_blank"><i class="fab fa-youtube"></i></a>
+        <a href="https://wa.me/5511991167256?text=Olá,%20gostaria%20de%20mais%20informações%20sobre%20a%20AVIVA" target="_blank"><i class="fab fa-whatsapp"></i></a>
       </div>
     </div>
-    <h1>AVIVA</h1>
-    <p class="tagline">Ministério Cristo a Viva Esperança</p>
-    <p>"Uma família vivendo o amor em Cristo"</p>
-    <div class="social-links">
-      <a href="https://www.instagram.com/mcvesede" target="_blank"><i class="fab fa-instagram"></i></a>
-      <a href="https://www.facebook.com/MCVEOFICIAL" target="_blank"><i class="fab fa-facebook"></i></a>
-      <a href="https://www.youtube.com/c/CristoAVIVAEsperan%C3%A7a/streams" target="_blank"><i class="fab fa-youtube"></i></a>
-      <a href="https://wa.me/5511991167256?text=Olá,%20gostaria%20de%20mais%20informações%20sobre%20a%20AVIVA" target="_blank"><i class="fab fa-whatsapp"></i></a>
-    </div>
-  </div>
-</header>
+  </header>
 
   <div class="container">
 
-<!-- Versículo do Dia -->
-<div class="versiculo" id="versiculoContainer">
-  <!-- Carregado via JavaScript -->
-</div>
+    <!-- Versículo do Dia -->
+    <div class="versiculo" id="versiculoContainer">
+      <!-- Carregado via JavaScript -->
+    </div>
 
-<!-- Recursos para Membros -->
-<div class="section">
-  <h2>Recursos para Membros</h2>
-  <div class="features-grid">
-    <div class="feature-card">
-      <div class="feature-icon">
-        <i class="fas fa-hands-praying"></i>
+    <!-- EVENTOS ESPECIAIS - NOVA SEÇÃO -->
+    <div class="section eventos-especiais" id="eventosEspeciaisSection" style="display: none;">
+      <h2>EVENTOS ESPECIAIS</h2>
+      <div class="evento-header">
+        <div class="evento-periodo" id="eventoPeriodo">
+          <!-- Carregado via JavaScript -->
+        </div>
+        <div class="evento-titulo" id="eventoTitulo">
+          <!-- Carregado via JavaScript -->
+        </div>
+        <div class="evento-tema" id="eventoTema">
+          <!-- Carregado via JavaScript -->
+        </div>
+        
+        <div class="versiculo" style="margin: 2rem auto; max-width: 700px;" id="eventoVersiculo">
+          <!-- Carregado via JavaScript -->
+        </div>
+
+        <p style="font-size: 1.2rem; margin-bottom: 2rem; line-height: 1.6; text-align: center;" id="eventoDescricao">
+          <!-- Carregado via JavaScript -->
+        </p>
+
+        <div class="evento-actions">
+          <button id="btnGarantirLugar" class="btn btn-warning">
+            <i class="fas fa-calendar-check"></i> Garantir Meu Lugar
+          </button>
+          <button id="btnJaInscrito" class="btn btn-success">
+            <i class="fas fa-check-circle"></i> Já Me Inscrevi
+          </button>
+        </div>
       </div>
-      <h3>Pedido de Oração</h3>
-      <p>Compartilhe seus pedidos de oração. Nossa equipe intercessora vai orar por você.</p>
-      <a href="https://forms.gle/SEU_LINK_ORACAO" target="_blank" class="btn btn-small">
-        <i class="fas fa-pray"></i> Enviar Pedido
+    </div>
+
+    <!-- Recursos para Membros -->
+    <div class="section">
+      <h2>Recursos para Membros</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-hands-praying"></i>
+          </div>
+          <h3>Pedido de Oração</h3>
+          <p>Compartilhe seus pedidos de oração. Nossa equipe intercessora vai orar por você.</p>
+          <a href="#" id="linkOracao" target="_blank" class="btn btn-small">
+            <i class="fas fa-pray"></i> Enviar Pedido
+          </a>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-user-friends"></i>
+          </div>
+          <h3>Aconselhamento</h3>
+          <p>Precisa de orientação espiritual? Agende um momento com nossos líderes.</p>
+          <a href="#" id="linkAconselhamento" target="_blank" class="btn btn-small">
+            <i class="fas fa-comments"></i> Solicitar
+          </a>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-book-bible"></i>
+          </div>
+          <h3>Estudos Bíblicos</h3>
+          <p>Acesse nossos estudos e materiais para crescimento espiritual.</p>
+          <a href="#" class="btn btn-small">
+            <i class="fas fa-book-open"></i> Acessar
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Meditação Diária - MELHORADA -->
+    <div class="section">
+      <h2>Meditação Diária</h2>
+      <p style="text-align: center; margin-bottom: 1rem; opacity: 0.9; font-size: 1.1rem;">
+        Momentos de paz e reflexão para seu dia. Vídeos curtos para renovar sua alma.
+      </p>
+      
+      <div class="meditacao-preview" id="meditacaoPreview">
+        <!-- Carregado via JavaScript -->
+      </div>
+      
+      <div style="text-align: center; margin-top: 2rem;">
+        <a href="/meditacao" class="btn">
+          <i class="fas fa-play-circle"></i> Ver Todos os Vídeos
+        </a>
+      </div>
+    </div>
+
+    <!-- Palavra da Semana -->
+    <div class="section">
+      <h2>Palavra da Semana</h2>
+      <p style="text-align:center; font-size:1.3rem; line-height:1.6; font-style: italic; margin-bottom: 1.5rem;" id="palavraSemanaTitulo">
+        <!-- Carregado via JavaScript -->
+      </p>
+      <div class="palavra-semana-buttons">
+        <button id="openModal" class="btn">
+          <i class="fas fa-book-open"></i> Ler Mensagem Completa
+        </button>
+        <a href="#" id="linkYouTube" target="_blank" class="btn">
+          <i class="fas fa-play-circle"></i> Assistir Pregação
+        </a>
+      </div>
+    </div>
+
+    <!-- Modal para Palavra da Semana -->
+    <div id="modalPalavraSemana" class="modal">
+      <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <div class="modal-header">
+          <h2 id="modalTitulo">O FIM É MELHOR DO QUE O COMEÇO</h2>
+          <p>Eclesiastes 7:8</p>
+        </div>
+        <div id="modalConteudo">
+          <!-- Conteúdo carregado via JavaScript -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Visitante - Primeira Vez -->
+    <div class="section">
+      <h2>É a sua primeira vez na AVIVA?</h2>
+      <p style="text-align:center; margin-bottom:1.5rem; font-size: 1.2rem; line-height: 1.6;">
+        Queremos te conhecer e te acolher como família! Preencha nosso formulário de visitante.
+      </p>
+      <div style="text-align: center;">
+        <a href="#" id="linkVisitante" target="_blank" class="btn">
+          <i class="fas fa-user-plus"></i> Sou visitante – Preencher formulário
+        </a>
+      </div>
+      <div class="badge-container">
+        <span class="badge">
+          <i class="fas fa-home"></i> Visita em casa
+        </span>
+        <span class="badge">
+          <i class="fab fa-whatsapp"></i> Grupo no WhatsApp
+        </span>
+        <span class="badge">
+          <i class="fas fa-hands"></i> Discipulado
+        </span>
+      </div>
+    </div>
+
+    <!-- Agenda -->
+    <div class="section">
+      <h2>Agenda de Cultos e Eventos</h2>
+      <div id="agenda">
+        <!-- Agenda será carregada via JavaScript -->
+      </div>
+    </div>
+
+    <!-- Informações da Igreja -->
+    <div class="section">
+      <h2>Nossos Contatos</h2>
+      <div class="contact-info">
+        <div class="contact-item">
+          <i class="fas fa-phone-alt"></i>
+          <span>Secretaria: <strong>(11) 99116-7256</strong></span>
+        </div>
+        <div class="contact-item">
+          <i class="fas fa-map-marker-alt"></i>
+          <span>Rua Alto Belo 475 - Vila Antonieta - CEP 03478-040</span>
+        </div>
+        <div class="contact-item">
+          <i class="fas fa-user"></i>
+          <span>Pastor Presidente: Ideir Noronha</span>
+        </div>
+        <div class="contact-item">
+          <i class="fas fa-clock"></i>
+          <span>Segunda a Sexta: 9h às 17h</span>
+        </div>
+      </div>
+      <div style="text-align: center; margin-top: 1.5rem;">
+        <a href="https://www.mcve.com.br" style="color:#ffffff; font-size:1.1rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem;">
+          <i class="fas fa-globe"></i> www.mcve.com.br
+        </a>
+      </div>
+    </div>
+
+    <!-- Ministérios -->
+    <div class="section">
+      <h2>Nossos Ministérios</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-fire"></i>
+          </div>
+          <h3>Aviva Jovens</h3>
+          <p>Encontros semanais para jovens que buscam uma vida com propósito em Deus.</p>
+          <div class="ministry-leaders">
+            <div class="double-leaders">
+              <div class="leader-card">
+                <div class="leader-icon">
+                  <i class="fas fa-user"></i>
+                </div>
+                <h4>Pastor</h4>
+                <p>Willian</p>
+              </div>
+              <div class="leader-card">
+                <div class="leader-icon">
+                  <i class="fas fa-user"></i>
+                </div>
+                <h4>Pastora</h4>
+                <p>Tatiani</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-child"></i>
+          </div>
+          <h3>Aviva Kids</h3>
+          <p>Ministério infantil com ensino bíblico criativo e divertido para crianças.</p>
+          <div class="ministry-leaders">
+            <div class="double-leaders">
+              <div class="leader-card">
+                <div class="leader-icon">
+                  <i class="fas fa-user"></i>
+                </div>
+                <h4>Pastora</h4>
+                <p>Rose</p>
+              </div>
+              <div class="leader-card">
+                <div class="leader-icon">
+                  <i class="fas fa-user"></i>
+                </div>
+                <h4>Obreira</h4>
+                <p>Juliane</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-heart"></i>
+          </div>
+          <h3>Aviva Casais</h3>
+          <p>Encontros e aconselhamento para fortalecer relacionamentos e famílias.</p>
+          <div class="ministry-leaders">
+            <div class="double-leaders">
+              <div class="leader-card">
+                <div class="leader-icon">
+                  <i class="fas fa-user"></i>
+                </div>
+                <h4>Presbítero</h4>
+                <p>Fabiano</p>
+              </div>
+              <div class="leader-card">
+                <div class="leader-icon">
+                  <i class="fas fa-user"></i>
+                </div>
+                <h4>Presbítera</h4>
+                <p>Vanessa</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="features-grid" style="margin-top: 1.5rem;">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <h3>Aviva Teens</h3>
+          <p>Ministério voltado para adolescentes com linguagem e atividades específicas.</p>
+          <div class="ministry-leaders">
+            <div class="double-leaders">
+              <div class="leader-card">
+                <div class="leader-icon">
+                  <i class="fas fa-user"></i>
+                </div>
+                <h4>Líder</h4>
+                <p>Bruno</p>
+              </div>
+              <div class="leader-card">
+                <div class="leader-icon">
+                  <i class="fas fa-user"></i>
+                </div>
+                <h4>Líder</h4>
+                <p>Caroline</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-music"></i>
+          </div>
+          <h3>Louvor e Adoração</h3>
+          <p>Ministério responsável pela adoração e música nos cultos.</p>
+          <div class="ministry-leaders">
+            <div class="leader-card">
+              <div class="leader-icon">
+                <i class="fas fa-user"></i>
+              </div>
+              <h4>Presbítero</h4>
+              <p>Dejair</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-hands-helping"></i>
+          </div>
+          <h3>Aviva Obreiros</h3>
+          <p>Treinamento e capacitação para obreiros e líderes em formação.</p>
+          <div class="ministry-leaders">
+            <div class="leader-card">
+              <div class="leader-icon">
+                <i class="fas fa-user"></i>
+              </div>
+              <h4>Presbítera</h4>
+              <p>Stefane</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Termômetro da Alma -->
+    <div class="section">
+      <h2>Termômetro da Alma</h2>
+      <p style="text-align:center; margin-bottom:1.5rem; font-size: 1.2rem; line-height: 1.6;">
+        Se você não está bem, deixe uma mensagem que entraremos em contato com você.
+      </p>
+      <div class="contact-info">
+        <div class="contact-item">
+          <i class="fas fa-phone-alt"></i>
+          <span>Número para contato: <strong>(11) 99116-7256</strong></span>
+        </div>
+      </div>
+      <a href="https://wa.me/5511991167256?text=Olá,%20gostaria%20de%20conversar%20sobre%20apoio%20espiritual" target="_blank" class="btn btn-primary">
+        <i class="fas fa-comment-dots"></i> Deixar Mensagem
       </a>
     </div>
-    
-    <div class="feature-card">
-      <div class="feature-icon">
-        <i class="fas fa-user-friends"></i>
-      </div>
-      <h3>Aconselhamento</h3>
-      <p>Precisa de orientação espiritual? Agende um momento com nossos líderes.</p>
-      <a href="https://forms.gle/SEU_LINK_ACONSELHAMENTO" target="_blank" class="btn btn-small">
-        <i class="fas fa-comments"></i> Solicitar
+
+    <!-- Link para Admin -->
+    <div class="admin-link">
+      <a href="/admin">
+        <i class="fas fa-cog"></i> Acessar Painel Administrativo
       </a>
     </div>
-    
-    <div class="feature-card">
-      <div class="feature-icon">
-        <i class="fas fa-book-bible"></i>
+
+  </div>
+
+  <!-- Modal de Inscrição -->
+  <div id="modalInscricao" class="modal">
+    <div class="modal-content" style="max-width: 500px;">
+      <span class="close-modal">&times;</span>
+      <div class="modal-header">
+        <h2>Garanta seu Lugar</h2>
+        <p id="modalEventoTitulo">Campanha das Primícias - Janeiro 2026</p>
       </div>
-      <h3>Estudos Bíblicos</h3>
-      <p>Acesse nossos estudos e materiais para crescimento espiritual.</p>
-      <a href="#" class="btn btn-small">
-        <i class="fas fa-book-open"></i> Acessar
-      </a>
-    </div>
-  </div>
-</div>
-
-<!-- Palavra da Semana -->
-<div class="section">
-  <h2>Palavra da Semana</h2>
-  <p style="text-align:center; font-size:1.2rem; line-height:1.6; font-style: italic;" id="palavraSemanaTitulo">
-    <!-- Carregado via JavaScript -->
-  </p>
-  <div class="palavra-semana-buttons">
-    <button id="openModal" class="btn">
-      <i class="fas fa-book-open"></i> Ler Mensagem Completa
-    </button>
-    <a href="https://www.youtube.com/c/CristoAVIVAEsperan%C3%A7a/streams" target="_blank" class="btn">
-      <i class="fas fa-play-circle"></i> Assistir Pregação
-    </a>
-  </div>
-</div>
-
-<!-- Modal para Palavra da Semana -->
-<div id="modalPalavraSemana" class="modal">
-  <div class="modal-content">
-    <span class="close-modal">&times;</span>
-    <div class="modal-header">
-      <h2 id="modalTitulo">O FIM É MELHOR DO QUE O COMEÇO</h2>
-      <p>Eclesiastes 7:8</p>
-    </div>
-    <div id="modalConteudo">
-      <!-- Conteúdo carregado via JavaScript -->
-    </div>
-  </div>
-</div>
-
-<!-- Visitante - Primeira Vez -->
-<div class="section">
-  <h2>É a sua primeira vez na AVIVA?</h2>
-  <p style="text-align:center; margin-bottom:1rem; font-size: 1.1rem;">
-    Queremos te conhecer e te acolher como família! Preencha nosso formulário de visitante.
-  </p>
-  <a href="https://forms.gle/SEU_LINK_VISITANTE" target="_blank" class="btn">
-    <i class="fas fa-user-plus"></i> Sou visitante – Preencher formulário
-  </a>
-  <div class="badge-container">
-    <span class="badge">
-      <i class="fas fa-home"></i> Visita em casa
-    </span>
-    <span class="badge">
-      <i class="fab fa-whatsapp"></i> Grupo no WhatsApp
-    </span>
-    <span class="badge">
-      <i class="fas fa-hands"></i> Discipulado
-    </span>
-  </div>
-</div>
-
-<!-- Agenda -->
-<div class="section">
-  <h2>Agenda de Cultos e Eventos</h2>
-  <div id="agenda">
-    <!-- Agenda será carregada via JavaScript -->
-  </div>
-</div>
-
-<!-- Informações da Igreja -->
-<div class="section">
-  <h2>Nossos Contatos</h2>
-  <div class="contact-info">
-    <div class="contact-item">
-      <i class="fas fa-phone-alt"></i>
-      <span>Secretaria: <strong>(11) 99116-7256</strong></span>
-    </div>
-    <div class="contact-item">
-      <i class="fas fa-map-marker-alt"></i>
-      <span>Rua Alto Belo 475 - Vila Antonieta - CEP 03478-040</span>
-    </div>
-    <div class="contact-item">
-      <i class="fas fa-user"></i>
-      <span>Pastor Presidente: Ideir Noronha</span>
-    </div>
-    <div class="contact-item">
-      <i class="fas fa-clock"></i>
-      <span>Segunda a Sexta: 9h às 17h</span>
-    </div>
-  </div>
-  <div style="text-align: center; margin-top: 1.5rem;">
-    <a href="https://www.mcve.com.br" style="color:#ffffff; font-size:1.1rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem;">
-      <i class="fas fa-globe"></i> www.mcve.com.br
-    </a>
-  </div>
-</div>
-
-<!-- Ministérios -->
-<div class="section">
-  <h2>Nossos Ministérios</h2>
-  <div class="features-grid">
-    <div class="feature-card">
-      <div class="feature-icon">
-        <i class="fas fa-fire"></i>
-      </div>
-      <h3>Aviva Jovens</h3>
-      <p>Encontros semanais para jovens que buscam uma vida com propósito em Deus.</p>
-      <div class="ministry-leaders">
-        <div class="double-leaders">
-          <div class="leader-card">
-            <div class="leader-icon">
-              <i class="fas fa-user"></i>
-            </div>
-            <h4>Pastor</h4>
-            <p>Willian</p>
-          </div>
-          <div class="leader-card">
-            <div class="leader-icon">
-              <i class="fas fa-user"></i>
-            </div>
-            <h4>Pastora</h4>
-            <p>Tatiani</p>
-          </div>
+      <form id="formInscricao">
+        <div class="form-group">
+          <label for="nomeCompleto">Nome Completo</label>
+          <input type="text" id="nomeCompleto" required>
         </div>
-      </div>
-    </div>
-    
-    <div class="feature-card">
-      <div class="feature-icon">
-        <i class="fas fa-child"></i>
-      </div>
-      <h3>Aviva Kids</h3>
-      <p>Ministério infantil com ensino bíblico criativo e divertido para crianças.</p>
-      <div class="ministry-leaders">
-        <div class="double-leaders">
-          <div class="leader-card">
-            <div class="leader-icon">
-              <i class="fas fa-user"></i>
-            </div>
-            <h4>Pastora</h4>
-            <p>Rose</p>
-          </div>
-          <div class="leader-card">
-            <div class="leader-icon">
-              <i class="fas fa-user"></i>
-            </div>
-            <h4>Obreira</h4>
-            <p>Juliane</p>
-          </div>
+        <div class="form-group">
+          <label for="telefone">Telefone</label>
+          <input type="tel" id="telefone" required>
         </div>
-      </div>
-    </div>
-    
-    <div class="feature-card">
-      <div class="feature-icon">
-        <i class="fas fa-heart"></i>
-      </div>
-      <h3>Aviva Casais</h3>
-      <p>Encontros e aconselhamento para fortalecer relacionamentos e famílias.</p>
-      <div class="ministry-leaders">
-        <div class="double-leaders">
-          <div class="leader-card">
-            <div class="leader-icon">
-              <i class="fas fa-user"></i>
-            </div>
-            <h4>Presbítero</h4>
-            <p>Fabiano</p>
-          </div>
-          <div class="leader-card">
-            <div class="leader-icon">
-              <i class="fas fa-user"></i>
-            </div>
-            <h4>Presbítera</h4>
-            <p>Vanessa</p>
-          </div>
+        <div class="form-group">
+          <label for="email">E-mail</label>
+          <input type="email" id="email">
         </div>
-      </div>
+        <div class="form-group">
+          <label for="quantidadePessoas">Quantas pessoas?</label>
+          <input type="number" id="quantidadePessoas" value="1" min="1" required>
+        </div>
+        <button type="submit" class="btn btn-warning" style="width: 100%;">
+          <i class="fas fa-check"></i> Confirmar Inscrição
+        </button>
+      </form>
     </div>
   </div>
-  
-  <div class="features-grid" style="margin-top: 1.5rem;">
-    <div class="feature-card">
-      <div class="feature-icon">
-        <i class="fas fa-users"></i>
-      </div>
-      <h3>Aviva Teens</h3>
-      <p>Ministério voltado para adolescentes com linguagem e atividades específicas.</p>
-      <div class="ministry-leaders">
-        <div class="double-leaders">
-          <div class="leader-card">
-            <div class="leader-icon">
-              <i class="fas fa-user"></i>
-            </div>
-            <h4>Líder</h4>
-            <p>Bruno</p>
-          </div>
-          <div class="leader-card">
-            <div class="leader-icon">
-              <i class="fas fa-user"></i>
-            </div>
-            <h4>Líder</h4>
-            <p>Caroline</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="feature-card">
-      <div class="feature-icon">
-        <i class="fas fa-music"></i>
-      </div>
-      <h3>Louvor e Adoração</h3>
-      <p>Ministério responsável pela adoração e música nos cultos.</p>
-      <div class="ministry-leaders">
-        <div class="leader-card">
-          <div class="leader-icon">
-            <i class="fas fa-user"></i>
-          </div>
-          <h4>Presbítero</h4>
-          <p>Dejair</p>
-        </div>
-      </div>
-    </div>
-    
-    <div class="feature-card">
-      <div class="feature-icon">
-        <i class="fas fa-hands-helping"></i>
-      </div>
-      <h3>Aviva Obreiros</h3>
-      <p>Treinamento e capacitação para obreiros e líderes em formação.</p>
-      <div class="ministry-leaders">
-        <div class="leader-card">
-          <div class="leader-icon">
-            <i class="fas fa-user"></i>
-          </div>
-          <h4>Presbítera</h4>
-          <p>Stefane</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
-<!-- Termômetro da Alma -->
-<div class="section">
-  <h2>Termômetro da Alma</h2>
-  <p style="text-align:center; margin-bottom:1rem; font-size: 1.1rem;">
-    Se você não está bem, deixe uma mensagem que entraremos em contato com você.
-  </p>
-  <div class="contact-info">
-    <div class="contact-item">
-      <i class="fas fa-phone-alt"></i>
-      <span>Número para contato: <strong>(11) 99116-7256</strong></span>
-    </div>
-  </div>
-  <a href="https://wa.me/5511991167256?text=Olá,%20gostaria%20de%20conversar%20sobre%20apoio%20espiritual" target="_blank" class="btn btn-primary">
-    <i class="fas fa-comment-dots"></i> Deixar Mensagem
-  </a>
-  <div class="ministry-leaders">
-    <div class="double-leaders">
-      <div class="leader-card">
-        <div class="leader-icon">
-          <i class="fas fa-home"></i>
-        </div>
-        <h4>Visita Domiciliar</h4>
-        <p>Obreiros Rodrigo e Dayane</p>
+  <!-- Modal de Confirmação -->
+  <div id="modalConfirmacao" class="modal">
+    <div class="modal-content" style="max-width: 400px; text-align: center;">
+      <span class="close-modal">&times;</span>
+      <div class="modal-header">
+        <h2 style="color: #10b981;">Inscrição Confirmada!</h2>
       </div>
-      <div class="leader-card">
-        <div class="leader-icon">
-          <i class="fas fa-hands"></i>
-        </div>
-        <h4>Recepção de Visitante</h4>
-        <p>Presbítera Silvana e Diácono Valdir</p>
+      <div style="padding: 2rem;">
+        <i class="fas fa-check-circle" style="font-size: 4rem; color: #10b981; margin-bottom: 1rem;"></i>
+        <p style="font-size: 1.1rem; margin-bottom: 1rem;">
+          Sua inscrição foi registrada com sucesso!
+        </p>
+        <p style="opacity: 0.8;">
+          Entraremos em contato em breve com mais informações.
+        </p>
       </div>
     </div>
-  </div>
-</div>
-
-<!-- Link para Admin -->
-<div class="admin-link">
-  <a href="/admin">
-    <i class="fas fa-cog"></i> Acessar Painel Administrativo
-  </a>
-</div>
-
   </div>
 
   <!-- Modal de Contatos -->
@@ -1191,16 +1481,11 @@
         const particle = document.createElement('div');
         particle.classList.add('particle');
         
-        // Tamanho aleatório
         const size = Math.random() * 8 + 4;
         particle.style.width = `${size}px`;
         particle.style.height = `${size}px`;
-        
-        // Posição inicial aleatória
         particle.style.left = `${Math.random() * 100}%`;
         particle.style.top = `${Math.random() * 100}%`;
-        
-        // Atraso de animação aleatório
         particle.style.animationDelay = `${Math.random() * 15}s`;
         
         particlesContainer.appendChild(particle);
@@ -1247,7 +1532,6 @@
     // Carrega dados quando a página abre
     window.addEventListener('load', async function() {
       try {
-        // Carregar dados do servidor
         const response = await fetch('/api/data');
         const data = await response.json();
         
@@ -1257,11 +1541,33 @@
           <strong>${data.versiculo.referencia}</strong>
         `;
         
+        // Atualizar eventos especiais
+        if (data.eventosEspeciais && data.eventosEspeciais.ativo) {
+          document.getElementById('eventosEspeciaisSection').style.display = 'block';
+          document.getElementById('eventoPeriodo').textContent = data.eventosEspeciais.periodo;
+          document.getElementById('eventoTitulo').textContent = data.eventosEspeciais.titulo;
+          document.getElementById('eventoTema').textContent = data.eventosEspeciais.tema;
+          document.getElementById('eventoVersiculo').innerHTML = `
+            ${data.eventosEspeciais.versiculo.texto}
+            <strong>${data.eventosEspeciais.versiculo.referencia}</strong>
+          `;
+          document.getElementById('eventoDescricao').textContent = data.eventosEspeciais.descricao;
+          document.getElementById('modalEventoTitulo').textContent = `${data.eventosEspeciais.titulo} - ${data.eventosEspeciais.periodo}`;
+        }
+        
+        // Atualizar links
+        if (data.links) {
+          document.getElementById('linkOracao').href = data.links.oracao;
+          document.getElementById('linkAconselhamento').href = data.links.aconselhamento;
+          document.getElementById('linkVisitante').href = data.links.visitante;
+          document.getElementById('linkYouTube').href = data.links.youtube;
+        }
+        
         // Atualizar palavra da semana
         document.getElementById('palavraSemanaTitulo').textContent = data.palavraSemana.titulo;
         document.getElementById('modalTitulo').textContent = data.palavraSemana.titulo;
         
-        // Preparar conteúdo do modal
+        // Preparar conteúdo do modal da palavra
         const mensagemFormatada = data.palavraSemana.mensagem.split('\n\n').map(paragrafo => {
           if (paragrafo.includes('Introdução:') || paragrafo.includes('Explicação:') || 
               paragrafo.includes('Aplicação:') || paragrafo.includes('Conclusão:')) {
@@ -1273,7 +1579,6 @@
             return `<div class="modal-section"><p>${paragrafo}</p></div>`;
           }
         }).join('');
-        
         document.getElementById('modalConteudo').innerHTML = mensagemFormatada;
         
         // Carregar agenda
@@ -1310,6 +1615,22 @@
         });
         document.getElementById('agenda').innerHTML = agendaHTML;
         
+        // Carregar meditação diária (preview)
+        if (data.meditacaoDiaria) {
+          let meditacaoHTML = '';
+          data.meditacaoDiaria.slice(0, 3).forEach(video => {
+            meditacaoHTML += `
+              <div class="video-preview">
+                <i class="fas fa-play-circle"></i>
+                <h4>${video.titulo}</h4>
+                <span class="duracao">${video.duracao}</span>
+                <p style="font-size: 0.9rem; opacity: 0.8;">${video.descricao}</p>
+              </div>
+            `;
+          });
+          document.getElementById('meditacaoPreview').innerHTML = meditacaoHTML;
+        }
+        
         // Lista de contatos no modal
         let contactListHTML = '';
         data.contatos.forEach(contato => {
@@ -1338,6 +1659,14 @@
           openModal('modalPalavraSemana');
         });
         
+        document.getElementById('btnGarantirLugar').addEventListener('click', function() {
+          openModal('modalInscricao');
+        });
+        
+        document.getElementById('btnJaInscrito').addEventListener('click', function() {
+          openModal('modalConfirmacao');
+        });
+        
         document.querySelectorAll('.close-modal').forEach(closeBtn => {
           closeBtn.addEventListener('click', function() {
             const modal = this.closest('.modal');
@@ -1348,6 +1677,34 @@
         // Configurar botão global do WhatsApp
         document.getElementById('whatsappGlobal').addEventListener('click', function() {
           openModal('modalContatos');
+        });
+        
+        // Formulário de inscrição
+        document.getElementById('formInscricao').addEventListener('submit', async function(e) {
+          e.preventDefault();
+          
+          const inscricaoData = {
+            nome: document.getElementById('nomeCompleto').value,
+            telefone: document.getElementById('telefone').value,
+            email: document.getElementById('email').value,
+            quantidade: document.getElementById('quantidadePessoas').value
+          };
+          
+          try {
+            const response = await fetch('/api/inscricoes', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(inscricaoData)
+            });
+            
+            if (response.ok) {
+              closeModal('modalInscricao');
+              openModal('modalConfirmacao');
+              document.getElementById('formInscricao').reset();
+            }
+          } catch (error) {
+            alert('Erro ao enviar inscrição: ' + error.message);
+          }
         });
         
       } catch (error) {

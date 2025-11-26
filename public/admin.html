@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Painel Admin - AVIVA</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     * {
       margin: 0;
@@ -11,251 +12,611 @@
       box-sizing: border-box;
     }
     
+    :root {
+      --primary: #3b82f6;
+      --primary-dark: #2563eb;
+      --primary-light: #60a5fa;
+      --secondary: #1e293b;
+      --accent: #0ea5e9;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --dark: #0f172a;
+      --light: #ffffff;
+      --gray: #64748b;
+      --card-bg: rgba(255, 255, 255, 0.08);
+      --card-border: rgba(255, 255, 255, 0.12);
+    }
+    
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-      color: #fff;
+      background: linear-gradient(135deg, var(--dark) 0%, var(--secondary) 100%);
+      color: var(--light);
       min-height: 100vh;
       line-height: 1.6;
     }
     
     .container {
-      max-width: 1200px;
+      max-width: 1400px;
       margin: 0 auto;
-      padding: 2rem;
+      padding: 0;
     }
     
-    header {
-      text-align: center;
-      margin-bottom: 3rem;
-      padding-bottom: 1rem;
-      border-bottom: 2px solid #3b82f6;
+    /* Header */
+    .admin-header {
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid var(--card-border);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     }
     
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 0.5rem;
-      color: #3b82f6;
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1400px;
+      margin: 0 auto;
     }
     
-    .subtitle {
-      font-size: 1.2rem;
+    .header-left h1 {
+      font-size: 1.8rem;
+      color: var(--light);
+      margin-bottom: 0.25rem;
+    }
+    
+    .header-left .subtitle {
+      color: var(--primary-light);
+      font-size: 0.9rem;
       opacity: 0.8;
     }
     
-    .admin-grid {
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    /* Tabs Navigation */
+    .tabs-container {
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--card-border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    
+    .tabs {
+      display: flex;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      overflow-x: auto;
+    }
+    
+    .tab {
+      padding: 1rem 1.5rem;
+      background: transparent;
+      border: none;
+      color: var(--light);
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+      border-bottom: 3px solid transparent;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .tab:hover {
+      background: rgba(59, 130, 246, 0.1);
+      color: var(--primary-light);
+    }
+    
+    .tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+      background: rgba(59, 130, 246, 0.15);
+    }
+    
+    /* Main Content */
+    .main-content {
+      padding: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Cards Grid */
+    .cards-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-      gap: 2rem;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 1.5rem;
       margin-bottom: 2rem;
     }
     
     .admin-card {
-      background: rgba(255, 255, 255, 0.1);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
       border-radius: 12px;
       padding: 1.5rem;
       backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s;
+    }
+    
+    .admin-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+      border-color: var(--primary-light);
     }
     
     .admin-card h2 {
-      color: #3b82f6;
+      color: var(--primary);
       margin-bottom: 1rem;
-      font-size: 1.4rem;
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
     
+    /* Form Styles */
     .form-group {
-      margin-bottom: 1rem;
+      margin-bottom: 1.25rem;
     }
     
     label {
       display: block;
       margin-bottom: 0.5rem;
       font-weight: 600;
+      color: var(--light);
+      font-size: 0.9rem;
     }
     
     input, textarea, select {
       width: 100%;
-      padding: 0.75rem;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      border-radius: 6px;
+      padding: 0.75rem 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
       background: rgba(255, 255, 255, 0.1);
-      color: #fff;
-      font-size: 1rem;
+      color: var(--light);
+      font-size: 0.95rem;
+      transition: all 0.3s;
+    }
+    
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     }
     
     textarea {
       min-height: 120px;
       resize: vertical;
+      line-height: 1.5;
     }
     
+    /* Buttons */
     .btn {
-      background: #3b82f6;
-      color: white;
-      border: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
       padding: 0.75rem 1.5rem;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
       font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
       transition: all 0.3s;
+      text-decoration: none;
     }
     
-    .btn:hover {
-      background: #2563eb;
-      transform: translateY(-2px);
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
     }
     
     .btn-success {
-      background: #10b981;
+      background: var(--success);
+      color: white;
     }
     
     .btn-success:hover {
       background: #059669;
+      transform: translateY(-1px);
     }
     
     .btn-danger {
-      background: #ef4444;
+      background: var(--danger);
+      color: white;
     }
     
     .btn-danger:hover {
       background: #dc2626;
+      transform: translateY(-1px);
     }
     
     .btn-warning {
-      background: #f59e0b;
+      background: var(--warning);
+      color: white;
     }
     
     .btn-warning:hover {
       background: #d97706;
+      transform: translateY(-1px);
     }
     
-    .agenda-item {
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+    }
+    
+    .btn-outline:hover {
+      background: var(--primary);
+      color: white;
+    }
+    
+    /* List Items */
+    .list-item {
       background: rgba(255, 255, 255, 0.05);
-      padding: 1rem;
+      padding: 1.25rem;
       border-radius: 8px;
       margin-bottom: 1rem;
-      border-left: 4px solid #3b82f6;
+      border-left: 4px solid var(--primary);
+      transition: all 0.3s;
     }
     
-    .agenda-header {
+    .list-item:hover {
+      background: rgba(255, 255, 255, 0.08);
+      transform: translateX(4px);
+    }
+    
+    .item-header {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.5rem;
+      align-items: flex-start;
+      margin-bottom: 0.75rem;
     }
     
-    .agenda-actions {
-      display: flex;
-      gap: 0.5rem;
-    }
-    
-    .message {
-      padding: 1rem;
-      border-radius: 6px;
-      margin-bottom: 1rem;
-      text-align: center;
-    }
-    
-    .message.success {
-      background: rgba(16, 185, 129, 0.2);
-      border: 1px solid #10b981;
-    }
-    
-    .message.error {
-      background: rgba(239, 68, 68, 0.2);
-      border: 1px solid #ef4444;
-    }
-    
-    .message.warning {
-      background: rgba(245, 158, 11, 0.2);
-      border: 1px solid #f59e0b;
-    }
-    
-    .contact-item {
-      background: rgba(255, 255, 255, 0.05);
-      padding: 1rem;
-      border-radius: 8px;
-      margin-bottom: 1rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    
-    .contact-info h4 {
+    .item-content h4 {
+      color: var(--light);
       margin-bottom: 0.25rem;
     }
     
-    .contact-info p {
-      opacity: 0.8;
+    .item-content p {
+      color: var(--gray);
       font-size: 0.9rem;
-    }
-
-    .back-link {
-      text-align: center;
-      margin-top: 2rem;
+      line-height: 1.4;
     }
     
-    .back-link a {
-      color: #3b82f6;
-      text-decoration: none;
-      font-weight: 600;
-      display: inline-flex;
-      align-items: center;
+    .item-actions {
+      display: flex;
       gap: 0.5rem;
     }
     
-    .back-link a:hover {
-      text-decoration: underline;
+    .btn-small {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.85rem;
     }
-
-    /* Tela de Login */
+    
+    /* Messages */
+    .message {
+      padding: 1rem 1.25rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .message.success {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #10b981;
+    }
+    
+    .message.error {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #ef4444;
+    }
+    
+    .message.warning {
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      color: #f59e0b;
+    }
+    
+    /* Stats */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: all 0.3s;
+    }
+    
+    .stat-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--primary-light);
+    }
+    
+    .stat-icon {
+      width: 50px;
+      height: 50px;
+      background: rgba(59, 130, 246, 0.2);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+      color: var(--primary);
+      font-size: 1.5rem;
+    }
+    
+    .stat-number {
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+    
+    .stat-label {
+      color: var(--gray);
+      font-size: 0.9rem;
+    }
+    
+    /* Upload Area */
+    .upload-area {
+      border: 2px dashed var(--primary);
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      background: rgba(59, 130, 246, 0.05);
+      transition: all 0.3s;
+    }
+    
+    .upload-area:hover {
+      background: rgba(59, 130, 246, 0.1);
+      border-color: var(--primary-light);
+    }
+    
+    .upload-area i {
+      font-size: 3rem;
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+    
+    .upload-area h4 {
+      margin-bottom: 0.5rem;
+      color: var(--light);
+    }
+    
+    .upload-area p {
+      color: var(--gray);
+      margin-bottom: 1.5rem;
+    }
+    
+    .video-preview {
+      max-width: 100%;
+      max-height: 200px;
+      border-radius: 8px;
+      margin-top: 1rem;
+      display: none;
+      border: 1px solid var(--card-border);
+    }
+    
+    /* Toggle Switch */
+    .toggle-switch {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+    }
+    
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: var(--gray);
+      transition: .4s;
+      border-radius: 34px;
+    }
+    
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    
+    input:checked + .slider {
+      background-color: var(--primary);
+    }
+    
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+    
+    /* Login Screen */
     .login-container {
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 80vh;
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--dark) 0%, var(--secondary) 100%);
     }
     
     .login-card {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      padding: 2rem;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 2.5rem;
       backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
       width: 100%;
       max-width: 400px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
     }
     
     .login-card h2 {
       text-align: center;
       margin-bottom: 1.5rem;
-      color: #3b82f6;
+      color: var(--primary);
+      font-size: 1.5rem;
     }
     
     .hidden {
       display: none;
     }
-
-    .link-item {
-      background: rgba(255, 255, 255, 0.05);
-      padding: 1rem;
-      border-radius: 8px;
-      margin-bottom: 1rem;
-      display: flex;
-      justify-content: space-between;
+    
+    /* Progress Bar */
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+      margin-top: 1rem;
+      overflow: hidden;
+      display: none;
+    }
+    
+    .progress {
+      height: 100%;
+      background: var(--primary);
+      border-radius: 3px;
+      transition: width 0.3s;
+      width: 0%;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container {
+        padding: 0;
+      }
+      
+      .main-content {
+        padding: 1rem;
+      }
+      
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .tabs {
+        padding: 0 1rem;
+      }
+      
+      .tab {
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+      }
+      
+      .admin-header {
+        padding: 1rem;
+      }
+      
+      .header-content {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+      }
+    }
+    
+    /* Loading States */
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: var(--primary);
+      animation: spin 1s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Badges */
+    .badge {
+      display: inline-flex;
       align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
     }
     
-    .link-info h4 {
-      margin-bottom: 0.25rem;
+    .badge-success {
+      background: rgba(16, 185, 129, 0.2);
+      color: #10b981;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    
+    .badge-warning {
+      background: rgba(245, 158, 11, 0.2);
+      color: #f59e0b;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+    
+    .badge-info {
+      background: rgba(59, 130, 246, 0.2);
       color: #3b82f6;
-    }
-    
-    .link-info p {
-      opacity: 0.8;
-      font-size: 0.9rem;
-      word-break: break-all;
+      border: 1px solid rgba(59, 130, 246, 0.3);
     }
   </style>
 </head>
@@ -263,183 +624,446 @@
   <!-- Tela de Login -->
   <div id="loginScreen" class="login-container">
     <div class="login-card">
-      <h2>Acesso Administrativo</h2>
+      <h2><i class="fas fa-lock"></i> Acesso Administrativo</h2>
       <form id="loginForm">
         <div class="form-group">
           <label for="senha">Senha de Acesso</label>
-          <input type="password" id="senha" required placeholder="Digite a senha">
+          <input type="password" id="senha" required placeholder="Digite a senha de administrador">
         </div>
-        <button type="submit" class="btn" style="width: 100%;">Entrar no Painel</button>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">
+          <i class="fas fa-sign-in-alt"></i> Entrar no Painel
+        </button>
       </form>
-      <div class="back-link" style="margin-top: 1rem;">
-        <a href="/">
+      <div style="text-align: center; margin-top: 1.5rem;">
+        <a href="/" style="color: var(--primary); text-decoration: none; font-size: 0.9rem;">
           <i class="fas fa-arrow-left"></i> Voltar para o Site
         </a>
       </div>
     </div>
   </div>
 
-  <!-- Painel Administrativo (inicialmente escondido) -->
+  <!-- Painel Administrativo -->
   <div id="adminPanel" class="hidden">
-    <div class="container">
-      <header>
-        <h1>Painel Administrativo</h1>
-        <p class="subtitle">AVIVA - Ministério Cristo a Viva Esperança</p>
-        <button id="logoutBtn" class="btn btn-warning" style="margin-top: 1rem;">
-          <i class="fas fa-sign-out-alt"></i> Sair
-        </button>
-      </header>
+    <!-- Header -->
+    <div class="admin-header">
+      <div class="header-content">
+        <div class="header-left">
+          <h1>Painel Administrativo</h1>
+          <p class="subtitle">AVIVA - Ministério Cristo a Viva Esperança</p>
+        </div>
+        <div class="header-right">
+          <button id="logoutBtn" class="btn btn-outline">
+            <i class="fas fa-sign-out-alt"></i> Sair
+          </button>
+        </div>
+      </div>
+    </div>
 
+    <!-- Tabs Navigation -->
+    <div class="tabs-container">
+      <div class="tabs">
+        <button class="tab active" data-tab="dashboard">
+          <i class="fas fa-tachometer-alt"></i> Dashboard
+        </button>
+        <button class="tab" data-tab="conteudo">
+          <i class="fas fa-newspaper"></i> Conteúdo
+        </button>
+        <button class="tab" data-tab="midia">
+          <i class="fas fa-play-circle"></i> Mídia
+        </button>
+        <button class="tab" data-tab="agenda">
+          <i class="fas fa-calendar"></i> Agenda
+        </button>
+        <button class="tab" data-tab="contatos">
+          <i class="fas fa-users"></i> Contatos
+        </button>
+        <button class="tab" data-tab="eventos">
+          <i class="fas fa-star"></i> Eventos
+        </button>
+        <button class="tab" data-tab="configuracoes">
+          <i class="fas fa-cog"></i> Configurações
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
       <div id="messageContainer"></div>
 
-      <div class="admin-grid">
-        <!-- Versículo do Dia -->
-        <div class="admin-card">
-          <h2>Versículo do Dia</h2>
-          <form id="versiculoForm">
-            <div class="form-group">
-              <label for="versiculoTexto">Texto do Versículo</label>
-              <textarea id="versiculoTexto" required></textarea>
-            </div>
-            <div class="form-group">
-              <label for="versiculoReferencia">Referência</label>
-              <input type="text" id="versiculoReferencia" required>
-            </div>
-            <button type="submit" class="btn">Atualizar Versículo</button>
-          </form>
+      <!-- Dashboard Tab -->
+      <div id="dashboard" class="tab-content active">
+        <h2 style="margin-bottom: 1.5rem; color: var(--light);">Visão Geral</h2>
+        
+        <!-- Estatísticas -->
+        <div class="stats-grid" id="statsContainer">
+          <!-- Carregado via JavaScript -->
         </div>
 
-        <!-- Palavra da Semana -->
-        <div class="admin-card">
-          <h2>Palavra da Semana</h2>
-          <form id="palavraSemanaForm">
-            <div class="form-group">
-              <label for="palavraTitulo">Título</label>
-              <input type="text" id="palavraTitulo" required>
+        <!-- Ações Rápidas -->
+        <div class="cards-grid">
+          <div class="admin-card">
+            <h2><i class="fas fa-bolt"></i> Ações Rápidas</h2>
+            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+              <button class="btn btn-primary" onclick="switchTab('conteudo')">
+                <i class="fas fa-edit"></i> Atualizar Versículo
+              </button>
+              <button class="btn btn-success" onclick="switchTab('midia')">
+                <i class="fas fa-plus"></i> Adicionar Vídeo
+              </button>
+              <button class="btn btn-warning" onclick="switchTab('eventos')">
+                <i class="fas fa-calendar-plus"></i> Gerenciar Eventos
+              </button>
             </div>
-            <div class="form-group">
-              <label for="palavraMensagem">Mensagem Completa</label>
-              <textarea id="palavraMensagem" required></textarea>
-            </div>
-            <button type="submit" class="btn">Atualizar Palavra</button>
-          </form>
-        </div>
-
-        <!-- Links Externos -->
-        <div class="admin-card">
-          <h2>Links Externos</h2>
-          <form id="linksForm">
-            <div class="form-group">
-              <label for="linkOracao">Formulário de Oração</label>
-              <input type="url" id="linkOracao" placeholder="https://forms.gle/...">
-            </div>
-            <div class="form-group">
-              <label for="linkAconselhamento">Formulário de Aconselhamento</label>
-              <input type="url" id="linkAconselhamento" placeholder="https://forms.gle/...">
-            </div>
-            <div class="form-group">
-              <label for="linkVisitante">Formulário de Visitante</label>
-              <input type="url" id="linkVisitante" placeholder="https://forms.gle/...">
-            </div>
-            <div class="form-group">
-              <label for="linkYouTube">Canal do YouTube</label>
-              <input type="url" id="linkYouTube" placeholder="https://youtube.com/...">
-            </div>
-            <button type="submit" class="btn">Atualizar Links</button>
-          </form>
-          
-          <div id="listaLinks" style="margin-top: 1.5rem;">
-            <!-- Lista de links será carregada aqui -->
           </div>
-        </div>
 
-        <!-- Agenda -->
-        <div class="admin-card">
-          <h2>Agenda de Eventos</h2>
-          <form id="agendaForm">
-            <div class="form-group">
-              <label for="eventoTipo">Tipo de Evento</label>
-              <select id="eventoTipo" required>
-                <option value="recorrente">Recorrente</option>
-                <option value="especial">Especial</option>
-              </select>
+          <div class="admin-card">
+            <h2><i class="fas fa-chart-line"></i> Atividade Recente</h2>
+            <div id="recentActivity">
+              <!-- Atividade será carregada via JavaScript -->
             </div>
-            <div class="form-group" id="dataField" style="display: none;">
-              <label for="eventoData">Data (DD/MM)</label>
-              <input type="text" id="eventoData" placeholder="Ex: 25/12">
-            </div>
-            <div class="form-group">
-              <label for="eventoTitulo">Título</label>
-              <input type="text" id="eventoTitulo" required>
-            </div>
-            <div class="form-group">
-              <label for="eventoHorario">Horário</label>
-              <input type="text" id="eventoHorario" required placeholder="Ex: 20h">
-            </div>
-            <div class="form-group">
-              <label for="eventoDescricao">Descrição</label>
-              <input type="text" id="eventoDescricao" required>
-            </div>
-            <button type="submit" class="btn btn-success">Adicionar Evento</button>
-          </form>
-          
-          <div id="listaAgenda" style="margin-top: 1.5rem;">
-            <!-- Lista de eventos será carregada aqui -->
           </div>
-        </div>
-
-        <!-- Contatos -->
-        <div class="admin-card">
-          <h2>Contatos dos Líderes</h2>
-          <form id="contatoForm">
-            <div class="form-group">
-              <label for="contatoNome">Nome</label>
-              <input type="text" id="contatoNome" required>
-            </div>
-            <div class="form-group">
-              <label for="contatoCargo">Cargo</label>
-              <input type="text" id="contatoCargo" required>
-            </div>
-            <div class="form-group">
-              <label for="contatoNumero">Número</label>
-              <input type="text" id="contatoNumero" required>
-            </div>
-            <button type="submit" class="btn btn-success">Adicionar Contato</button>
-          </form>
-          
-          <div id="listaContatos" style="margin-top: 1.5rem;">
-            <!-- Lista de contatos será carregada aqui -->
-          </div>
-        </div>
-
-        <!-- Configurações -->
-        <div class="admin-card">
-          <h2>Configurações de Segurança</h2>
-          <form id="configForm">
-            <div class="form-group">
-              <label for="novaSenha">Nova Senha</label>
-              <input type="password" id="novaSenha" placeholder="Deixe em branco para manter atual">
-            </div>
-            <div class="form-group">
-              <label for="confirmarSenha">Confirmar Nova Senha</label>
-              <input type="password" id="confirmarSenha" placeholder="Confirme a nova senha">
-            </div>
-            <button type="submit" class="btn btn-warning">Alterar Senha</button>
-          </form>
         </div>
       </div>
 
-      <div class="back-link">
-        <a href="/">
-          <i class="fas fa-arrow-left"></i> Voltar para o Site Principal
-        </a>
+      <!-- Conteúdo Tab -->
+      <div id="conteudo" class="tab-content">
+        <h2 style="margin-bottom: 1.5rem; color: var(--light);">Gerenciar Conteúdo</h2>
+        
+        <div class="cards-grid">
+          <!-- Versículo do Dia -->
+          <div class="admin-card">
+            <h2><i class="fas fa-bible"></i> Versículo do Dia</h2>
+            <form id="versiculoForm">
+              <div class="form-group">
+                <label for="versiculoTexto">Texto do Versículo</label>
+                <textarea id="versiculoTexto" required placeholder="Digite o texto do versículo..."></textarea>
+              </div>
+              <div class="form-group">
+                <label for="versiculoReferencia">Referência</label>
+                <input type="text" id="versiculoReferencia" required placeholder="Ex: João 3:16">
+              </div>
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Atualizar Versículo
+              </button>
+            </form>
+          </div>
+
+          <!-- Palavra da Semana -->
+          <div class="admin-card">
+            <h2><i class="fas fa-book-open"></i> Palavra da Semana</h2>
+            <form id="palavraSemanaForm">
+              <div class="form-group">
+                <label for="palavraTitulo">Título</label>
+                <input type="text" id="palavraTitulo" required placeholder="Título da mensagem">
+              </div>
+              <div class="form-group">
+                <label for="palavraMensagem">Mensagem Completa</label>
+                <textarea id="palavraMensagem" required placeholder="Digite a mensagem completa..."></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Atualizar Palavra
+              </button>
+            </form>
+          </div>
+
+          <!-- Links Externos -->
+          <div class="admin-card">
+            <h2><i class="fas fa-link"></i> Links Externos</h2>
+            <form id="linksForm">
+              <div class="form-group">
+                <label for="linkOracao">Formulário de Oração</label>
+                <input type="url" id="linkOracao" placeholder="https://forms.gle/...">
+              </div>
+              <div class="form-group">
+                <label for="linkAconselhamento">Formulário de Aconselhamento</label>
+                <input type="url" id="linkAconselhamento" placeholder="https://forms.gle/...">
+              </div>
+              <div class="form-group">
+                <label for="linkVisitante">Formulário de Visitante</label>
+                <input type="url" id="linkVisitante" placeholder="https://forms.gle/...">
+              </div>
+              <div class="form-group">
+                <label for="linkYouTube">Canal do YouTube</label>
+                <input type="url" id="linkYouTube" placeholder="https://youtube.com/...">
+              </div>
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Atualizar Links
+              </button>
+            </form>
+            
+            <div style="margin-top: 1.5rem;">
+              <h3 style="color: var(--light); margin-bottom: 1rem; font-size: 1.1rem;">Links Ativos</h3>
+              <div id="listaLinks">
+                <!-- Lista de links será carregada aqui -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mídia Tab -->
+      <div id="midia" class="tab-content">
+        <h2 style="margin-bottom: 1.5rem; color: var(--light);">Gerenciar Mídia</h2>
+        
+        <div class="cards-grid">
+          <!-- Upload de Vídeo -->
+          <div class="admin-card">
+            <h2><i class="fas fa-cloud-upload-alt"></i> Adicionar Vídeo</h2>
+            
+            <!-- Upload de Arquivo -->
+            <div class="upload-area" id="uploadArea">
+              <i class="fas fa-video"></i>
+              <h4>Upload de Vídeo</h4>
+              <p>Arraste um arquivo de vídeo ou clique para selecionar</p>
+              <input type="file" id="videoFile" accept="video/*" style="display: none;">
+              <button type="button" class="btn btn-success" onclick="document.getElementById('videoFile').click()">
+                <i class="fas fa-upload"></i> Selecionar Vídeo
+              </button>
+              <div class="progress-bar" id="progressBar">
+                <div class="progress" id="progress"></div>
+              </div>
+              <video id="videoPreview" class="video-preview" controls></video>
+            </div>
+
+            <form id="meditacaoForm">
+              <div class="form-group">
+                <label for="videoTitulo">Título do Vídeo</label>
+                <input type="text" id="videoTitulo" required placeholder="Ex: Paz para a Alma">
+              </div>
+              <div class="form-group">
+                <label for="videoDuracao">Duração</label>
+                <input type="text" id="videoDuracao" required placeholder="Ex: 1 min, 30 seg">
+              </div>
+              <div class="form-group">
+                <label for="videoDescricao">Descrição</label>
+                <textarea id="videoDescricao" required placeholder="Breve descrição do conteúdo..."></textarea>
+              </div>
+              <div class="form-group">
+                <label for="videoCategoria">Categoria</label>
+                <select id="videoCategoria" required>
+                  <option value="Paz">Paz</option>
+                  <option value="Renovação">Renovação</option>
+                  <option value="Fé">Fé</option>
+                  <option value="Gratidão">Gratidão</option>
+                  <option value="Esperança">Esperança</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="videoUrl">URL do YouTube (Opcional)</label>
+                <input type="url" id="videoUrl" placeholder="https://www.youtube.com/embed/...">
+                <small style="color: var(--gray); font-size: 0.8rem; display: block; margin-top: 0.25rem;">
+                  Use o link de incorporação do YouTube OU faça upload de arquivo
+                </small>
+              </div>
+              <button type="submit" class="btn btn-success">
+                <i class="fas fa-plus"></i> Adicionar Vídeo
+              </button>
+            </form>
+          </div>
+
+          <!-- Lista de Vídeos -->
+          <div class="admin-card">
+            <h2><i class="fas fa-list"></i> Vídeos Cadastrados</h2>
+            <div id="listaVideos" style="max-height: 600px; overflow-y: auto;">
+              <!-- Lista de vídeos será carregada aqui -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Agenda Tab -->
+      <div id="agenda" class="tab-content">
+        <h2 style="margin-bottom: 1.5rem; color: var(--light);">Gerenciar Agenda</h2>
+        
+        <div class="cards-grid">
+          <!-- Adicionar Evento -->
+          <div class="admin-card">
+            <h2><i class="fas fa-plus"></i> Adicionar Evento</h2>
+            <form id="agendaForm">
+              <div class="form-group">
+                <label for="eventoTipo">Tipo de Evento</label>
+                <select id="eventoTipo" required>
+                  <option value="recorrente">Recorrente</option>
+                  <option value="especial">Especial</option>
+                </select>
+              </div>
+              <div class="form-group" id="dataField" style="display: none;">
+                <label for="eventoData">Data (DD/MM)</label>
+                <input type="text" id="eventoData" placeholder="Ex: 25/12">
+              </div>
+              <div class="form-group">
+                <label for="agendaTitulo">Título</label>
+                <input type="text" id="agendaTitulo" required placeholder="Nome do evento">
+              </div>
+              <div class="form-group">
+                <label for="agendaHorario">Horário</label>
+                <input type="text" id="agendaHorario" required placeholder="Ex: 20h">
+              </div>
+              <div class="form-group">
+                <label for="agendaDescricao">Descrição</label>
+                <input type="text" id="agendaDescricao" required placeholder="Descrição do evento">
+              </div>
+              <button type="submit" class="btn btn-success">
+                <i class="fas fa-plus"></i> Adicionar Evento
+              </button>
+            </form>
+          </div>
+
+          <!-- Lista de Eventos -->
+          <div class="admin-card">
+            <h2><i class="fas fa-calendar-check"></i> Eventos da Agenda</h2>
+            <div id="listaAgenda">
+              <!-- Lista de eventos será carregada aqui -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contatos Tab -->
+      <div id="contatos" class="tab-content">
+        <h2 style="margin-bottom: 1.5rem; color: var(--light);">Gerenciar Contatos</h2>
+        
+        <div class="cards-grid">
+          <!-- Adicionar Contato -->
+          <div class="admin-card">
+            <h2><i class="fas fa-user-plus"></i> Adicionar Contato</h2>
+            <form id="contatoForm">
+              <div class="form-group">
+                <label for="contatoNome">Nome</label>
+                <input type="text" id="contatoNome" required placeholder="Nome completo">
+              </div>
+              <div class="form-group">
+                <label for="contatoCargo">Cargo</label>
+                <input type="text" id="contatoCargo" required placeholder="Cargo/ministério">
+              </div>
+              <div class="form-group">
+                <label for="contatoNumero">Número</label>
+                <input type="text" id="contatoNumero" required placeholder="Telefone/WhatsApp">
+              </div>
+              <button type="submit" class="btn btn-success">
+                <i class="fas fa-plus"></i> Adicionar Contato
+              </button>
+            </form>
+          </div>
+
+          <!-- Lista de Contatos -->
+          <div class="admin-card">
+            <h2><i class="fas fa-address-book"></i> Lista de Contatos</h2>
+            <div id="listaContatos">
+              <!-- Lista de contatos será carregada aqui -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Eventos Tab -->
+      <div id="eventos" class="tab-content">
+        <h2 style="margin-bottom: 1.5rem; color: var(--light);">Eventos Especiais</h2>
+        
+        <div class="cards-grid">
+          <!-- Configurações do Evento -->
+          <div class="admin-card">
+            <h2><i class="fas fa-cog"></i> Configurações do Evento</h2>
+            <div class="toggle-switch">
+              <span>Evento Ativo:</span>
+              <label class="switch">
+                <input type="checkbox" id="eventoAtivo">
+                <span class="slider"></span>
+              </label>
+            </div>
+            <form id="eventosEspeciaisForm">
+              <div class="form-group">
+                <label for="eventoTitulo">Título do Evento</label>
+                <input type="text" id="eventoTitulo" required placeholder="Nome do evento especial">
+              </div>
+              <div class="form-group">
+                <label for="eventoPeriodo">Período</label>
+                <input type="text" id="eventoPeriodo" required placeholder="Ex: 01 a 12 de Janeiro de 2026">
+              </div>
+              <div class="form-group">
+                <label for="eventoTema">Tema</label>
+                <input type="text" id="eventoTema" required placeholder="Ex: 2026 ANO APOSTÓLICO CONECTANDO AS GERAÇÕES">
+              </div>
+              <div class="form-group">
+                <label for="eventoVersiculo">Versículo</label>
+                <textarea id="eventoVersiculo" required placeholder="Versículo base do evento"></textarea>
+              </div>
+              <div class="form-group">
+                <label for="eventoReferencia">Referência</label>
+                <input type="text" id="eventoReferencia" required placeholder="Referência bíblica">
+              </div>
+              <div class="form-group">
+                <label for="eventoDescricao">Descrição</label>
+                <textarea id="eventoDescricao" required placeholder="Descrição completa do evento"></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Atualizar Evento
+              </button>
+            </form>
+          </div>
+
+          <!-- Inscrições -->
+          <div class="admin-card">
+            <h2><i class="fas fa-users"></i> Inscrições Confirmadas</h2>
+            <div style="margin-bottom: 1rem;">
+              <h3 style="color: var(--light);">Total: <span id="totalInscricoes">0</span> inscrições</h3>
+            </div>
+            <div id="listaInscricoes" style="max-height: 500px; overflow-y: auto;">
+              <!-- Lista de inscrições -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Configurações Tab -->
+      <div id="configuracoes" class="tab-content">
+        <h2 style="margin-bottom: 1.5rem; color: var(--light);">Configurações do Sistema</h2>
+        
+        <div class="cards-grid">
+          <!-- Segurança -->
+          <div class="admin-card">
+            <h2><i class="fas fa-shield-alt"></i> Segurança</h2>
+            <form id="configForm">
+              <div class="form-group">
+                <label for="novaSenha">Nova Senha</label>
+                <input type="password" id="novaSenha" placeholder="Deixe em branco para manter atual">
+              </div>
+              <div class="form-group">
+                <label for="confirmarSenha">Confirmar Nova Senha</label>
+                <input type="password" id="confirmarSenha" placeholder="Confirme a nova senha">
+              </div>
+              <button type="submit" class="btn btn-warning">
+                <i class="fas fa-key"></i> Alterar Senha
+              </button>
+            </form>
+          </div>
+
+          <!-- Informações do Sistema -->
+          <div class="admin-card">
+            <h2><i class="fas fa-info-circle"></i> Informações do Sistema</h2>
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+              <div>
+                <strong style="color: var(--primary);">Versão:</strong>
+                <span style="color: var(--light);">1.0.0</span>
+              </div>
+              <div>
+                <strong style="color: var(--primary);">Última Atualização:</strong>
+                <span style="color: var(--light);" id="lastUpdate">Carregando...</span>
+              </div>
+              <div>
+                <strong style="color: var(--primary);">Status:</strong>
+                <span class="badge badge-success">Online</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
   <script>
     // Sistema de Autenticação
-    const ADMIN_PASSWORD = 'aviva2024'; // Senha padrão - pode ser alterada depois
+    const ADMIN_PASSWORD = 'aviva2024';
 
     // Elementos do DOM
     const loginScreen = document.getElementById('loginScreen');
@@ -452,13 +1076,38 @@
     const versiculoForm = document.getElementById('versiculoForm');
     const palavraSemanaForm = document.getElementById('palavraSemanaForm');
     const linksForm = document.getElementById('linksForm');
+    const eventosEspeciaisForm = document.getElementById('eventosEspeciaisForm');
     const agendaForm = document.getElementById('agendaForm');
     const contatoForm = document.getElementById('contatoForm');
     const configForm = document.getElementById('configForm');
+    const meditacaoForm = document.getElementById('meditacaoForm');
     
     // Campos da agenda
     const eventoTipo = document.getElementById('eventoTipo');
     const dataField = document.getElementById('dataField');
+    const eventoAtivo = document.getElementById('eventoAtivo');
+
+    // Variáveis para upload de vídeo
+    let videoFile = null;
+
+    // Sistema de Abas
+    function switchTab(tabName) {
+      // Esconder todas as abas
+      document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      
+      // Remover classe active de todas as tabs
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      
+      // Mostrar aba selecionada
+      document.getElementById(tabName).classList.add('active');
+      
+      // Ativar tab correspondente
+      document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+    }
 
     // Verificar se usuário já está logado
     function checkAuth() {
@@ -479,6 +1128,9 @@
       loginScreen.classList.add('hidden');
       adminPanel.classList.remove('hidden');
       loadData();
+      
+      // Atualizar data da última atualização
+      document.getElementById('lastUpdate').textContent = new Date().toLocaleString('pt-BR');
     }
 
     // Login
@@ -507,11 +1159,31 @@
       dataField.style.display = this.value === 'especial' ? 'block' : 'none';
     });
 
+    // Preview de vídeo
+    document.getElementById('videoFile').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        videoFile = file;
+        const preview = document.getElementById('videoPreview');
+        preview.src = URL.createObjectURL(file);
+        preview.style.display = 'block';
+        showMessage('Vídeo selecionado: ' + file.name, 'success');
+        
+        // Mostrar barra de progresso para arquivos grandes
+        if (file.size > 50 * 1024 * 1024) { // 50MB
+          document.getElementById('progressBar').style.display = 'block';
+        }
+      }
+    });
+
     // Função para mostrar mensagens
     function showMessage(message, type = 'success') {
       const messageEl = document.createElement('div');
       messageEl.className = `message ${type}`;
-      messageEl.textContent = message;
+      messageEl.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check' : type === 'error' ? 'exclamation-triangle' : 'exclamation-circle'}"></i>
+        ${message}
+      `;
       messageContainer.appendChild(messageEl);
       
       setTimeout(() => {
@@ -541,6 +1213,20 @@
           document.getElementById('linkYouTube').value = data.links.youtube || '';
         }
         
+        // Preencher eventos especiais
+        if (data.eventosEspeciais) {
+          eventoAtivo.checked = data.eventosEspeciais.ativo || false;
+          document.getElementById('eventoTitulo').value = data.eventosEspeciais.titulo || '';
+          document.getElementById('eventoPeriodo').value = data.eventosEspeciais.periodo || '';
+          document.getElementById('eventoTema').value = data.eventosEspeciais.tema || '';
+          document.getElementById('eventoVersiculo').value = data.eventosEspeciais.versiculo?.texto || '';
+          document.getElementById('eventoReferencia').value = data.eventosEspeciais.versiculo?.referencia || '';
+          document.getElementById('eventoDescricao').value = data.eventosEspeciais.descricao || '';
+        }
+        
+        // Carregar estatísticas
+        renderStats(data);
+        
         // Carregar agenda
         renderAgenda(data.agenda);
         
@@ -550,61 +1236,166 @@
         // Carregar links
         renderLinks(data.links || {});
         
+        // Carregar inscrições
+        renderInscricoes(data.eventosEspeciais?.inscricoes || []);
+        
+        // Carregar meditação diária
+        renderMeditacao(data.meditacaoDiaria || []);
+        
+        // Carregar atividade recente
+        renderRecentActivity(data);
+        
       } catch (error) {
         showMessage('Erro ao carregar dados: ' + error.message, 'error');
       }
     }
 
+    // Renderizar estatísticas
+    function renderStats(data) {
+      const statsContainer = document.getElementById('statsContainer');
+      const totalInscricoes = data.eventosEspeciais?.inscricoes?.length || 0;
+      const totalVideos = data.meditacaoDiaria?.length || 0;
+      const totalContatos = data.contatos?.length || 0;
+      const totalEventos = data.agenda?.length || 0;
+
+      statsContainer.innerHTML = `
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="stat-number">${totalInscricoes}</div>
+          <div class="stat-label">Inscrições</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-video"></i>
+          </div>
+          <div class="stat-number">${totalVideos}</div>
+          <div class="stat-label">Vídeos</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-address-book"></i>
+          </div>
+          <div class="stat-number">${totalContatos}</div>
+          <div class="stat-label">Líderes</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-calendar"></i>
+          </div>
+          <div class="stat-number">${totalEventos}</div>
+          <div class="stat-label">Eventos</div>
+        </div>
+      `;
+    }
+
+    // Renderizar atividade recente
+    function renderRecentActivity(data) {
+      const activityContainer = document.getElementById('recentActivity');
+      const activities = [];
+      
+      // Adicionar atividades baseadas nos dados
+      if (data.meditacaoDiaria && data.meditacaoDiaria.length > 0) {
+        const latestVideo = data.meditacaoDiaria[0];
+        activities.push({
+          icon: 'fas fa-video',
+          text: `Vídeo "${latestVideo.titulo}" adicionado`,
+          time: 'Recentemente'
+        });
+      }
+      
+      if (data.eventosEspeciais?.inscricoes && data.eventosEspeciais.inscricoes.length > 0) {
+        activities.push({
+          icon: 'fas fa-user-plus',
+          text: `${data.eventosEspeciais.inscricoes.length} nova(s) inscrição(ões)`,
+          time: 'Hoje'
+        });
+      }
+      
+      if (data.agenda && data.agenda.length > 0) {
+        activities.push({
+          icon: 'fas fa-calendar-plus',
+          text: 'Eventos da agenda atualizados',
+          time: 'Esta semana'
+        });
+      }
+      
+      // Se não houver atividades, mostrar mensagem
+      if (activities.length === 0) {
+        activityContainer.innerHTML = '<p style="color: var(--gray); text-align: center;">Nenhuma atividade recente</p>';
+        return;
+      }
+      
+      activityContainer.innerHTML = activities.map(activity => `
+        <div class="list-item">
+          <div class="item-header">
+            <div class="item-content">
+              <h4><i class="${activity.icon}"></i> ${activity.text}</h4>
+              <p>${activity.time}</p>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
     // Renderizar agenda
     function renderAgenda(agenda) {
       const listaAgenda = document.getElementById('listaAgenda');
-      listaAgenda.innerHTML = '';
       
-      agenda.forEach((evento, index) => {
-        const eventoEl = document.createElement('div');
-        eventoEl.className = 'agenda-item';
-        eventoEl.innerHTML = `
-          <div class="agenda-header">
-            <div>
-              <strong>${evento.titulo}</strong> • ${evento.horario}
-              ${evento.data ? ` • ${evento.data}` : ''}
+      if (agenda.length === 0) {
+        listaAgenda.innerHTML = '<p style="color: var(--gray); text-align: center;">Nenhum evento cadastrado</p>';
+        return;
+      }
+      
+      listaAgenda.innerHTML = agenda.map((evento, index) => `
+        <div class="list-item">
+          <div class="item-header">
+            <div class="item-content">
+              <h4>${evento.titulo}</h4>
+              <p>${evento.horario} • ${evento.descricao}</p>
+              ${evento.data ? `<p><small class="badge badge-info"><i class="fas fa-calendar-day"></i> ${evento.data}</small></p>` : ''}
             </div>
-            <div class="agenda-actions">
-              <button type="button" class="btn btn-danger" onclick="removerEvento(${index})">Remover</button>
+            <div class="item-actions">
+              <button type="button" class="btn btn-danger btn-small" onclick="removerEvento(${index})">
+                <i class="fas fa-trash"></i>
+              </button>
             </div>
           </div>
-          <div>${evento.descricao}</div>
-        `;
-        listaAgenda.appendChild(eventoEl);
-      });
+        </div>
+      `).join('');
     }
 
     // Renderizar contatos
     function renderContatos(contatos) {
       const listaContatos = document.getElementById('listaContatos');
-      listaContatos.innerHTML = '';
       
-      contatos.forEach((contato, index) => {
-        const contatoEl = document.createElement('div');
-        contatoEl.className = 'contact-item';
-        contatoEl.innerHTML = `
-          <div class="contact-info">
-            <h4>${contato.nome}</h4>
-            <p>${contato.cargo} • ${contato.numero}</p>
+      if (contatos.length === 0) {
+        listaContatos.innerHTML = '<p style="color: var(--gray); text-align: center;">Nenhum contato cadastrado</p>';
+        return;
+      }
+      
+      listaContatos.innerHTML = contatos.map((contato, index) => `
+        <div class="list-item">
+          <div class="item-header">
+            <div class="item-content">
+              <h4>${contato.nome}</h4>
+              <p>${contato.cargo}</p>
+              <p><small>${contato.numero}</small></p>
+            </div>
+            <div class="item-actions">
+              <button type="button" class="btn btn-danger btn-small" onclick="removerContato(${index})">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
           </div>
-          <div class="agenda-actions">
-            <button type="button" class="btn btn-danger" onclick="removerContato(${index})">Remover</button>
-          </div>
-        `;
-        listaContatos.appendChild(contatoEl);
-      });
+        </div>
+      `).join('');
     }
 
     // Renderizar links
     function renderLinks(links) {
       const listaLinks = document.getElementById('listaLinks');
-      listaLinks.innerHTML = '';
-      
       const linksData = [
         { nome: 'Oração', url: links.oracao, id: 'oracao' },
         { nome: 'Aconselhamento', url: links.aconselhamento, id: 'aconselhamento' },
@@ -612,27 +1403,93 @@
         { nome: 'YouTube', url: links.youtube, id: 'youtube' }
       ];
       
-      linksData.forEach(link => {
-        if (link.url) {
-          const linkEl = document.createElement('div');
-          linkEl.className = 'link-item';
-          linkEl.innerHTML = `
-            <div class="link-info">
-              <h4>${link.nome}</h4>
-              <p>${link.url}</p>
+      listaLinks.innerHTML = linksData.map(link => {
+        if (!link.url) return '';
+        return `
+          <div class="list-item">
+            <div class="item-header">
+              <div class="item-content">
+                <h4>${link.nome}</h4>
+                <p style="word-break: break-all;">${link.url}</p>
+              </div>
+              <div class="item-actions">
+                <a href="${link.url}" target="_blank" class="btn btn-success btn-small">
+                  <i class="fas fa-external-link-alt"></i>
+                </a>
+              </div>
             </div>
-            <div class="agenda-actions">
-              <a href="${link.url}" target="_blank" class="btn btn-success">
-                <i class="fas fa-external-link-alt"></i> Abrir
-              </a>
-            </div>
-          `;
-          listaLinks.appendChild(linkEl);
-        }
-      });
+          </div>
+        `;
+      }).join('');
     }
 
-    // Remover evento
+    // Renderizar inscrições
+    function renderInscricoes(inscricoes) {
+      const listaInscricoes = document.getElementById('listaInscricoes');
+      const totalInscricoes = document.getElementById('totalInscricoes');
+      
+      totalInscricoes.textContent = inscricoes.length;
+      
+      if (inscricoes.length === 0) {
+        listaInscricoes.innerHTML = '<p style="color: var(--gray); text-align: center;">Nenhuma inscrição confirmada</p>';
+        return;
+      }
+      
+      listaInscricoes.innerHTML = inscricoes.map((inscricao, index) => {
+        const data = new Date(inscricao.dataInscricao).toLocaleDateString('pt-BR');
+        return `
+          <div class="list-item">
+            <div class="item-header">
+              <div class="item-content">
+                <h4>${inscricao.nome}</h4>
+                <p><strong>Telefone:</strong> ${inscricao.telefone}</p>
+                <p><strong>E-mail:</strong> ${inscricao.email || 'Não informado'}</p>
+                <p><strong>Pessoas:</strong> ${inscricao.quantidade}</p>
+                <p><small>Inscrito em: ${data}</small></p>
+              </div>
+              <div class="item-actions">
+                <button type="button" class="btn btn-danger btn-small" onclick="removerInscricao('${inscricao.id}')">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Renderizar meditação diária
+    function renderMeditacao(videos) {
+      const listaVideos = document.getElementById('listaVideos');
+      
+      if (videos.length === 0) {
+        listaVideos.innerHTML = '<p style="color: var(--gray); text-align: center;">Nenhum vídeo cadastrado</p>';
+        return;
+      }
+      
+      listaVideos.innerHTML = videos.map(video => `
+        <div class="list-item">
+          <div class="item-header">
+            <div class="item-content">
+              <h4>${video.titulo}</h4>
+              <p>${video.descricao}</p>
+              <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+                <span class="badge badge-info"><i class="fas fa-clock"></i> ${video.duracao}</span>
+                <span class="badge badge-success"><i class="fas fa-tag"></i> ${video.categoria}</span>
+                <span class="badge badge-warning"><i class="fas fa-${video.tipo === 'upload' ? 'upload' : 'youtube'}"></i> ${video.tipo === 'upload' ? 'Upload' : 'YouTube'}</span>
+              </div>
+            </div>
+            <div class="item-actions">
+              <button type="button" class="btn btn-danger btn-small" onclick="removerVideo(${video.id})">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Funções para remover itens (mantidas do código anterior)
     async function removerEvento(index) {
       try {
         const response = await fetch('/api/data');
@@ -648,6 +1505,8 @@
         
         if (updateResponse.ok) {
           renderAgenda(data.agenda);
+          renderStats(data);
+          renderRecentActivity(data);
           showMessage('Evento removido com sucesso');
         }
       } catch (error) {
@@ -655,7 +1514,6 @@
       }
     }
 
-    // Remover contato
     async function removerContato(index) {
       try {
         const response = await fetch('/api/data');
@@ -671,6 +1529,8 @@
         
         if (updateResponse.ok) {
           renderContatos(data.contatos);
+          renderStats(data);
+          renderRecentActivity(data);
           showMessage('Contato removido com sucesso');
         }
       } catch (error) {
@@ -678,7 +1538,50 @@
       }
     }
 
-    // Event Listeners para formulários
+    async function removerInscricao(id) {
+      try {
+        const response = await fetch('/api/data');
+        const data = await response.json();
+        
+        data.eventosEspeciais.inscricoes = data.eventosEspeciais.inscricoes.filter(insc => insc.id !== id);
+        
+        const updateResponse = await fetch('/api/eventos-especiais', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data.eventosEspeciais)
+        });
+        
+        if (updateResponse.ok) {
+          renderInscricoes(data.eventosEspeciais.inscricoes);
+          renderStats(data);
+          renderRecentActivity(data);
+          showMessage('Inscrição removida com sucesso');
+        }
+      } catch (error) {
+        showMessage('Erro ao remover inscrição: ' + error.message, 'error');
+      }
+    }
+
+    async function removerVideo(videoId) {
+      try {
+        const response = await fetch(`/api/video/${videoId}`, {
+          method: 'DELETE'
+        });
+        
+        if (response.ok) {
+          const dataResponse = await fetch('/api/data');
+          const data = await dataResponse.json();
+          renderMeditacao(data.meditacaoDiaria || []);
+          renderStats(data);
+          renderRecentActivity(data);
+          showMessage('Vídeo removido com sucesso');
+        }
+      } catch (error) {
+        showMessage('Erro ao remover vídeo: ' + error.message, 'error');
+      }
+    }
+
+    // Event Listeners para formulários (mantidos do código anterior)
     versiculoForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       
@@ -756,14 +1659,139 @@
       }
     });
 
+    eventosEspeciaisForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const eventosData = {
+        ativo: eventoAtivo.checked,
+        titulo: document.getElementById('eventoTitulo').value,
+        periodo: document.getElementById('eventoPeriodo').value,
+        tema: document.getElementById('eventoTema').value,
+        versiculo: {
+          texto: document.getElementById('eventoVersiculo').value,
+          referencia: document.getElementById('eventoReferencia').value
+        },
+        descricao: document.getElementById('eventoDescricao').value,
+        inscricoes: []
+      };
+      
+      try {
+        const response = await fetch('/api/data');
+        const data = await response.json();
+        
+        // Manter as inscrições existentes
+        if (data.eventosEspeciais && data.eventosEspeciais.inscricoes) {
+          eventosData.inscricoes = data.eventosEspeciais.inscricoes;
+        }
+        
+        const updateResponse = await fetch('/api/eventos-especiais', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(eventosData)
+        });
+        
+        if (updateResponse.ok) {
+          showMessage('Evento especial atualizado com sucesso!');
+        }
+      } catch (error) {
+        showMessage('Erro ao atualizar evento especial: ' + error.message, 'error');
+      }
+    });
+
+    meditacaoForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const titulo = document.getElementById('videoTitulo').value;
+      const duracao = document.getElementById('videoDuracao').value;
+      const descricao = document.getElementById('videoDescricao').value;
+      const categoria = document.getElementById('videoCategoria').value;
+      const url = document.getElementById('videoUrl').value;
+
+      try {
+        let videoData;
+
+        if (videoFile) {
+          // Upload de arquivo com progresso
+          const formData = new FormData();
+          formData.append('video', videoFile);
+          formData.append('titulo', titulo);
+          formData.append('duracao', duracao);
+          formData.append('descricao', descricao);
+          formData.append('categoria', categoria);
+
+          const uploadResponse = await fetch('/api/upload-video', {
+            method: 'POST',
+            body: formData
+          });
+
+          if (!uploadResponse.ok) {
+            throw new Error('Erro no upload do vídeo');
+          }
+
+          const result = await uploadResponse.json();
+          videoData = result.video;
+        } else if (url) {
+          // Vídeo do YouTube
+          const response = await fetch('/api/data');
+          const data = await response.json();
+          
+          videoData = {
+            id: Date.now(),
+            titulo: titulo,
+            duracao: duracao,
+            descricao: descricao,
+            categoria: categoria,
+            tipo: "youtube",
+            url: url,
+            data: new Date().toISOString().split('T')[0]
+          };
+
+          if (!data.meditacaoDiaria) {
+            data.meditacaoDiaria = [];
+          }
+          
+          data.meditacaoDiaria.push(videoData);
+          
+          const updateResponse = await fetch('/api/meditacao', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data.meditacaoDiaria)
+          });
+          
+          if (!updateResponse.ok) {
+            throw new Error('Erro ao salvar vídeo');
+          }
+        } else {
+          showMessage('Selecione um arquivo de vídeo ou informe uma URL do YouTube', 'error');
+          return;
+        }
+
+        // Recarregar dados
+        const dataResponse = await fetch('/api/data');
+        const data = await dataResponse.json();
+        
+        renderMeditacao(data.meditacaoDiaria || []);
+        renderStats(data);
+        renderRecentActivity(data);
+        meditacaoForm.reset();
+        document.getElementById('videoPreview').style.display = 'none';
+        document.getElementById('progressBar').style.display = 'none';
+        videoFile = null;
+        showMessage('Vídeo adicionado com sucesso!');
+        
+      } catch (error) {
+        showMessage('Erro ao adicionar vídeo: ' + error.message, 'error');
+      }
+    });
+
     agendaForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       
       const eventoData = {
         tipo: document.getElementById('eventoTipo').value,
-        titulo: document.getElementById('eventoTitulo').value,
-        horario: document.getElementById('eventoHorario').value,
-        descricao: document.getElementById('eventoDescricao').value
+        titulo: document.getElementById('agendaTitulo').value,
+        horario: document.getElementById('agendaHorario').value,
+        descricao: document.getElementById('agendaDescricao').value
       };
       
       if (eventoData.tipo === 'especial') {
@@ -784,6 +1812,8 @@
         
         if (updateResponse.ok) {
           renderAgenda(data.agenda);
+          renderStats(data);
+          renderRecentActivity(data);
           agendaForm.reset();
           dataField.style.display = 'none';
           showMessage('Evento adicionado com sucesso!');
@@ -816,6 +1846,8 @@
         
         if (updateResponse.ok) {
           renderContatos(data.contatos);
+          renderStats(data);
+          renderRecentActivity(data);
           contatoForm.reset();
           showMessage('Contato adicionado com sucesso!');
         }
@@ -841,6 +1873,14 @@
       } else {
         showMessage('Digite uma nova senha para alterar', 'warning');
       }
+    });
+
+    // Event Listeners para as abas
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        const tabName = tab.getAttribute('data-tab');
+        switchTab(tabName);
+      });
     });
 
     // Inicializar

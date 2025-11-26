@@ -1,10 +1,46 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs').promises;
+const fsSync = require('fs');
+const multer = require('multer');
+const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// ================= CONFIGURAÇÃO MULTER (UPLOAD DE VÍDEOS) =================
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const uploadDir = path.join(__dirname, 'public', 'uploads');
+    // Criar diretório se não existir
+    if (!fsSync.existsSync(uploadDir)) {
+      fsSync.mkdirSync(uploadDir, { recursive: true });
+    }
+    cb(null, uploadDir);
+  },
+  filename: function (req, file, cb) {
+    // Nome único para o arquivo
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, 'video-' + uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 50 * 1024 * 1024 // 50MB limite
+  },
+  fileFilter: function (req, file, cb) {
+    // Aceitar apenas vídeos
+    if (file.mimetype.startsWith('video/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Apenas arquivos de vídeo são permitidos!'));
+    }
+  }
+});
+
 // ================= MIDDLEWARES =================
+app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -23,9 +59,7 @@ const initialData = {
     { tipo: "recorrente", titulo: "Culto às Quintas", horario: "20h", descricao: "Todas as quintas-feiras | Templo Principal" },
     { tipo: "recorrente", titulo: "Culto aos Domingos", horario: "18h", descricao: "Todos os domingos | Templo Principal" },
     { tipo: "recorrente", titulo: "Oração Diária", horario: "8h", descricao: "Todos os dias | Presencial na Igreja" },
-    { tipo: "recorrente", titulo: "Oração Quarta-feira", horario: "5h", descricao: "Todas as quartas-feiras | Presencial na Igreja" },
-    { tipo: "especial", data: "02/12", titulo: "Formatura do Rever", horario: "20h", descricao: "Templo Principal" },
-    { tipo: "especial", data: "06/12", titulo: "Aviva Teens", horario: "18h", descricao: "Templo Principal" }
+    { tipo: "recorrente", titulo: "Oração Quarta-feira", horario: "5h", descricao: "Todas as quartas-feiras | Presencial na Igreja" }
   ],
   contatos: [
     { nome: "Bruno Dos Santos", cargo: "Líder - Aviva Teens", numero: "+55 11 96354-4213" },
@@ -38,6 +72,46 @@ const initialData = {
     { nome: "Rose Ribeiro", cargo: "Pastora - Aviva Kids", numero: "+55 11 98956-4020" },
     { nome: "Stefane", cargo: "Presbítera - Aviva Obreiros", numero: "+55 11 94069-6532" },
     { nome: "Vanessa Sede", cargo: "Presbítera - Aviva Casais", numero: "+55 11 97663-2641" }
+  ],
+  links: {
+    oracao: "https://forms.gle/SEU_LINK_ORACAO",
+    aconselhamento: "https://forms.gle/SEU_LINK_ACONSELHAMENTO",
+    visitante: "https://forms.gle/SEU_LINK_VISITANTE",
+    youtube: "https://www.youtube.com/c/CristoAVIVAEsperan%C3%A7a/streams"
+  },
+  eventosEspeciais: {
+    ativo: true,
+    titulo: "Campanha das Primícias",
+    periodo: "01 a 12 de Janeiro de 2026",
+    tema: "2026 ANO APOSTÓLICO CONECTANDO AS GERAÇÕES",
+    versiculo: {
+      texto: "E o que de mim, entre muitas testemunhas, ouviste, confia-o a homens fiéis, que sejam idôneos para também ensinarem os outros.",
+      referencia: "2 Timóteo 2:1,2"
+    },
+    descricao: "Venha semear os seus primeiros dias do ano, e colher um ano de MILAGRES e VITORIAS.",
+    inscricoes: []
+  },
+  meditacaoDiaria: [
+    {
+      id: 1,
+      titulo: "Paz para a Alma",
+      duracao: "1 min",
+      descricao: "Comece seu dia com paz interior e serenidade.",
+      tipo: "youtube",
+      url: "https://www.youtube.com/embed/0vrS1-MJus4",
+      categoria: "Paz",
+      data: "2024-01-15"
+    },
+    {
+      id: 2,
+      titulo: "Renovação Espiritual", 
+      duracao: "2 min",
+      descricao: "Momento de renovação e conexão com Deus.",
+      tipo: "youtube",
+      url: "https://www.youtube.com/embed/0vrS1-MJus4",
+      categoria: "Renovação",
+      data: "2024-01-16"
+    }
   ]
 };
 
@@ -111,9 +185,129 @@ app.post('/api/contatos', async (req, res) => {
   }
 });
 
+app.post('/api/links', async (req, res) => {
+  try {
+    const data = await loadData();
+    data.links = req.body;
+    await saveData(data);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: "Erro ao salvar links" });
+  }
+});
+
+app.post('/api/eventos-especiais', async (req, res) => {
+  try {
+    const data = await loadData();
+    data.eventosEspeciais = req.body;
+    await saveData(data);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: "Erro ao salvar eventos especiais" });
+  }
+});
+
+app.post('/api/inscricoes', async (req, res) => {
+  try {
+    const data = await loadData();
+    data.eventosEspeciais.inscricoes.push({
+      ...req.body,
+      dataInscricao: new Date().toISOString(),
+      id: Date.now().toString()
+    });
+    await saveData(data);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: "Erro ao salvar inscrição" });
+  }
+});
+
+// ROTA DE UPLOAD DE VÍDEOS
+app.post('/api/upload-video', upload.single('video'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: "Nenhum arquivo enviado" });
+    }
+
+    const data = await loadData();
+    
+    const novoVideo = {
+      id: Date.now(),
+      titulo: req.body.titulo,
+      duracao: req.body.duracao,
+      descricao: req.body.descricao,
+      categoria: req.body.categoria,
+      tipo: "upload",
+      url: '/uploads/' + req.file.filename,
+      data: new Date().toISOString().split('T')[0]
+    };
+
+    if (!data.meditacaoDiaria) {
+      data.meditacaoDiaria = [];
+    }
+
+    data.meditacaoDiaria.push(novoVideo);
+    await saveData(data);
+
+    res.json({ 
+      success: true, 
+      video: novoVideo,
+      message: "Vídeo enviado com sucesso!" 
+    });
+  } catch (err) {
+    res.status(500).json({ error: "Erro ao fazer upload do vídeo: " + err.message });
+  }
+});
+
+app.post('/api/meditacao', async (req, res) => {
+  try {
+    const data = await loadData();
+    data.meditacaoDiaria = req.body;
+    await saveData(data);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: "Erro ao salvar meditação diária" });
+  }
+});
+
+// Rota para deletar vídeo
+app.delete('/api/video/:id', async (req, res) => {
+  try {
+    const data = await loadData();
+    const videoIndex = data.meditacaoDiaria.findIndex(v => v.id == req.params.id);
+    
+    if (videoIndex === -1) {
+      return res.status(404).json({ error: "Vídeo não encontrado" });
+    }
+
+    const video = data.meditacaoDiaria[videoIndex];
+    
+    // Deletar arquivo físico se for upload
+    if (video.tipo === 'upload' && video.url) {
+      const filePath = path.join(__dirname, 'public', video.url);
+      try {
+        await fs.unlink(filePath);
+      } catch (err) {
+        console.log("Arquivo não encontrado para deletar:", filePath);
+      }
+    }
+
+    data.meditacaoDiaria.splice(videoIndex, 1);
+    await saveData(data);
+
+    res.json({ success: true, message: "Vídeo deletado com sucesso" });
+  } catch (err) {
+    res.status(500).json({ error: "Erro ao deletar vídeo: " + err.message });
+  }
+});
+
 // ================= ROTAS DE PÁGINA =================
 app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'admin.html'));
+});
+
+app.get('/meditacao', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'meditacao-diaria.html'));
 });
 
 app.get('*', (req, res) => {
@@ -124,5 +318,6 @@ app.get('*', (req, res) => {
 app.listen(PORT, () => {
   console.log(`🚀 SERVIDOR RODANDO → http://localhost:${PORT}`);
   console.log(`📱 Página principal → http://localhost:${PORT}`);
+  console.log(`🧘 Meditação Diária → http://localhost:${PORT}/meditacao`);
   console.log(`⚙️  Painel Admin     → http://localhost:${PORT}/admin`);
 });
