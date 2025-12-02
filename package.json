@@ -10,7 +10,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
-    "express": "^4.21.2",
+    "express": "^4.22.1",
     "multer": "^1.4.5-lts.1"
   },
   "devDependencies": {
@@ -18,5 +18,16 @@
   },
   "engines": {
     "node": ">=18.x"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yanlt32/Portal-MCVE.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yanlt32/Portal-MCVE/issues"
+  },
+  "homepage": "https://github.com/yanlt32/Portal-MCVE#readme"
 }

@@ -8,33 +8,34 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // ================= CONFIGURAÇÃO MULTER (UPLOAD DE VÍDEOS) =================
+const uploadDir = path.join(__dirname, 'public', 'uploads');
+if (!fsSync.existsSync(uploadDir)) {
+  fsSync.mkdirSync(uploadDir, { recursive: true });
+}
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const uploadDir = path.join(__dirname, 'public', 'uploads');
-    // Criar diretório se não existir
-    if (!fsSync.existsSync(uploadDir)) {
-      fsSync.mkdirSync(uploadDir, { recursive: true });
-    }
     cb(null, uploadDir);
   },
   filename: function (req, file, cb) {
-    // Nome único para o arquivo
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, 'video-' + uniqueSuffix + path.extname(file.originalname));
+    const ext = path.extname(file.originalname);
+    const filename = 'video-' + uniqueSuffix + ext;
+    cb(null, filename);
   }
 });
 
 const upload = multer({
   storage: storage,
   limits: {
-    fileSize: 50 * 1024 * 1024 // 50MB limite
+    fileSize: 100 * 1024 * 1024 // 100MB limite
   },
   fileFilter: function (req, file, cb) {
-    // Aceitar apenas vídeos
-    if (file.mimetype.startsWith('video/')) {
+    const allowedTypes = ['video/mp4', 'video/webm', 'video/ogg', 'audio/mpeg', 'audio/ogg'];
+    if (allowedTypes.includes(file.mimetype)) {
       cb(null, true);
     } else {
-      cb(new Error('Apenas arquivos de vídeo são permitidos!'));
+      cb(new Error('Tipo de arquivo não suportado. Use vídeos MP4, WebM, OGG ou áudio MP3.'));
     }
   }
 });
@@ -43,74 +44,127 @@ const upload = multer({
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public'), {
+  setHeaders: (res, path) => {
+    if (path.endsWith('.js')) {
+      res.setHeader('Content-Type', 'application/javascript');
+    }
+  }
+}));
 
 // ================= DADOS INICIAIS =================
 const initialData = {
   versiculo: {
     texto: "Bendito seja o Deus e Pai de nosso Senhor Jesus Cristo, que, segundo a sua grande misericórdia, nos gerou de novo para uma viva esperança, pela ressurreição de Jesus Cristo dentre os mortos.",
-    referencia: "1 Pedro 1:3"
+    referencia: "1 Pedro 1:3",
+    dataAtualizacao: new Date().toISOString()
   },
+  
   palavraSemana: {
     titulo: "O FIM É MELHOR DO QUE O COMEÇO",
-    mensagem: `1. O Fim Revela o Propósito\nIntrodução: "Melhor é o fim das coisas do que o princípio delas..." (Ec 7:8)\n\nExplicação: No início, ainda não entendemos o propósito completo daquilo que Deus está fazendo. O começo pode parecer confuso, difícil ou incerto. Mas o fim revela aquilo que Deus estava construindo silenciosamente.\n\nVersículo: "Sabemos que todas as coisas cooperam para o bem daqueles que amam a Deus..." (Rm 8:28)\n\nAplicação: Confie que Deus está trabalhando mesmo quando você não vê o resultado. Não julgue sua caminhada pelos primeiros capítulos—Deus está escrevendo o final.\n\n2. A Paciência Forja o Caráter\nTexto-base: "...melhor é o paciente de espírito do que o altivo de espírito." (Ec 7:8)\n\nIntrodução: Quem é paciente permite que Deus o molde durante o processo. O altivo quer resultados imediatos; o paciente amadurece enquanto espera.\n\nVersículo: "Mas tenha a paciência a sua obra perfeita, para que sejais perfeitos e completos..." (Tg 1:4)\n\nAplicação: Deixe que o processo transforme você. A demora não é castigo, é construção. A maturidade surge na espera.\n\n3. Deus Vê o Final Desde o Princípio\nExplicação: Deus não está limitado ao tempo. Ele conhece o final de cada história, e por isso podemos descansar mesmo no início, quando tudo parece incerto.\n\nVersículo: "Eu anuncio o fim desde o princípio..." (Is 46:10)\n\nAplicação: Descanso espiritual vem quando lembramos que Deus já viu sua vitória antes mesmo de você enfrentar a batalha. Ele sabe aonde quer te levar.\n\n4. O Final de Deus Sempre Supera o Começo Humano\nIntrodução: O fim que Deus prepara sempre é melhor do que o começo que nós mesmos planejamos. Ele transforma lágrimas em risos e desespero em esperança.\n\nVersículo: "O fim das coisas é melhor que o princípio delas." (Ec 7:8)\n"A glória desta última casa será maior do que a da primeira..." (Ag 2:9)\n\nConclusão: Creia que Deus pode terminar sua história melhor do que você começou. O que começa pequeno pode terminar glorioso nas mãos de Deus. Sua vida não será definida pelo seu início, mas pelo final que Deus prepara.`
+    mensagem: `Introdução:
+Vivemos em uma cultura que valoriza muito os começos, mas a Bíblia nos ensina que o fim é mais importante do que o início.
+
+Versículo: Eclesiastes 7:8 - "Melhor é o fim das coisas do que o princípio delas; melhor é o paciente de espírito do que o altivo de espírito."
+
+Explicação:
+Deus está mais interessado em como terminamos do que em como começamos. Muitos começam bem, mas poucos terminam bem. A paciência, a perseverança e a fidelidade são essenciais para terminarmos bem a corrida.
+
+Aplicação:
+Não desanime se seu começo foi difícil. Não se acomode se seu início foi bom. Mantenha os olhos no alvo, na presença de Deus, na meta celestial. Continue fiel até o fim.
+
+Conclusão:
+O fim será melhor quando mantivermos nossa fé, nossa esperança e nosso amor em Cristo Jesus. Ele que começou a boa obra em nós há de completá-la até o dia de Cristo Jesus.`,
+    dataAtualizacao: new Date().toISOString()
   },
+  
   agenda: [
-    { tipo: "recorrente", titulo: "Culto às Quintas", horario: "20h", descricao: "Todas as quintas-feiras | Templo Principal" },
-    { tipo: "recorrente", titulo: "Culto aos Domingos", horario: "18h", descricao: "Todos os domingos | Templo Principal" },
-    { tipo: "recorrente", titulo: "Oração Diária", horario: "8h", descricao: "Todos os dias | Presencial na Igreja" },
-    { tipo: "recorrente", titulo: "Oração Quarta-feira", horario: "5h", descricao: "Todas as quartas-feiras | Presencial na Igreja" }
+    {
+      id: Date.now().toString(),
+      tipo: "recorrente",
+      titulo: "Culto de Oração",
+      horario: "Quarta-feira às 20h",
+      descricao: "Momento de intercessão pela igreja, família e nação.",
+      icone: "fas fa-hands-praying"
+    },
+    {
+      id: (Date.now() + 1).toString(),
+      tipo: "recorrente",
+      titulo: "Culto de Celebração",
+      horario: "Domingo às 18h30",
+      descricao: "Culto principal com louvor, palavra e celebração.",
+      icone: "fas fa-church"
+    },
+    {
+      id: (Date.now() + 2).toString(),
+      tipo: "recorrente",
+      titulo: "Escola Bíblica",
+      horario: "Domingo às 17h",
+      descricao: "Estudo sistemático da Palavra de Deus.",
+      icone: "fas fa-book-bible"
+    }
   ],
+  
   contatos: [
-    { nome: "Bruno Dos Santos", cargo: "Líder - Aviva Teens", numero: "+55 11 96354-4213" },
-    { nome: "Caroline Ramos", cargo: "Líder - Aviva Teens", numero: "+55 11 96315-3635" },
-    { nome: "Dejair", cargo: "Presbítero - Louvor e Adoração", numero: "+55 69 9381-6282" },
-    { nome: "Fabiano", cargo: "Presbítero - Aviva Casais", numero: "+55 11 94736-5680" },
-    { nome: "Juliane Lirio Farias", cargo: "Obreira - Aviva Kids", numero: "+55 11 99107-8595" },
-    { nome: "Pr Will", cargo: "Pastor - Aviva Jovens", numero: "+55 11 98268-5622" },
-    { nome: "Pra Tatiani", cargo: "Pastora - Aviva Jovens", numero: "+55 11 95984-4501" },
-    { nome: "Rose Ribeiro", cargo: "Pastora - Aviva Kids", numero: "+55 11 98956-4020" },
-    { nome: "Stefane", cargo: "Presbítera - Aviva Obreiros", numero: "+55 11 94069-6532" },
-    { nome: "Vanessa Sede", cargo: "Presbítera - Aviva Casais", numero: "+55 11 97663-2641" }
+    { id: 1, nome: "Bruno Dos Santos", cargo: "Líder - Aviva Teens", numero: "+55 11 96354-4213" },
+    { id: 2, nome: "Caroline Ramos", cargo: "Líder - Aviva Teens", numero: "+55 11 96315-3635" },
+    { id: 3, nome: "Dejair", cargo: "Presbítero - Louvor e Adoração", numero: "+55 69 9381-6282" },
+    { id: 4, nome: "Fabiano", cargo: "Presbítero - Aviva Casais", numero: "+55 11 94736-5680" },
+    { id: 5, nome: "Juliane Lirio Farias", cargo: "Obreira - Aviva Kids", numero: "+55 11 99107-8595" },
+    { id: 6, nome: "Pr Will", cargo: "Pastor - Aviva Jovens", numero: "+55 11 98268-5622" },
+    { id: 7, nome: "Pra Tatiani", cargo: "Pastora - Aviva Jovens", numero: "+55 11 95984-4501" },
+    { id: 8, nome: "Rose Ribeiro", cargo: "Pastora - Aviva Kids", numero: "+55 11 98956-4020" },
+    { id: 9, nome: "Stefane", cargo: "Presbítera - Aviva Obreiros", numero: "+55 11 94069-6532" },
+    { id: 10, nome: "Vanessa Sede", cargo: "Presbítera - Aviva Casais", numero: "+55 11 97663-2641" }
   ],
+  
   links: {
-    oracao: "https://forms.gle/SEU_LINK_ORACAO",
-    aconselhamento: "https://forms.gle/SEU_LINK_ACONSELHAMENTO",
-    visitante: "https://forms.gle/SEU_LINK_VISITANTE",
-    youtube: "https://www.youtube.com/c/CristoAVIVAEsperan%C3%A7a/streams"
+    oracao: "https://forms.gle/oracao",
+    aconselhamento: "https://forms.gle/aconselhamento",
+    visitante: "https://forms.gle/visitante",
+    youtube: "https://www.youtube.com/c/CristoAVIVAEsperan%C3%A7a",
+    facebook: "https://www.facebook.com/MCVEOFICIAL",
+    instagram: "https://www.instagram.com/mcvesede",
+    whatsapp: "https://wa.me/5511991167256"
   },
+  
   eventosEspeciais: {
     ativo: true,
     titulo: "Campanha das Primícias",
-    periodo: "01 a 12 de Janeiro de 2026",
-    tema: "2026 ANO APOSTÓLICO CONECTANDO AS GERAÇÕES",
+    periodo: "Janeiro 2026",
+    tema: "Consagrando o Primeiro ao Senhor",
     versiculo: {
-      texto: "E o que de mim, entre muitas testemunhas, ouviste, confia-o a homens fiéis, que sejam idôneos para também ensinarem os outros.",
-      referencia: "2 Timóteo 2:1,2"
+      texto: "Honra ao SENHOR com os teus bens e com as primícias de toda a tua renda; e se encherão os teus celeiros abundantemente, e transbordarão de mosto os teus lagares.",
+      referencia: "Provérbios 3:9-10"
     },
-    descricao: "Venha semear os seus primeiros dias do ano, e colher um ano de MILAGRES e VITORIAS.",
-    inscricoes: []
+    descricao: "Venha consagrar o primeiro mês do ano ao Senhor! Uma semana especial de cultos e consagração para começarmos o ano na presença de Deus.",
+    inscricoes: [],
+    dataInicio: "2026-01-01",
+    dataFim: "2026-01-31"
   },
+  
   meditacaoDiaria: [
     {
-      id: 1,
+      id: Date.now().toString(),
       titulo: "Paz para a Alma",
       duracao: "1 min",
       descricao: "Comece seu dia com paz interior e serenidade.",
       tipo: "youtube",
       url: "https://www.youtube.com/embed/0vrS1-MJus4",
       categoria: "Paz",
-      data: "2024-01-15"
+      data: new Date().toISOString().split('T')[0],
+      views: 0
     },
     {
-      id: 2,
+      id: (Date.now() + 1).toString(),
       titulo: "Renovação Espiritual", 
       duracao: "2 min",
       descricao: "Momento de renovação e conexão com Deus.",
       tipo: "youtube",
       url: "https://www.youtube.com/embed/0vrS1-MJus4",
       categoria: "Renovação",
-      data: "2024-01-16"
+      data: new Date().toISOString().split('T')[0],
+      views: 0
     }
   ]
 };
@@ -119,34 +173,148 @@ const initialData = {
 async function loadData() {
   try {
     const raw = await fs.readFile(path.join(__dirname, 'data.json'), 'utf8');
-    return JSON.parse(raw);
+    const data = JSON.parse(raw);
+    
+    // Verificar e adicionar IDs se necessário
+    if (!data.agenda.every(item => item.id)) {
+      data.agenda = data.agenda.map((item, index) => ({
+        ...item,
+        id: item.id || (Date.now() + index).toString()
+      }));
+    }
+    
+    if (!data.contatos.every(item => item.id)) {
+      data.contatos = data.contatos.map((item, index) => ({
+        ...item,
+        id: item.id || (index + 1)
+      }));
+    }
+    
+    return data;
   } catch (err) {
-    console.log("data.json não existe → criando com dados iniciais...");
+    console.log("data.json não encontrado → criando com dados iniciais...");
     await saveData(initialData);
     return initialData;
   }
 }
 
 async function saveData(data) {
-  await fs.writeFile(path.join(__dirname, 'data.json'), JSON.stringify(data, null, 2));
+  try {
+    await fs.writeFile(
+      path.join(__dirname, 'data.json'), 
+      JSON.stringify(data, null, 2)
+    );
+    console.log("Dados salvos com sucesso");
+  } catch (err) {
+    console.error("Erro ao salvar dados:", err);
+    throw err;
+  }
 }
 
+// ================= ROTAS DO SERVICE WORKER E PWA =================
+app.get('/sw.js', (req, res) => {
+  res.setHeader('Content-Type', 'application/javascript');
+  res.sendFile(path.join(__dirname, 'public', 'sw.js'));
+});
+
+app.get('/manifest.json', (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  const manifest = {
+    name: "AVIVA - Portal dos Membros",
+    short_name: "AVIVA",
+    description: "Portal do Ministério Cristo a Viva Esperança",
+    start_url: "/",
+    display: "standalone",
+    orientation: "portrait",
+    background_color: "#0f172a",
+    theme_color: "#1e293b",
+    icons: [
+      {
+        src: "/logo.jpeg",
+        sizes: "192x192",
+        type: "image/jpeg"
+      },
+      {
+        src: "/logo.jpeg",
+        sizes: "512x512",
+        type: "image/jpeg"
+      }
+    ],
+    categories: ["lifestyle", "religious"],
+    lang: "pt-BR"
+  };
+  res.json(manifest);
+});
+
 // ================= ROTAS API =================
+
+// GET todos os dados
 app.get('/api/data', async (req, res) => {
   try {
     const data = await loadData();
     res.json(data);
   } catch (err) {
-    res.status(500).json({ error: "Erro ao carregar dados" });
+    console.error("Erro ao carregar dados:", err);
+    res.status(500).json({ error: "Erro ao carregar dados", details: err.message });
   }
 });
 
+// GET dados específicos
+app.get('/api/palavra-semana', async (req, res) => {
+  try {
+    const data = await loadData();
+    res.json(data.palavraSemana);
+  } catch (err) {
+    res.status(500).json({ error: "Erro ao carregar palavra da semana" });
+  }
+});
+
+app.get('/api/eventos-especiais', async (req, res) => {
+  try {
+    const data = await loadData();
+    res.json(data.eventosEspeciais);
+  } catch (err) {
+    res.status(500).json({ error: "Erro ao carregar eventos especiais" });
+  }
+});
+
+app.get('/api/meditacao', async (req, res) => {
+  try {
+    const data = await loadData();
+    res.json(data.meditacaoDiaria);
+  } catch (err) {
+    res.status(500).json({ error: "Erro ao carregar meditação diária" });
+  }
+});
+
+app.get('/api/agenda', async (req, res) => {
+  try {
+    const data = await loadData();
+    res.json(data.agenda);
+  } catch (err) {
+    res.status(500).json({ error: "Erro ao carregar agenda" });
+  }
+});
+
+app.get('/api/contatos', async (req, res) => {
+  try {
+    const data = await loadData();
+    res.json(data.contatos);
+  } catch (err) {
+    res.status(500).json({ error: "Erro ao carregar contatos" });
+  }
+});
+
+// POST para atualizar dados
 app.post('/api/versiculo', async (req, res) => {
   try {
     const data = await loadData();
-    data.versiculo = req.body;
+    data.versiculo = {
+      ...req.body,
+      dataAtualizacao: new Date().toISOString()
+    };
     await saveData(data);
-    res.json({ success: true });
+    res.json({ success: true, message: "Versículo atualizado com sucesso" });
   } catch (err) {
     res.status(500).json({ error: "Erro ao salvar versículo" });
   }
@@ -155,9 +323,12 @@ app.post('/api/versiculo', async (req, res) => {
 app.post('/api/palavra-semana', async (req, res) => {
   try {
     const data = await loadData();
-    data.palavraSemana = req.body;
+    data.palavraSemana = {
+      ...req.body,
+      dataAtualizacao: new Date().toISOString()
+    };
     await saveData(data);
-    res.json({ success: true });
+    res.json({ success: true, message: "Palavra da semana atualizada com sucesso" });
   } catch (err) {
     res.status(500).json({ error: "Erro ao salvar palavra da semana" });
   }
@@ -166,9 +337,12 @@ app.post('/api/palavra-semana', async (req, res) => {
 app.post('/api/agenda', async (req, res) => {
   try {
     const data = await loadData();
-    data.agenda = req.body;
+    data.agenda = req.body.map(item => ({
+      ...item,
+      id: item.id || Date.now().toString()
+    }));
     await saveData(data);
-    res.json({ success: true });
+    res.json({ success: true, message: "Agenda atualizada com sucesso" });
   } catch (err) {
     res.status(500).json({ error: "Erro ao salvar agenda" });
   }
@@ -177,9 +351,12 @@ app.post('/api/agenda', async (req, res) => {
 app.post('/api/contatos', async (req, res) => {
   try {
     const data = await loadData();
-    data.contatos = req.body;
+    data.contatos = req.body.map((item, index) => ({
+      ...item,
+      id: item.id || (index + 1)
+    }));
     await saveData(data);
-    res.json({ success: true });
+    res.json({ success: true, message: "Contatos atualizados com sucesso" });
   } catch (err) {
     res.status(500).json({ error: "Erro ao salvar contatos" });
   }
@@ -190,7 +367,7 @@ app.post('/api/links', async (req, res) => {
     const data = await loadData();
     data.links = req.body;
     await saveData(data);
-    res.json({ success: true });
+    res.json({ success: true, message: "Links atualizados com sucesso" });
   } catch (err) {
     res.status(500).json({ error: "Erro ao salvar links" });
   }
@@ -201,28 +378,67 @@ app.post('/api/eventos-especiais', async (req, res) => {
     const data = await loadData();
     data.eventosEspeciais = req.body;
     await saveData(data);
-    res.json({ success: true });
+    res.json({ success: true, message: "Eventos especiais atualizados com sucesso" });
   } catch (err) {
     res.status(500).json({ error: "Erro ao salvar eventos especiais" });
   }
 });
 
+// POST inscrições
 app.post('/api/inscricoes', async (req, res) => {
   try {
     const data = await loadData();
-    data.eventosEspeciais.inscricoes.push({
+    if (!data.eventosEspeciais.inscricoes) {
+      data.eventosEspeciais.inscricoes = [];
+    }
+    
+    const inscricao = {
       ...req.body,
+      id: Date.now().toString(),
       dataInscricao: new Date().toISOString(),
-      id: Date.now().toString()
-    });
+      status: "pendente"
+    };
+    
+    data.eventosEspeciais.inscricoes.push(inscricao);
     await saveData(data);
-    res.json({ success: true });
+    
+    res.json({ 
+      success: true, 
+      message: "Inscrição realizada com sucesso!",
+      inscricao: inscricao
+    });
   } catch (err) {
-    res.status(500).json({ error: "Erro ao salvar inscrição" });
+    res.status(500).json({ error: "Erro ao salvar inscrição: " + err.message });
   }
 });
 
-// ROTA DE UPLOAD DE VÍDEOS
+// GET inscrições
+app.get('/api/inscricoes', async (req, res) => {
+  try {
+    const data = await loadData();
+    res.json(data.eventosEspeciais?.inscricoes || []);
+  } catch (err) {
+    res.status(500).json({ error: "Erro ao carregar inscrições" });
+  }
+});
+
+// POST meditação diária
+app.post('/api/meditacao', async (req, res) => {
+  try {
+    const data = await loadData();
+    data.meditacaoDiaria = req.body.map(item => ({
+      ...item,
+      id: item.id || Date.now().toString(),
+      views: item.views || 0
+    }));
+    await saveData(data);
+    res.json({ success: true, message: "Meditação diária atualizada com sucesso" });
+  } catch (err) {
+    res.status(500).json({ error: "Erro ao salvar meditação diária" });
+  }
+});
+
+// POST upload de vídeo
 app.post('/api/upload-video', upload.single('video'), async (req, res) => {
   try {
     if (!req.file) {
@@ -232,21 +448,22 @@ app.post('/api/upload-video', upload.single('video'), async (req, res) => {
     const data = await loadData();
     
     const novoVideo = {
-      id: Date.now(),
-      titulo: req.body.titulo,
-      duracao: req.body.duracao,
-      descricao: req.body.descricao,
-      categoria: req.body.categoria,
+      id: Date.now().toString(),
+      titulo: req.body.titulo || "Vídeo sem título",
+      duracao: req.body.duracao || "0 min",
+      descricao: req.body.descricao || "",
+      categoria: req.body.categoria || "Geral",
       tipo: "upload",
       url: '/uploads/' + req.file.filename,
-      data: new Date().toISOString().split('T')[0]
+      data: new Date().toISOString().split('T')[0],
+      views: 0
     };
 
     if (!data.meditacaoDiaria) {
       data.meditacaoDiaria = [];
     }
 
-    data.meditacaoDiaria.push(novoVideo);
+    data.meditacaoDiaria.unshift(novoVideo); // Adiciona no início
     await saveData(data);
 
     res.json({ 
@@ -255,22 +472,12 @@ app.post('/api/upload-video', upload.single('video'), async (req, res) => {
       message: "Vídeo enviado com sucesso!" 
     });
   } catch (err) {
+    console.error("Erro no upload:", err);
     res.status(500).json({ error: "Erro ao fazer upload do vídeo: " + err.message });
   }
 });
 
-app.post('/api/meditacao', async (req, res) => {
-  try {
-    const data = await loadData();
-    data.meditacaoDiaria = req.body;
-    await saveData(data);
-    res.json({ success: true });
-  } catch (err) {
-    res.status(500).json({ error: "Erro ao salvar meditação diária" });
-  }
-});
-
-// Rota para deletar vídeo
+// DELETE vídeo
 app.delete('/api/video/:id', async (req, res) => {
   try {
     const data = await loadData();
@@ -301,23 +508,133 @@ app.delete('/api/video/:id', async (req, res) => {
   }
 });
 
+// POST incrementar views do vídeo
+app.post('/api/video/:id/view', async (req, res) => {
+  try {
+    const data = await loadData();
+    const video = data.meditacaoDiaria.find(v => v.id == req.params.id);
+    
+    if (!video) {
+      return res.status(404).json({ error: "Vídeo não encontrado" });
+    }
+
+    video.views = (video.views || 0) + 1;
+    await saveData(data);
+
+    res.json({ success: true, views: video.views });
+  } catch (err) {
+    res.status(500).json({ error: "Erro ao incrementar views" });
+  }
+});
+
+// POST backup de dados
+app.post('/api/backup', async (req, res) => {
+  try {
+    const data = await loadData();
+    const backupDir = path.join(__dirname, 'backups');
+    
+    if (!fsSync.existsSync(backupDir)) {
+      fsSync.mkdirSync(backupDir, { recursive: true });
+    }
+    
+    const backupFile = path.join(backupDir, `backup-${Date.now()}.json`);
+    await fs.writeFile(backupFile, JSON.stringify(data, null, 2));
+    
+    res.json({ 
+      success: true, 
+      message: "Backup criado com sucesso",
+      file: backupFile 
+    });
+  } catch (err) {
+    res.status(500).json({ error: "Erro ao criar backup" });
+  }
+});
+
+// GET lista de backups
+app.get('/api/backups', async (req, res) => {
+  try {
+    const backupDir = path.join(__dirname, 'backups');
+    
+    if (!fsSync.existsSync(backupDir)) {
+      return res.json([]);
+    }
+    
+    const files = await fs.readdir(backupDir);
+    const backups = files
+      .filter(file => file.endsWith('.json'))
+      .map(file => ({
+        name: file,
+        path: path.join(backupDir, file),
+        size: fsSync.statSync(path.join(backupDir, file)).size
+      }));
+    
+    res.json(backups);
+  } catch (err) {
+    res.status(500).json({ error: "Erro ao listar backups" });
+  }
+});
+
 // ================= ROTAS DE PÁGINA =================
 app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'admin.html'));
 });
 
 app.get('/meditacao', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'meditacao-diaria.html'));
+  res.sendFile(path.join(__dirname, 'public', 'meditacao.html'));
 });
 
+// Health check
+app.get('/health', (req, res) => {
+  res.json({ 
+    status: 'ok', 
+    timestamp: new Date().toISOString(),
+    version: '1.0.0'
+  });
+});
+
+// Fallback para SPA
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// ================= INICIAR SERVIDOR =================
-app.listen(PORT, () => {
-  console.log(`🚀 SERVIDOR RODANDO → http://localhost:${PORT}`);
-  console.log(`📱 Página principal → http://localhost:${PORT}`);
-  console.log(`🧘 Meditação Diária → http://localhost:${PORT}/meditacao`);
-  console.log(`⚙️  Painel Admin     → http://localhost:${PORT}/admin`);
+// ================= TRATAMENTO DE ERROS =================
+app.use((err, req, res, next) => {
+  console.error('Erro:', err.message);
+  
+  if (err instanceof multer.MulterError) {
+    if (err.code === 'LIMIT_FILE_SIZE') {
+      return res.status(400).json({ error: "Arquivo muito grande. Tamanho máximo: 100MB" });
+    }
+  }
+  
+  res.status(500).json({ 
+    error: "Erro interno do servidor",
+    message: process.env.NODE_ENV === 'development' ? err.message : undefined
+  });
 });
+
+// ================= INICIAR SERVIDOR =================
+async function startServer() {
+  try {
+    // Garantir que os dados iniciais existam
+    await loadData();
+    
+    app.listen(PORT, () => {
+      console.log(`\n🚀 SERVIDOR RODANDO NA PORTA ${PORT}`);
+      console.log(`📱 Página principal → http://localhost:${PORT}`);
+      console.log(`🧘 Meditação Diária → http://localhost:${PORT}/meditacao`);
+      console.log(`⚙️  Painel Admin     → http://localhost:${PORT}/admin`);
+      console.log(`📊 API disponível   → http://localhost:${PORT}/api/data`);
+      console.log(`🩺 Health check     → http://localhost:${PORT}/health`);
+      console.log(`🔄 Service Worker   → http://localhost:${PORT}/sw.js`);
+      console.log(`📄 Manifest         → http://localhost:${PORT}/manifest.json`);
+      console.log(`\n⚡ AVIVA App pronto para uso!`);
+    });
+  } catch (err) {
+    console.error("Erro ao iniciar servidor:", err);
+    process.exit(1);
+  }
+}
+
+// Iniciar servidor
+startServer();
