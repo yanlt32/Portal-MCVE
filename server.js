@@ -654,6 +654,45 @@ async function startServer() {
     process.exit(1);
   }
 }
+// ========== ROTAS PARA O CRON-JOB ==========
 
+// Rota simples para o cron-job
+app.get('/ping', (req, res) => {
+  console.log(`✅ Ping recebido: ${new Date().toLocaleTimeString()}`);
+  res.json({ 
+    status: 'alive',
+    timestamp: new Date().toISOString(),
+    message: 'AVIVA Portal Online',
+    uptime: process.uptime()
+  });
+});
+
+// Rota de saúde mais completa
+app.get('/health', (req, res) => {
+  res.json({
+    status: 'healthy',
+    server: 'AVIVA Portal',
+    version: '1.0.0',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    memory: process.memoryUsage(),
+    requests: requestCount
+  });
+});
+
+// Rota de status (para verificar manualmente)
+app.get('/status', (req, res) => {
+  res.json({
+    online: true,
+    lastPing: new Date().toISOString(),
+    url: 'https://' + req.get('host'),
+    endpoints: {
+      ping: '/ping',
+      health: '/health',
+      main: '/',
+      api: '/api/data'
+    }
+  });
+});
 // Iniciar servidor
 startServer();
