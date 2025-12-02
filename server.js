@@ -1,3 +1,5 @@
+
+
 const express = require('express');
 const path = require('path');
 const fs = require('fs').promises;
@@ -6,6 +8,23 @@ const multer = require('multer');
 const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+
+// Adicione isto ANTES de tudo no server.js
+const KEEP_ALIVE_INTERVAL = 10 * 60 * 1000; // 10 minutos
+
+// Função para manter o servidor ativo
+function startKeepAlive() {
+  setInterval(() => {
+    console.log(`🔄 Keep-alive: ${new Date().toISOString()}`);
+    
+    // Opcional: fazer uma requisição interna
+    fetch(`http://localhost:${PORT}/health`)
+      .then(res => console.log('✅ Health check interno:', res.status))
+      .catch(err => console.log('⚠️  Health check falhou:', err.message));
+      
+  }, KEEP_ALIVE_INTERVAL);
+}
 
 // ================= CONFIGURAÇÃO MULTER (UPLOAD DE VÍDEOS) =================
 const uploadDir = path.join(__dirname, 'public', 'uploads');
