@@ -1,5 +1,5 @@
-const CACHE_NAME = 'aviva-cache-v1';
-const APP_VERSION = '1.0.0';
+const CACHE_NAME = 'aviva-cache-v3';
+const APP_VERSION = '2.0.0';
 
 // URLs para cache
 const urlsToCache = [

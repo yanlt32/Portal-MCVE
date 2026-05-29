@@ -1,7 +1,8 @@
 {
   "versiculo": {
     "texto": "Bendito seja o Deus e Pai de nosso Senhor Jesus Cristo, que, segundo a sua grande misericórdia, nos gerou de novo para uma viva esperança, pela ressurreição de Jesus Cristo dentre os mortos.",
-    "referencia": "1 Pedro 1:3"
+    "referencia": "1 Pedro 1:2",
+    "dataAtualizacao": "2026-05-29T21:58:07.979Z"
   },
   "palavraSemana": {
     "titulo": "O FIM É MELHOR DO QUE O COMEÇO",
@@ -12,92 +13,130 @@
       "tipo": "recorrente",
       "titulo": "Culto às Quintas",
       "horario": "20h",
-      "descricao": "Todas as quintas-feiras | Templo Principal"
+      "descricao": "Todas as quintas-feiras | Templo Principal",
+      "id": "1780091887979"
     },
     {
       "tipo": "recorrente",
       "titulo": "Culto aos Domingos",
       "horario": "18h",
-      "descricao": "Todos os domingos | Templo Principal"
+      "descricao": "Todos os domingos | Templo Principal",
+      "id": "1780091887980"
     },
     {
       "tipo": "recorrente",
       "titulo": "Oração Diária",
       "horario": "8h",
-      "descricao": "Todos os dias | Presencial na Igreja"
+      "descricao": "Todos os dias | Presencial na Igreja",
+      "id": "1780091887981"
     },
     {
       "tipo": "recorrente",
       "titulo": "Oração Quarta-feira",
       "horario": "5h",
-      "descricao": "Todas as quartas-feiras | Presencial na Igreja"
+      "descricao": "Todas as quartas-feiras | Presencial na Igreja",
+      "id": "1780091887982"
     },
     {
       "tipo": "especial",
       "data": "02/12",
       "titulo": "Formatura do Rever",
       "horario": "20h",
-      "descricao": "Templo Principal"
+      "descricao": "Templo Principal",
+      "id": "1780091887983"
     },
     {
       "tipo": "especial",
       "data": "06/12",
       "titulo": "Aviva Teens",
       "horario": "18h",
-      "descricao": "Templo Principal"
+      "descricao": "Templo Principal",
+      "id": "1780091887984"
     }
   ],
   "contatos": [
     {
       "nome": "Bruno Dos Santos",
       "cargo": "Líder - Aviva Teens",
-      "numero": "+55 11 96354-4213"
+      "numero": "+55 11 96354-4213",
+      "id": 1
     },
     {
       "nome": "Caroline Ramos",
       "cargo": "Líder - Aviva Teens",
-      "numero": "+55 11 96315-3635"
+      "numero": "+55 11 96315-3635",
+      "id": 2
     },
     {
       "nome": "Dejair",
       "cargo": "Presbítero - Louvor e Adoração",
-      "numero": "+55 69 9381-6282"
+      "numero": "+55 69 9381-6282",
+      "id": 3
     },
     {
       "nome": "Fabiano",
       "cargo": "Presbítero - Aviva Casais",
-      "numero": "+55 11 94736-5680"
+      "numero": "+55 11 94736-5680",
+      "id": 4
     },
     {
       "nome": "Juliane Lirio Farias",
       "cargo": "Obreira - Aviva Kids",
-      "numero": "+55 11 99107-8595"
+      "numero": "+55 11 99107-8595",
+      "id": 5
     },
     {
       "nome": "Pr Will",
       "cargo": "Pastor - Aviva Jovens",
-      "numero": "+55 11 98268-5622"
+      "numero": "+55 11 98268-5622",
+      "id": 6
     },
     {
       "nome": "Pra Tatiani",
       "cargo": "Pastora - Aviva Jovens",
-      "numero": "+55 11 95984-4501"
+      "numero": "+55 11 95984-4501",
+      "id": 7
     },
     {
       "nome": "Rose Ribeiro",
       "cargo": "Pastora - Aviva Kids",
-      "numero": "+55 11 98956-4020"
+      "numero": "+55 11 98956-4020",
+      "id": 8
     },
     {
       "nome": "Stefane",
       "cargo": "Presbítera - Aviva Obreiros",
-      "numero": "+55 11 94069-6532"
+      "numero": "+55 11 94069-6532",
+      "id": 9
     },
     {
       "nome": "Vanessa Sede",
       "cargo": "Presbítera - Aviva Casais",
-      "numero": "+55 11 97663-2641"
+      "numero": "+55 11 97663-2641",
+      "id": 10
     }
   ],
-  "meditacaoDiaria": []
+  "meditacaoDiaria": [],
+  "links": {
+    "oracao": "https://forms.gle/oracao",
+    "aconselhamento": "https://forms.gle/aconselhamento",
+    "visitante": "https://forms.gle/visitante",
+    "youtube": "https://www.youtube.com/c/CristoAVIVAEsperan%C3%A7a/streams",
+    "facebook": "https://www.facebook.com/MCVEOFICIAL",
+    "instagram": "https://www.instagram.com/mcvesede",
+    "whatsapp": "https://wa.me/5511991167256"
+  },
+  "eventosEspeciais": {
+    "ativo": false,
+    "titulo": "",
+    "periodo": "",
+    "tema": "",
+    "descricao": "",
+    "versiculo": { "texto": "", "referencia": "" },
+    "inscricoes": []
+  },
+  "estudos": [],
+  "visitantes": [],
+  "pedidosOracao": [],
+  "pedidosAconselhamento": []
 }

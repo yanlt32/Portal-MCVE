@@ -630,106 +630,151 @@ function showNotification(message, type = 'info') {
 }
 
 // ================= INSTALAÇÃO PWA =================
+const INSTALL_STORAGE_KEY = 'aviva_app_installed';
+const BANNER_DISMISSED_KEY = 'aviva_banner_dismissed_until';
+
+function jaInstalado() {
+  return localStorage.getItem(INSTALL_STORAGE_KEY) === '1';
+}
+
+function bannerDispensado() {
+  const ate = localStorage.getItem(BANNER_DISMISSED_KEY);
+  return ate && Date.now() < Number(ate);
+}
+
 function setupPWAInstall() {
-  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
   const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
-  
-  if ((isIOS || isAndroid()) && !isStandalone) {
-    createInstallBanner();
-  }
-  
-  // Detectar evento de instalação
+  if (isStandalone || jaInstalado()) return;
+
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     window.deferredPrompt = e;
-    
-    if (!isStandalone) {
-      showInstallPrompt();
-    }
+    if (!bannerDispensado()) showInstallPrompt();
   });
+
+  // Detecta quando o app foi instalado com sucesso
+  window.addEventListener('appinstalled', () => {
+    localStorage.setItem(INSTALL_STORAGE_KEY, '1');
+    const b = document.getElementById('installBanner');
+    if (b) b.remove();
+  });
+
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  if ((isIOS || isAndroid()) && !bannerDispensado()) {
+    criarBannerInstall();
+  }
 }
 
-function isAndroid() {
-  return /Android/.test(navigator.userAgent);
+function isAndroid() { return /Android/.test(navigator.userAgent); }
+
+function showInstallPrompt() {
+  const banner = document.getElementById('installBanner');
+  if (banner) banner.classList.add('show');
+  else criarBannerInstall();
 }
 
-function createInstallBanner() {
-  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-  
-  const bannerHTML = `
+function criarBannerInstall() {
+  if (document.getElementById('installBanner')) return;
+  document.body.insertAdjacentHTML('beforeend', `
     <div class="install-banner" id="installBanner">
       <div class="install-banner-content">
-        <div class="app-icon">
-          <i class="fas fa-church"></i>
-        </div>
+        <div class="app-icon"><i class="fas fa-church"></i></div>
         <div class="app-info">
           <div class="app-name">AVIVA App</div>
-          <div class="app-desc">Instale para acesso rápido</div>
+          <div class="app-desc">Instale — rápido, sem anúncios</div>
         </div>
       </div>
       <div class="install-banner-actions">
-        <button class="btn-install" id="btnInstallPWA">
-          <i class="fas fa-download"></i> Instalar
-        </button>
+        <button class="btn-install" id="btnInstallPWA"><i class="fas fa-download"></i> Instalar</button>
         <button class="btn-close" id="btnCloseBanner">&times;</button>
       </div>
     </div>
-  `;
-  
-  document.body.insertAdjacentHTML('beforeend', bannerHTML);
-  
-  // Eventos do banner
+  `);
+
   document.getElementById('btnCloseBanner').addEventListener('click', () => {
     document.getElementById('installBanner').classList.remove('show');
+    // Não mostra de novo por 7 dias
+    localStorage.setItem(BANNER_DISMISSED_KEY, String(Date.now() + 7 * 24 * 60 * 60 * 1000));
   });
-  
-  document.getElementById('btnInstallPWA').addEventListener('click', () => {
-    showInstallInstructions();
-  });
-  
-  // Mostrar banner após 5 segundos
+
+  document.getElementById('btnInstallPWA').addEventListener('click', abrirGuiaInstalacao);
+
   setTimeout(() => {
-    const banner = document.getElementById('installBanner');
-    if (banner) banner.classList.add('show');
-  }, 5000);
+    const b = document.getElementById('installBanner');
+    if (b) b.classList.add('show');
+  }, 4000);
 }
 
-function showInstallInstructions() {
-  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-  
-  if (isIOS) {
-    const instructions = `
-      Para instalar o app no iPhone/iPad:
-      
-      1. Abra o site no Safari
-      2. Toque no botão "Compartilhar" 📤
-      3. Role para baixo e toque em "Adicionar à Tela de Início"
-      4. Toque em "Adicionar"
-      
-      O ícone do AVIVA aparecerá na sua tela inicial!`;
-    
-    alert(instructions);
-  } else if (window.deferredPrompt) {
-    // Prompt de instalação nativo
+function abrirGuiaInstalacao() {
+  // Tenta o prompt nativo (Android Chrome)
+  if (window.deferredPrompt) {
     window.deferredPrompt.prompt();
-    window.deferredPrompt.userChoice.then((choiceResult) => {
-      if (choiceResult.outcome === 'accepted') {
-        console.log('Usuário aceitou a instalação');
-      }
+    window.deferredPrompt.userChoice.then(r => {
+      if (r.outcome === 'accepted') localStorage.setItem(INSTALL_STORAGE_KEY, '1');
       window.deferredPrompt = null;
+      const b = document.getElementById('installBanner');
+      if (b) b.classList.remove('show');
     });
-  } else {
-    const instructions = `
-      Para instalar o app:
-      
-      1. Abra o menu do navegador (⋮)
-      2. Selecione "Instalar aplicativo"
-      3. Confirme a instalação
-      
-      Ou procure por "Adicionar à tela inicial" no menu.`;
-    
-    alert(instructions);
+    return;
   }
+
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  const isAndroidDevice = isAndroid();
+
+  let passos = '';
+  let titulo = '';
+
+  if (isIOS) {
+    titulo = '📱 Instalar no iPhone / iPad';
+    passos = `
+      <div class="install-step"><span class="install-num">1</span><div><strong>Abra no Safari</strong><br><small>O app só pode ser instalado pelo Safari (não Chrome)</small></div></div>
+      <div class="install-step"><span class="install-num">2</span><div><strong>Toque em Compartilhar</strong> <span style="font-size:1.3rem">📤</span><br><small>Botão na barra inferior do Safari</small></div></div>
+      <div class="install-step"><span class="install-num">3</span><div><strong>Role e toque em "Adicionar à Tela de Início"</strong> <span style="font-size:1.1rem">➕</span></div></div>
+      <div class="install-step"><span class="install-num">4</span><div><strong>Toque em "Adicionar"</strong><br><small>O ícone AVIVA vai aparecer na sua tela inicial!</small></div></div>`;
+  } else if (isAndroidDevice) {
+    titulo = '🤖 Instalar no Android';
+    passos = `
+      <div class="install-step"><span class="install-num">1</span><div><strong>Abra no Chrome</strong><br><small>Se estiver em outro navegador, copie o link e abra no Chrome</small></div></div>
+      <div class="install-step"><span class="install-num">2</span><div><strong>Toque nos 3 pontos</strong> <span style="font-size:1.2rem">⋮</span><br><small>Canto superior direito da tela</small></div></div>
+      <div class="install-step"><span class="install-num">3</span><div><strong>Toque em "Instalar aplicativo"</strong><br><small>ou "Adicionar à tela inicial"</small></div></div>
+      <div class="install-step"><span class="install-num">4</span><div><strong>Confirme a instalação</strong><br><small>O ícone AVIVA vai aparecer na sua tela!</small></div></div>`;
+  } else {
+    titulo = '💻 Instalar no computador';
+    passos = `
+      <div class="install-step"><span class="install-num">1</span><div><strong>Clique nos 3 pontos</strong> no Chrome<br><small>Canto superior direito</small></div></div>
+      <div class="install-step"><span class="install-num">2</span><div><strong>Clique em "Instalar AVIVA…"</strong><br><small>ou procure "Salvar e compartilhar" → "Criar atalho"</small></div></div>
+      <div class="install-step"><span class="install-num">3</span><div><strong>Confirme clicando em "Instalar"</strong></div></div>`;
+  }
+
+  // Criar modal de instrução
+  const existente = document.getElementById('installGuideModal');
+  if (existente) existente.remove();
+
+  document.body.insertAdjacentHTML('beforeend', `
+    <div id="installGuideModal" style="position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:flex-end;padding:0">
+      <div style="background:#fff;border-radius:20px 20px 0 0;width:100%;max-height:85vh;overflow-y:auto;padding:1.5rem">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem">
+          <h3 style="font-size:1.1rem;font-weight:700">${titulo}</h3>
+          <button onclick="document.getElementById('installGuideModal').remove()" style="background:none;border:none;font-size:1.5rem;color:#6b7280;cursor:pointer;line-height:1">&times;</button>
+        </div>
+        <div id="installSteps">${passos}</div>
+        <button onclick="document.getElementById('installGuideModal').remove();localStorage.setItem('${INSTALL_STORAGE_KEY}','1');document.getElementById('installBanner')?.remove();"
+          style="width:100%;margin-top:1.2rem;padding:.9rem;background:#2563eb;color:#fff;border:none;border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer">
+          ✅ Já instalei o app!
+        </button>
+      </div>
+    </div>
+    <style>
+      .install-step{display:flex;align-items:flex-start;gap:.8rem;padding:.9rem;background:#f8fafc;border-radius:12px;margin-bottom:.6rem}
+      .install-num{min-width:28px;height:28px;background:#2563eb;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem}
+      .install-step small{color:#6b7280;font-size:.8rem}
+    </style>
+  `);
+
+  // Fechar clicando fora
+  document.getElementById('installGuideModal').addEventListener('click', function(e) {
+    if (e.target === this) this.remove();
+  });
 }
 
 // ================= EFEITOS VISUAIS =================

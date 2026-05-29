@@ -1,0 +1,54 @@
+{
+  "packageId": "br.com.mcve.aviva",
+  "host": "aviva-portal.onrender.com",
+  "name": "AVIVA",
+  "launcherName": "AVIVA",
+  "display": "standalone",
+  "orientation": "portrait",
+  "themeColor": "#2563eb",
+  "themeColorDark": "#1d4ed8",
+  "navigationColor": "#2563eb",
+  "navigationColorDark": "#1d4ed8",
+  "navigationDividerColor": "#2563eb",
+  "navigationDividerColorDark": "#1d4ed8",
+  "backgroundColor": "#ffffff",
+  "startUrl": "/",
+  "iconUrl": "https://aviva-portal.onrender.com/icons/icon-512x512.png",
+  "maskableIconUrl": "https://aviva-portal.onrender.com/icons/icon-512x512-maskable.png",
+  "monochromeIconUrl": "https://aviva-portal.onrender.com/icons/icon-192x192.png",
+  "appVersion": "1",
+  "appVersionName": "1.0.0",
+  "signingMode": "none",
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://aviva-portal.onrender.com/manifest.json",
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "fullScopeUrl": "https://aviva-portal.onrender.com/",
+  "minSdkVersion": 19,
+  "features": {
+    "locationDelegation": { "enabled": false },
+    "playBilling": { "enabled": false }
+  },
+  "alphaDependencies": { "enabled": false },
+  "enableNotifications": false,
+  "shortcuts": [
+    {
+      "name": "Palavra da Semana",
+      "short_name": "Palavra",
+      "url": "/#palavra-semana",
+      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Meditação Diária",
+      "short_name": "Meditação",
+      "url": "/meditacao",
+      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
+    }
+  ],
+  "generatedApp": false,
+  "retainedBundles": [],
+  "serviceAccountJsonFile": "",
+  "fallbackType": "customtabs",
+  "additionalTrustedOrigins": [],
+  "playStoreSigningKeyPath": null
+}

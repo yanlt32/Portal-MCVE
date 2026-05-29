@@ -1,1890 +1,975 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel Admin - AVIVA</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
-    :root {
-      --primary: #3b82f6;
-      --primary-dark: #2563eb;
-      --primary-light: #60a5fa;
-      --secondary: #1e293b;
-      --accent: #0ea5e9;
-      --success: #10b981;
-      --warning: #f59e0b;
-      --danger: #ef4444;
-      --dark: #0f172a;
-      --light: #ffffff;
-      --gray: #64748b;
-      --card-bg: rgba(255, 255, 255, 0.08);
-      --card-border: rgba(255, 255, 255, 0.12);
-    }
-    
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, var(--dark) 0%, var(--secondary) 100%);
-      color: var(--light);
-      min-height: 100vh;
-      line-height: 1.6;
-    }
-    
-    .container {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 0;
-    }
-    
-    /* Header */
-    .admin-header {
-      background: rgba(15, 23, 42, 0.95);
-      backdrop-filter: blur(10px);
-      padding: 1.5rem 2rem;
-      border-bottom: 1px solid var(--card-border);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    }
-    
-    .header-content {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-    
-    .header-left h1 {
-      font-size: 1.8rem;
-      color: var(--light);
-      margin-bottom: 0.25rem;
-    }
-    
-    .header-left .subtitle {
-      color: var(--primary-light);
-      font-size: 0.9rem;
-      opacity: 0.8;
-    }
-    
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    
-    /* Tabs Navigation */
-    .tabs-container {
-      background: rgba(15, 23, 42, 0.8);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--card-border);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    
-    .tabs {
-      display: flex;
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 0 2rem;
-      overflow-x: auto;
-    }
-    
-    .tab {
-      padding: 1rem 1.5rem;
-      background: transparent;
-      border: none;
-      color: var(--light);
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.3s;
-      border-bottom: 3px solid transparent;
-      white-space: nowrap;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    
-    .tab:hover {
-      background: rgba(59, 130, 246, 0.1);
-      color: var(--primary-light);
-    }
-    
-    .tab.active {
-      color: var(--primary);
-      border-bottom-color: var(--primary);
-      background: rgba(59, 130, 246, 0.15);
-    }
-    
-    /* Main Content */
-    .main-content {
-      padding: 2rem;
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-    
-    .tab-content {
-      display: none;
-    }
-    
-    .tab-content.active {
-      display: block;
-      animation: fadeIn 0.3s ease-in-out;
-    }
-    
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    
-    /* Cards Grid */
-    .cards-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-    }
-    
-    .admin-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 1.5rem;
-      backdrop-filter: blur(10px);
-      transition: all 0.3s;
-    }
-    
-    .admin-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-      border-color: var(--primary-light);
-    }
-    
-    .admin-card h2 {
-      color: var(--primary);
-      margin-bottom: 1rem;
-      font-size: 1.3rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    
-    /* Form Styles */
-    .form-group {
-      margin-bottom: 1.25rem;
-    }
-    
-    label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: 600;
-      color: var(--light);
-      font-size: 0.9rem;
-    }
-    
-    input, textarea, select {
-      width: 100%;
-      padding: 0.75rem 1rem;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.1);
-      color: var(--light);
-      font-size: 0.95rem;
-      transition: all 0.3s;
-    }
-    
-    input:focus, textarea:focus, select:focus {
-      outline: none;
-      border-color: var(--primary);
-      background: rgba(255, 255, 255, 0.15);
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-    }
-    
-    textarea {
-      min-height: 120px;
-      resize: vertical;
-      line-height: 1.5;
-    }
-    
-    /* Buttons */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      padding: 0.75rem 1.5rem;
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 0.95rem;
-      cursor: pointer;
-      transition: all 0.3s;
-      text-decoration: none;
-    }
-    
-    .btn-primary {
-      background: var(--primary);
-      color: white;
-    }
-    
-    .btn-primary:hover {
-      background: var(--primary-dark);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-    }
-    
-    .btn-success {
-      background: var(--success);
-      color: white;
-    }
-    
-    .btn-success:hover {
-      background: #059669;
-      transform: translateY(-1px);
-    }
-    
-    .btn-danger {
-      background: var(--danger);
-      color: white;
-    }
-    
-    .btn-danger:hover {
-      background: #dc2626;
-      transform: translateY(-1px);
-    }
-    
-    .btn-warning {
-      background: var(--warning);
-      color: white;
-    }
-    
-    .btn-warning:hover {
-      background: #d97706;
-      transform: translateY(-1px);
-    }
-    
-    .btn-outline {
-      background: transparent;
-      border: 1px solid var(--primary);
-      color: var(--primary);
-    }
-    
-    .btn-outline:hover {
-      background: var(--primary);
-      color: white;
-    }
-    
-    /* List Items */
-    .list-item {
-      background: rgba(255, 255, 255, 0.05);
-      padding: 1.25rem;
-      border-radius: 8px;
-      margin-bottom: 1rem;
-      border-left: 4px solid var(--primary);
-      transition: all 0.3s;
-    }
-    
-    .list-item:hover {
-      background: rgba(255, 255, 255, 0.08);
-      transform: translateX(4px);
-    }
-    
-    .item-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 0.75rem;
-    }
-    
-    .item-content h4 {
-      color: var(--light);
-      margin-bottom: 0.25rem;
-    }
-    
-    .item-content p {
-      color: var(--gray);
-      font-size: 0.9rem;
-      line-height: 1.4;
-    }
-    
-    .item-actions {
-      display: flex;
-      gap: 0.5rem;
-    }
-    
-    .btn-small {
-      padding: 0.5rem 0.75rem;
-      font-size: 0.85rem;
-    }
-    
-    /* Messages */
-    .message {
-      padding: 1rem 1.25rem;
-      border-radius: 8px;
-      margin-bottom: 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-    
-    .message.success {
-      background: rgba(16, 185, 129, 0.15);
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      color: #10b981;
-    }
-    
-    .message.error {
-      background: rgba(239, 68, 68, 0.15);
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      color: #ef4444;
-    }
-    
-    .message.warning {
-      background: rgba(245, 158, 11, 0.15);
-      border: 1px solid rgba(245, 158, 11, 0.3);
-      color: #f59e0b;
-    }
-    
-    /* Stats */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-    }
-    
-    .stat-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 1.5rem;
-      text-align: center;
-      transition: all 0.3s;
-    }
-    
-    .stat-card:hover {
-      transform: translateY(-2px);
-      border-color: var(--primary-light);
-    }
-    
-    .stat-icon {
-      width: 50px;
-      height: 50px;
-      background: rgba(59, 130, 246, 0.2);
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 1rem;
-      color: var(--primary);
-      font-size: 1.5rem;
-    }
-    
-    .stat-number {
-      font-size: 2rem;
-      font-weight: bold;
-      color: var(--primary);
-      margin-bottom: 0.5rem;
-    }
-    
-    .stat-label {
-      color: var(--gray);
-      font-size: 0.9rem;
-    }
-    
-    /* Upload Area */
-    .upload-area {
-      border: 2px dashed var(--primary);
-      border-radius: 12px;
-      padding: 2rem;
-      text-align: center;
-      margin-bottom: 1.5rem;
-      background: rgba(59, 130, 246, 0.05);
-      transition: all 0.3s;
-    }
-    
-    .upload-area:hover {
-      background: rgba(59, 130, 246, 0.1);
-      border-color: var(--primary-light);
-    }
-    
-    .upload-area i {
-      font-size: 3rem;
-      color: var(--primary);
-      margin-bottom: 1rem;
-    }
-    
-    .upload-area h4 {
-      margin-bottom: 0.5rem;
-      color: var(--light);
-    }
-    
-    .upload-area p {
-      color: var(--gray);
-      margin-bottom: 1.5rem;
-    }
-    
-    .video-preview {
-      max-width: 100%;
-      max-height: 200px;
-      border-radius: 8px;
-      margin-top: 1rem;
-      display: none;
-      border: 1px solid var(--card-border);
-    }
-    
-    /* Toggle Switch */
-    .toggle-switch {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-    }
-    
-    .switch {
-      position: relative;
-      display: inline-block;
-      width: 60px;
-      height: 34px;
-    }
-    
-    .switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-    
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: var(--gray);
-      transition: .4s;
-      border-radius: 34px;
-    }
-    
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 26px;
-      width: 26px;
-      left: 4px;
-      bottom: 4px;
-      background-color: white;
-      transition: .4s;
-      border-radius: 50%;
-    }
-    
-    input:checked + .slider {
-      background-color: var(--primary);
-    }
-    
-    input:checked + .slider:before {
-      transform: translateX(26px);
-    }
-    
-    /* Login Screen */
-    .login-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      background: linear-gradient(135deg, var(--dark) 0%, var(--secondary) 100%);
-    }
-    
-    .login-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      padding: 2.5rem;
-      backdrop-filter: blur(10px);
-      width: 100%;
-      max-width: 400px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-    }
-    
-    .login-card h2 {
-      text-align: center;
-      margin-bottom: 1.5rem;
-      color: var(--primary);
-      font-size: 1.5rem;
-    }
-    
-    .hidden {
-      display: none;
-    }
-    
-    /* Progress Bar */
-    .progress-bar {
-      width: 100%;
-      height: 6px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 3px;
-      margin-top: 1rem;
-      overflow: hidden;
-      display: none;
-    }
-    
-    .progress {
-      height: 100%;
-      background: var(--primary);
-      border-radius: 3px;
-      transition: width 0.3s;
-      width: 0%;
-    }
-    
-    /* Responsive */
-    @media (max-width: 768px) {
-      .container {
-        padding: 0;
-      }
-      
-      .main-content {
-        padding: 1rem;
-      }
-      
-      .cards-grid {
-        grid-template-columns: 1fr;
-      }
-      
-      .tabs {
-        padding: 0 1rem;
-      }
-      
-      .tab {
-        padding: 0.75rem 1rem;
-        font-size: 0.9rem;
-      }
-      
-      .admin-header {
-        padding: 1rem;
-      }
-      
-      .header-content {
-        flex-direction: column;
-        gap: 1rem;
-        text-align: center;
-      }
-    }
-    
-    /* Loading States */
-    .loading {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      border: 3px solid rgba(255, 255, 255, 0.3);
-      border-radius: 50%;
-      border-top-color: var(--primary);
-      animation: spin 1s ease-in-out infinite;
-    }
-    
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-    
-    /* Badges */
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.25rem;
-      padding: 0.25rem 0.5rem;
-      border-radius: 12px;
-      font-size: 0.75rem;
-      font-weight: 600;
-    }
-    
-    .badge-success {
-      background: rgba(16, 185, 129, 0.2);
-      color: #10b981;
-      border: 1px solid rgba(16, 185, 129, 0.3);
-    }
-    
-    .badge-warning {
-      background: rgba(245, 158, 11, 0.2);
-      color: #f59e0b;
-      border: 1px solid rgba(245, 158, 11, 0.3);
-    }
-    
-    .badge-info {
-      background: rgba(59, 130, 246, 0.2);
-      color: #3b82f6;
-      border: 1px solid rgba(59, 130, 246, 0.3);
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin AVIVA</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --primary:#7c3aed;--primary-dark:#6d28d9;--primary-light:#ede9fe;
+  --sidebar:#1a1d2e;--sidebar-hover:#252840;--sidebar-active:#7c3aed;
+  --text:#1f2937;--muted:#6b7280;--bg:#f1f5f9;--card:#fff;--border:#e5e7eb;
+  --success:#10b981;--warning:#f59e0b;--danger:#ef4444;--info:#3b82f6;
+  --shadow:0 2px 8px rgba(0,0,0,.08);--shadow-lg:0 8px 24px rgba(0,0,0,.1);
+}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+
+/* ===== TELA DE LOGIN ===== */
+.login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#1e3a8a,#4f46e5,#7c3aed)}
+.login-box{background:#fff;border-radius:20px;padding:2.5rem;width:100%;max-width:380px;box-shadow:0 25px 50px rgba(0,0,0,.2);text-align:center}
+.login-box .logo-admin{width:70px;height:70px;background:var(--primary-light);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.2rem;font-size:1.8rem;color:var(--primary)}
+.login-box h2{font-size:1.5rem;color:var(--text);margin-bottom:.3rem}
+.login-box p{color:var(--muted);font-size:.9rem;margin-bottom:1.5rem}
+.login-box input{width:100%;padding:.85rem 1rem;border:1px solid var(--border);border-radius:10px;font-size:1rem;margin-bottom:1rem;transition:.2s}
+.login-box input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-light)}
+.login-box .btn-login{width:100%;padding:.9rem;background:var(--primary);color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:600;cursor:pointer;transition:.2s}
+.login-box .btn-login:hover{background:var(--primary-dark)}
+.login-box .btn-login:disabled{opacity:.6;cursor:not-allowed}
+.login-error{color:var(--danger);font-size:.85rem;margin-top:.5rem;display:none}
+.back-site{display:inline-flex;align-items:center;gap:.4rem;color:rgba(255,255,255,.8);font-size:.85rem;margin-top:1rem;text-decoration:none;transition:.2s}
+.back-site:hover{color:#fff}
+
+/* ===== LAYOUT ADMIN ===== */
+.admin-layout{display:flex;min-height:100vh}
+.sidebar{width:240px;background:var(--sidebar);min-height:100vh;display:flex;flex-direction:column;flex-shrink:0;position:fixed;top:0;left:0;z-index:200;transition:.3s}
+.sidebar-header{padding:1.2rem 1rem;border-bottom:1px solid rgba(255,255,255,.08)}
+.sidebar-logo{display:flex;align-items:center;gap:.7rem;color:#fff;font-size:1.1rem;font-weight:700}
+.sidebar-logo .icon{width:36px;height:36px;background:var(--primary);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.sidebar-subtitle{color:rgba(255,255,255,.45);font-size:.72rem;margin-top:.1rem;font-weight:400}
+.sidebar-nav{flex:1;padding:.8rem 0;overflow-y:auto}
+.nav-section{padding:.4rem 1rem .2rem;color:rgba(255,255,255,.35);font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-top:.5rem}
+.nav-item{display:flex;align-items:center;gap:.7rem;padding:.7rem 1rem;color:rgba(255,255,255,.7);cursor:pointer;transition:.2s;border-radius:0;font-size:.88rem;border-left:3px solid transparent;margin:.05rem 0}
+.nav-item:hover{background:var(--sidebar-hover);color:#fff}
+.nav-item.active{background:rgba(124,58,237,.2);color:#fff;border-left-color:var(--primary)}
+.nav-item i{width:18px;text-align:center;font-size:.9rem}
+.sidebar-footer{padding:1rem;border-top:1px solid rgba(255,255,255,.08)}
+.btn-logout{width:100%;padding:.6rem;background:rgba(239,68,68,.15);color:#fca5a5;border:1px solid rgba(239,68,68,.3);border-radius:8px;cursor:pointer;font-size:.85rem;display:flex;align-items:center;justify-content:center;gap:.4rem;transition:.2s}
+.btn-logout:hover{background:rgba(239,68,68,.25)}
+
+.main-area{margin-left:240px;flex:1;display:flex;flex-direction:column;min-height:100vh}
+.topbar{background:#fff;padding:.8rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--shadow)}
+.topbar-title{font-size:1.1rem;font-weight:700;color:var(--text)}
+.topbar-right{display:flex;align-items:center;gap:.8rem}
+.badge-admin{background:var(--primary-light);color:var(--primary);padding:.3rem .7rem;border-radius:20px;font-size:.75rem;font-weight:600}
+.hamburger{display:none;background:none;border:none;font-size:1.3rem;color:var(--text);cursor:pointer;padding:.3rem}
+
+.content{flex:1;padding:1.5rem}
+.section-content{display:none}
+.section-content.active{display:block}
+
+/* Cards */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-bottom:1.5rem}
+.stat-card{background:var(--card);border-radius:14px;padding:1.2rem;border:1px solid var(--border);display:flex;align-items:center;gap:1rem;box-shadow:var(--shadow)}
+.stat-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.stat-icon.purple{background:#ede9fe;color:#7c3aed}
+.stat-icon.blue{background:#dbeafe;color:#2563eb}
+.stat-icon.green{background:#dcfce7;color:#16a34a}
+.stat-icon.orange{background:#ffedd5;color:#ea580c}
+.stat-icon.pink{background:#fce7f3;color:#be185d}
+.stat-num{font-size:1.6rem;font-weight:800;color:var(--text);line-height:1}
+.stat-label{font-size:.78rem;color:var(--muted);margin-top:.2rem}
+
+.card{background:var(--card);border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);overflow:hidden;margin-bottom:1.2rem}
+.card-head{padding:1rem 1.2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.card-head h3{font-size:1rem;font-weight:700;color:var(--text);display:flex;align-items:center;gap:.5rem}
+.card-body{padding:1.2rem}
+
+/* Forms */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.form-grid.cols3{grid-template-columns:1fr 1fr 1fr}
+.form-grid.col1{grid-template-columns:1fr}
+.fg{display:flex;flex-direction:column;gap:.35rem}
+.fg.full{grid-column:1/-1}
+.fg label{font-size:.82rem;font-weight:600;color:var(--text)}
+.fg input,.fg textarea,.fg select{padding:.7rem .9rem;border:1px solid var(--border);border-radius:8px;font-size:.9rem;color:var(--text);transition:.2s;font-family:inherit}
+.fg input:focus,.fg textarea:focus,.fg select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-light)}
+.fg textarea{resize:vertical;min-height:80px}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.6rem 1.1rem;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer;border:none;transition:.2s;font-family:inherit}
+.btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:var(--primary-dark)}
+.btn-success{background:var(--success);color:#fff}.btn-success:hover{background:#059669}
+.btn-danger{background:var(--danger);color:#fff}.btn-danger:hover{background:#dc2626}
+.btn-warning{background:var(--warning);color:#fff}.btn-warning:hover{background:#d97706}
+.btn-info{background:var(--info);color:#fff}.btn-info:hover{background:#1d4ed8}
+.btn-outline{background:transparent;color:var(--primary);border:1px solid var(--primary)}.btn-outline:hover{background:var(--primary-light)}
+.btn-sm{padding:.4rem .8rem;font-size:.78rem}
+.btn-block{width:100%;justify-content:center}
+
+/* Table */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th{text-align:left;padding:.7rem .9rem;background:#f8fafc;color:var(--muted);font-weight:600;font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid var(--border)}
+td{padding:.75rem .9rem;border-bottom:1px solid var(--border);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafafa}
+.badge{display:inline-block;padding:.2rem .6rem;border-radius:20px;font-size:.73rem;font-weight:600}
+.badge-novo{background:#dbeafe;color:#1d4ed8}
+.badge-contatado{background:#fef3c7;color:#92400e}
+.badge-integrado{background:#dcfce7;color:#166534}
+.badge-pendente{background:#fef3c7;color:#92400e}
+.badge-respondido{background:#dcfce7;color:#166534}
+
+/* Alert/Message */
+.alert{padding:.8rem 1rem;border-radius:8px;font-size:.85rem;margin-bottom:1rem;display:flex;align-items:center;gap:.6rem}
+.alert-success{background:#f0fdf4;color:#166534;border:1px solid #86efac}
+.alert-danger{background:#fef2f2;color:#991b1b;border:1px solid #fca5a5}
+.alert-info{background:#eff6ff;color:#1e40af;border:1px solid #93c5fd}
+.alert-warning{background:#fffbeb;color:#92400e;border:1px solid #fde68a}
+
+/* Toggle */
+.toggle-wrap{display:flex;align-items:center;gap:.6rem}
+.toggle{width:44px;height:24px;background:var(--border);border-radius:12px;cursor:pointer;position:relative;transition:.2s}
+.toggle.on{background:var(--success)}
+.toggle::after{content:'';position:absolute;top:3px;left:3px;width:18px;height:18px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.toggle.on::after{left:23px}
+
+/* Modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;overflow-y:auto;padding:1rem}
+.modal-box{background:#fff;border-radius:16px;max-width:600px;margin:2rem auto;overflow:hidden;box-shadow:0 25px 50px rgba(0,0,0,.2)}
+.modal-box-head{padding:1.2rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-box-head h3{font-size:1.05rem;font-weight:700}
+.modal-box-body{padding:1.5rem}
+.modal-box-foot{padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;gap:.6rem;justify-content:flex-end}
+.btn-close-modal{background:none;border:none;font-size:1.3rem;color:var(--muted);cursor:pointer;line-height:1;padding:.2rem}
+.btn-close-modal:hover{color:var(--danger)}
+
+/* Sidebar overlay for mobile */
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:199}
+
+/* Responsive */
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .sidebar-overlay.show{display:block}
+  .main-area{margin-left:0}
+  .hamburger{display:block}
+  .form-grid{grid-template-columns:1fr}
+  .form-grid.cols3{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  .content{padding:1rem}
+  .stats-row{grid-template-columns:1fr 1fr}
+  .topbar-title{font-size:.95rem}
+}
+</style>
 </head>
 <body>
-  <!-- Tela de Login -->
-  <div id="loginScreen" class="login-container">
-    <div class="login-card">
-      <h2><i class="fas fa-lock"></i> Acesso Administrativo</h2>
-      <form id="loginForm">
-        <div class="form-group">
-          <label for="senha">Senha de Acesso</label>
-          <input type="password" id="senha" required placeholder="Digite a senha de administrador">
-        </div>
-        <button type="submit" class="btn btn-primary" style="width: 100%;">
-          <i class="fas fa-sign-in-alt"></i> Entrar no Painel
-        </button>
-      </form>
-      <div style="text-align: center; margin-top: 1.5rem;">
-        <a href="/" style="color: var(--primary); text-decoration: none; font-size: 0.9rem;">
-          <i class="fas fa-arrow-left"></i> Voltar para o Site
-        </a>
-      </div>
+
+<!-- ===== LOGIN ===== -->
+<div id="loginScreen" class="login-screen">
+  <div style="text-align:center">
+    <div class="login-box">
+      <div class="logo-admin"><i class="fas fa-lock"></i></div>
+      <h2>Painel AVIVA</h2>
+      <p>Acesso restrito a administradores</p>
+      <input type="password" id="senhaInput" placeholder="Senha de acesso" onkeydown="if(event.key==='Enter')fazerLogin()">
+      <button class="btn-login" onclick="fazerLogin()" id="btnLogin">
+        <i class="fas fa-sign-in-alt"></i> Entrar
+      </button>
+      <div id="loginError" class="login-error">Senha incorreta. Tente novamente.</div>
     </div>
+    <a href="/" class="back-site"><i class="fas fa-arrow-left"></i> Voltar ao site</a>
   </div>
+</div>
 
-  <!-- Painel Administrativo -->
-  <div id="adminPanel" class="hidden">
-    <!-- Header -->
-    <div class="admin-header">
-      <div class="header-content">
-        <div class="header-left">
-          <h1>Painel Administrativo</h1>
-          <p class="subtitle">AVIVA - Ministério Cristo a Viva Esperança</p>
-        </div>
-        <div class="header-right">
-          <button id="logoutBtn" class="btn btn-outline">
-            <i class="fas fa-sign-out-alt"></i> Sair
-          </button>
+<!-- ===== SIDEBAR OVERLAY ===== -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="fecharSidebar()"></div>
+
+<!-- ===== ADMIN LAYOUT ===== -->
+<div id="adminLayout" class="admin-layout" style="display:none">
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <div class="icon"><i class="fas fa-church"></i></div>
+        <div>
+          <div>AVIVA</div>
+          <div class="sidebar-subtitle">Painel Administrativo</div>
         </div>
       </div>
     </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">Geral</div>
+      <div class="nav-item active" onclick="ir('dashboard')"><i class="fas fa-chart-pie"></i> Dashboard</div>
 
-    <!-- Tabs Navigation -->
-    <div class="tabs-container">
-      <div class="tabs">
-        <button class="tab active" data-tab="dashboard">
-          <i class="fas fa-tachometer-alt"></i> Dashboard
-        </button>
-        <button class="tab" data-tab="conteudo">
-          <i class="fas fa-newspaper"></i> Conteúdo
-        </button>
-        <button class="tab" data-tab="midia">
-          <i class="fas fa-play-circle"></i> Mídia
-        </button>
-        <button class="tab" data-tab="agenda">
-          <i class="fas fa-calendar"></i> Agenda
-        </button>
-        <button class="tab" data-tab="contatos">
-          <i class="fas fa-users"></i> Contatos
-        </button>
-        <button class="tab" data-tab="eventos">
-          <i class="fas fa-star"></i> Eventos
-        </button>
-        <button class="tab" data-tab="configuracoes">
-          <i class="fas fa-cog"></i> Configurações
-        </button>
+      <div class="nav-section">Conteúdo</div>
+      <div class="nav-item" onclick="ir('versiculo')"><i class="fas fa-quote-right"></i> Versículo do Dia</div>
+      <div class="nav-item" onclick="ir('palavra')"><i class="fas fa-bible"></i> Palavra da Semana</div>
+      <div class="nav-item" onclick="ir('meditacao')"><i class="fas fa-play-circle"></i> Meditações Diárias</div>
+      <div class="nav-item" onclick="ir('estudos')"><i class="fas fa-book-open"></i> Estudos Bíblicos</div>
+
+      <div class="nav-section">Comunidade</div>
+      <div class="nav-item" onclick="ir('visitantes')"><i class="fas fa-user-plus"></i> Visitantes</div>
+      <div class="nav-item" onclick="ir('oracao')"><i class="fas fa-hands-praying"></i> Pedidos de Oração</div>
+      <div class="nav-item" onclick="ir('aconselhamento')"><i class="fas fa-comments"></i> Aconselhamento</div>
+
+      <div class="nav-section">Igreja</div>
+      <div class="nav-item" onclick="ir('agenda')"><i class="fas fa-calendar-alt"></i> Agenda</div>
+      <div class="nav-item" onclick="ir('eventos')"><i class="fas fa-star"></i> Eventos Especiais</div>
+      <div class="nav-item" onclick="ir('contatos')"><i class="fas fa-address-book"></i> Líderes / Contatos</div>
+
+      <div class="nav-section">Config</div>
+      <div class="nav-item" onclick="ir('links')"><i class="fas fa-link"></i> Links</div>
+      <div class="nav-item" onclick="ir('backup')"><i class="fas fa-database"></i> Backup</div>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Sair</button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main-area">
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:.8rem">
+        <button class="hamburger" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+        <span class="topbar-title" id="topbarTitle">Dashboard</span>
+      </div>
+      <div class="topbar-right">
+        <span class="badge-admin"><i class="fas fa-shield-halved"></i> Admin</span>
+        <a href="/" style="color:var(--muted);font-size:.82rem;text-decoration:none"><i class="fas fa-external-link-alt"></i> Ver Site</a>
       </div>
     </div>
 
-    <!-- Main Content -->
-    <div class="main-content">
-      <div id="messageContainer"></div>
+    <div class="content">
+      <div id="msg" style="display:none"></div>
 
-      <!-- Dashboard Tab -->
-      <div id="dashboard" class="tab-content active">
-        <h2 style="margin-bottom: 1.5rem; color: var(--light);">Visão Geral</h2>
-        
-        <!-- Estatísticas -->
-        <div class="stats-grid" id="statsContainer">
-          <!-- Carregado via JavaScript -->
+      <!-- DASHBOARD -->
+      <div id="sec-dashboard" class="section-content active">
+        <div class="stats-row" id="statsRow">
+          <div class="stat-card"><div class="stat-icon purple"><i class="fas fa-play-circle"></i></div><div><div class="stat-num" id="stMeditacoes">-</div><div class="stat-label">Meditações</div></div></div>
+          <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-book-open"></i></div><div><div class="stat-num" id="stEstudos">-</div><div class="stat-label">Estudos</div></div></div>
+          <div class="stat-card"><div class="stat-icon green"><i class="fas fa-user-plus"></i></div><div><div class="stat-num" id="stVisitantes">-</div><div class="stat-label">Visitantes</div></div></div>
+          <div class="stat-card"><div class="stat-icon orange"><i class="fas fa-hands-praying"></i></div><div><div class="stat-num" id="stOracao">-</div><div class="stat-label">Pedidos Oração</div></div></div>
+          <div class="stat-card"><div class="stat-icon pink"><i class="fas fa-calendar"></i></div><div><div class="stat-num" id="stAgenda">-</div><div class="stat-label">Eventos na Agenda</div></div></div>
         </div>
-
-        <!-- Ações Rápidas -->
-        <div class="cards-grid">
-          <div class="admin-card">
-            <h2><i class="fas fa-bolt"></i> Ações Rápidas</h2>
-            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-              <button class="btn btn-primary" onclick="switchTab('conteudo')">
-                <i class="fas fa-edit"></i> Atualizar Versículo
-              </button>
-              <button class="btn btn-success" onclick="switchTab('midia')">
-                <i class="fas fa-plus"></i> Adicionar Vídeo
-              </button>
-              <button class="btn btn-warning" onclick="switchTab('eventos')">
-                <i class="fas fa-calendar-plus"></i> Gerenciar Eventos
-              </button>
-            </div>
-          </div>
-
-          <div class="admin-card">
-            <h2><i class="fas fa-chart-line"></i> Atividade Recente</h2>
-            <div id="recentActivity">
-              <!-- Atividade será carregada via JavaScript -->
-            </div>
+        <div class="card">
+          <div class="card-head"><h3><i class="fas fa-bolt" style="color:var(--primary)"></i> Acesso Rápido</h3></div>
+          <div class="card-body" style="display:flex;flex-wrap:wrap;gap:.7rem">
+            <button class="btn btn-primary" onclick="ir('versiculo')"><i class="fas fa-quote-right"></i> Versículo</button>
+            <button class="btn btn-info" onclick="ir('meditacao')"><i class="fas fa-plus"></i> Nova Meditação</button>
+            <button class="btn btn-success" onclick="ir('estudos')"><i class="fas fa-plus"></i> Novo Estudo</button>
+            <button class="btn btn-warning" onclick="ir('visitantes')"><i class="fas fa-users"></i> Ver Visitantes</button>
+            <button class="btn btn-outline" onclick="ir('oracao')"><i class="fas fa-hands-praying"></i> Pedidos</button>
           </div>
         </div>
       </div>
 
-      <!-- Conteúdo Tab -->
-      <div id="conteudo" class="tab-content">
-        <h2 style="margin-bottom: 1.5rem; color: var(--light);">Gerenciar Conteúdo</h2>
-        
-        <div class="cards-grid">
-          <!-- Versículo do Dia -->
-          <div class="admin-card">
-            <h2><i class="fas fa-bible"></i> Versículo do Dia</h2>
-            <form id="versiculoForm">
-              <div class="form-group">
-                <label for="versiculoTexto">Texto do Versículo</label>
-                <textarea id="versiculoTexto" required placeholder="Digite o texto do versículo..."></textarea>
-              </div>
-              <div class="form-group">
-                <label for="versiculoReferencia">Referência</label>
-                <input type="text" id="versiculoReferencia" required placeholder="Ex: João 3:16">
-              </div>
-              <button type="submit" class="btn btn-primary">
-                <i class="fas fa-save"></i> Atualizar Versículo
-              </button>
-            </form>
-          </div>
-
-          <!-- Palavra da Semana -->
-          <div class="admin-card">
-            <h2><i class="fas fa-book-open"></i> Palavra da Semana</h2>
-            <form id="palavraSemanaForm">
-              <div class="form-group">
-                <label for="palavraTitulo">Título</label>
-                <input type="text" id="palavraTitulo" required placeholder="Título da mensagem">
-              </div>
-              <div class="form-group">
-                <label for="palavraMensagem">Mensagem Completa</label>
-                <textarea id="palavraMensagem" required placeholder="Digite a mensagem completa..."></textarea>
-              </div>
-              <button type="submit" class="btn btn-primary">
-                <i class="fas fa-save"></i> Atualizar Palavra
-              </button>
-            </form>
-          </div>
-
-          <!-- Links Externos -->
-          <div class="admin-card">
-            <h2><i class="fas fa-link"></i> Links Externos</h2>
-            <form id="linksForm">
-              <div class="form-group">
-                <label for="linkOracao">Formulário de Oração</label>
-                <input type="url" id="linkOracao" placeholder="https://forms.gle/...">
-              </div>
-              <div class="form-group">
-                <label for="linkAconselhamento">Formulário de Aconselhamento</label>
-                <input type="url" id="linkAconselhamento" placeholder="https://forms.gle/...">
-              </div>
-              <div class="form-group">
-                <label for="linkVisitante">Formulário de Visitante</label>
-                <input type="url" id="linkVisitante" placeholder="https://forms.gle/...">
-              </div>
-              <div class="form-group">
-                <label for="linkYouTube">Canal do YouTube</label>
-                <input type="url" id="linkYouTube" placeholder="https://youtube.com/...">
-              </div>
-              <button type="submit" class="btn btn-primary">
-                <i class="fas fa-save"></i> Atualizar Links
-              </button>
-            </form>
-            
-            <div style="margin-top: 1.5rem;">
-              <h3 style="color: var(--light); margin-bottom: 1rem; font-size: 1.1rem;">Links Ativos</h3>
-              <div id="listaLinks">
-                <!-- Lista de links será carregada aqui -->
-              </div>
+      <!-- VERSÍCULO -->
+      <div id="sec-versiculo" class="section-content">
+        <div class="card">
+          <div class="card-head"><h3><i class="fas fa-quote-right" style="color:var(--primary)"></i> Versículo do Dia</h3></div>
+          <div class="card-body">
+            <div class="form-grid col1">
+              <div class="fg"><label>Texto do versículo</label><textarea id="vTexto" rows="4" placeholder="Digite o versículo..."></textarea></div>
+              <div class="fg"><label>Referência (ex: João 3:16)</label><input type="text" id="vRef" placeholder="Livro capítulo:versículo"></div>
             </div>
+            <div style="margin-top:1rem"><button class="btn btn-primary btn-block" onclick="salvarVersiculo()"><i class="fas fa-save"></i> Salvar Versículo</button></div>
           </div>
         </div>
       </div>
 
-      <!-- Mídia Tab -->
-      <div id="midia" class="tab-content">
-        <h2 style="margin-bottom: 1.5rem; color: var(--light);">Gerenciar Mídia</h2>
-        
-        <div class="cards-grid">
-          <!-- Upload de Vídeo -->
-          <div class="admin-card">
-            <h2><i class="fas fa-cloud-upload-alt"></i> Adicionar Vídeo</h2>
-            
-            <!-- Upload de Arquivo -->
-            <div class="upload-area" id="uploadArea">
-              <i class="fas fa-video"></i>
-              <h4>Upload de Vídeo</h4>
-              <p>Arraste um arquivo de vídeo ou clique para selecionar</p>
-              <input type="file" id="videoFile" accept="video/*" style="display: none;">
-              <button type="button" class="btn btn-success" onclick="document.getElementById('videoFile').click()">
-                <i class="fas fa-upload"></i> Selecionar Vídeo
-              </button>
-              <div class="progress-bar" id="progressBar">
-                <div class="progress" id="progress"></div>
-              </div>
-              <video id="videoPreview" class="video-preview" controls></video>
+      <!-- PALAVRA DA SEMANA -->
+      <div id="sec-palavra" class="section-content">
+        <div class="card">
+          <div class="card-head"><h3><i class="fas fa-bible" style="color:var(--primary)"></i> Palavra da Semana</h3></div>
+          <div class="card-body">
+            <div class="form-grid col1">
+              <div class="fg"><label>Título da mensagem</label><input type="text" id="pTitulo" placeholder="Ex: O Fim é Melhor que o Começo"></div>
+              <div class="fg"><label>Link do YouTube (pregação)</label><input type="url" id="pYoutube" placeholder="https://youtube.com/..."></div>
+              <div class="fg"><label>Mensagem completa</label><textarea id="pMensagem" rows="10" placeholder="Escreva a mensagem completa aqui..."></textarea></div>
             </div>
+            <div style="margin-top:1rem"><button class="btn btn-primary btn-block" onclick="salvarPalavra()"><i class="fas fa-save"></i> Salvar Palavra da Semana</button></div>
+          </div>
+        </div>
+      </div>
 
-            <form id="meditacaoForm">
-              <div class="form-group">
-                <label for="videoTitulo">Título do Vídeo</label>
-                <input type="text" id="videoTitulo" required placeholder="Ex: Paz para a Alma">
+      <!-- MEDITAÇÕES -->
+      <div id="sec-meditacao" class="section-content">
+        <div class="card">
+          <div class="card-head">
+            <h3><i class="fas fa-plus" style="color:var(--primary)"></i> Adicionar Meditação</h3>
+          </div>
+          <div class="card-body">
+            <div class="form-grid">
+              <div class="fg"><label>Título</label><input type="text" id="mTitulo" placeholder="Título da meditação"></div>
+              <div class="fg"><label>Duração (ex: 2 min)</label><input type="text" id="mDuracao" placeholder="1 min"></div>
+              <div class="fg"><label>Categoria</label>
+                <select id="mCategoria"><option>Paz</option><option>Renovação</option><option>Fé</option><option>Gratidão</option><option>Esperança</option><option>Cura</option><option>Outro</option></select>
               </div>
-              <div class="form-group">
-                <label for="videoDuracao">Duração</label>
-                <input type="text" id="videoDuracao" required placeholder="Ex: 1 min, 30 seg">
-              </div>
-              <div class="form-group">
-                <label for="videoDescricao">Descrição</label>
-                <textarea id="videoDescricao" required placeholder="Breve descrição do conteúdo..."></textarea>
-              </div>
-              <div class="form-group">
-                <label for="videoCategoria">Categoria</label>
-                <select id="videoCategoria" required>
-                  <option value="Paz">Paz</option>
-                  <option value="Renovação">Renovação</option>
-                  <option value="Fé">Fé</option>
-                  <option value="Gratidão">Gratidão</option>
-                  <option value="Esperança">Esperança</option>
+              <div class="fg"><label>Tipo</label>
+                <select id="mTipo" onchange="toggleMidiaInput()">
+                  <option value="youtube">YouTube</option>
+                  <option value="upload">Upload de vídeo</option>
                 </select>
               </div>
-              <div class="form-group">
-                <label for="videoUrl">URL do YouTube (Opcional)</label>
-                <input type="url" id="videoUrl" placeholder="https://www.youtube.com/embed/...">
-                <small style="color: var(--gray); font-size: 0.8rem; display: block; margin-top: 0.25rem;">
-                  Use o link de incorporação do YouTube OU faça upload de arquivo
-                </small>
-              </div>
-              <button type="submit" class="btn btn-success">
-                <i class="fas fa-plus"></i> Adicionar Vídeo
-              </button>
-            </form>
-          </div>
-
-          <!-- Lista de Vídeos -->
-          <div class="admin-card">
-            <h2><i class="fas fa-list"></i> Vídeos Cadastrados</h2>
-            <div id="listaVideos" style="max-height: 600px; overflow-y: auto;">
-              <!-- Lista de vídeos será carregada aqui -->
+              <div class="fg full" id="mYoutubeWrap"><label>Link do YouTube (embed)</label><input type="url" id="mUrl" placeholder="https://www.youtube.com/embed/..."></div>
+              <div class="fg full" id="mUploadWrap" style="display:none"><label>Arquivo de vídeo</label><input type="file" id="mFile" accept="video/*"></div>
+              <div class="fg full"><label>Descrição</label><textarea id="mDesc" rows="2" placeholder="Breve descrição da meditação"></textarea></div>
             </div>
+            <div style="margin-top:1rem"><button class="btn btn-primary btn-block" onclick="adicionarMeditacao()"><i class="fas fa-plus"></i> Adicionar Meditação</button></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3><i class="fas fa-list" style="color:var(--primary)"></i> Meditações Publicadas</h3><span id="cntMeditacoes" style="font-size:.8rem;color:var(--muted)"></span></div>
+          <div class="card-body"><div id="listaMeditacoes"></div></div>
+        </div>
+      </div>
+
+      <!-- ESTUDOS -->
+      <div id="sec-estudos" class="section-content">
+        <div class="card">
+          <div class="card-head"><h3><i class="fas fa-plus" style="color:var(--primary)"></i> Adicionar Estudo</h3></div>
+          <div class="card-body">
+            <div class="form-grid">
+              <div class="fg"><label>Título</label><input type="text" id="eTitulo" placeholder="Título do estudo"></div>
+              <div class="fg"><label>Subtítulo (série, parte...)</label><input type="text" id="eSubtitulo" placeholder="Ex: Parte 1 - O Amor"></div>
+              <div class="fg"><label>Autor</label><input type="text" id="eAutor" placeholder="Pastor / Líder"></div>
+              <div class="fg"><label>Categoria</label>
+                <select id="eCategoria"><option>Série</option><option>Devocional</option><option>Livro Bíblico</option><option>Temático</option><option>Outro</option></select>
+              </div>
+              <div class="fg full"><label>Descrição curta</label><input type="text" id="eDesc" placeholder="Resumo em uma linha"></div>
+              <div class="fg full"><label>Conteúdo completo</label><textarea id="eConteudo" rows="8" placeholder="Escreva o conteúdo completo do estudo..."></textarea></div>
+              <div class="fg full"><label>Link externo (opcional - PDF, YouTube...)</label><input type="url" id="eUrl" placeholder="https://..."></div>
+              <div class="fg"><label><input type="checkbox" id="eDestaque" style="margin-right:.4rem">Marcar como destaque</label></div>
+            </div>
+            <div style="margin-top:1rem"><button class="btn btn-primary btn-block" onclick="adicionarEstudo()"><i class="fas fa-plus"></i> Publicar Estudo</button></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3><i class="fas fa-list" style="color:var(--primary)"></i> Estudos Publicados</h3></div>
+          <div class="card-body"><div id="listaEstudos"></div></div>
+        </div>
+      </div>
+
+      <!-- VISITANTES -->
+      <div id="sec-visitantes" class="section-content">
+        <div class="card">
+          <div class="card-head"><h3><i class="fas fa-users" style="color:var(--primary)"></i> Visitantes Cadastrados</h3><span id="cntVisitantes" style="font-size:.8rem;color:var(--muted)"></span></div>
+          <div class="card-body">
+            <div class="table-wrap"><table id="tabelaVisitantes">
+              <thead><tr><th>Nome</th><th>Telefone</th><th>Bairro</th><th>Chegada</th><th>WhatsApp</th><th>Status</th><th>Ação</th></tr></thead>
+              <tbody id="bodyVisitantes"><tr><td colspan="7" style="text-align:center;color:var(--muted);padding:2rem">Carregando...</td></tr></tbody>
+            </table></div>
           </div>
         </div>
       </div>
 
-      <!-- Agenda Tab -->
-      <div id="agenda" class="tab-content">
-        <h2 style="margin-bottom: 1.5rem; color: var(--light);">Gerenciar Agenda</h2>
-        
-        <div class="cards-grid">
-          <!-- Adicionar Evento -->
-          <div class="admin-card">
-            <h2><i class="fas fa-plus"></i> Adicionar Evento</h2>
-            <form id="agendaForm">
-              <div class="form-group">
-                <label for="eventoTipo">Tipo de Evento</label>
-                <select id="eventoTipo" required>
-                  <option value="recorrente">Recorrente</option>
-                  <option value="especial">Especial</option>
-                </select>
-              </div>
-              <div class="form-group" id="dataField" style="display: none;">
-                <label for="eventoData">Data (DD/MM)</label>
-                <input type="text" id="eventoData" placeholder="Ex: 25/12">
-              </div>
-              <div class="form-group">
-                <label for="agendaTitulo">Título</label>
-                <input type="text" id="agendaTitulo" required placeholder="Nome do evento">
-              </div>
-              <div class="form-group">
-                <label for="agendaHorario">Horário</label>
-                <input type="text" id="agendaHorario" required placeholder="Ex: 20h">
-              </div>
-              <div class="form-group">
-                <label for="agendaDescricao">Descrição</label>
-                <input type="text" id="agendaDescricao" required placeholder="Descrição do evento">
-              </div>
-              <button type="submit" class="btn btn-success">
-                <i class="fas fa-plus"></i> Adicionar Evento
-              </button>
-            </form>
-          </div>
-
-          <!-- Lista de Eventos -->
-          <div class="admin-card">
-            <h2><i class="fas fa-calendar-check"></i> Eventos da Agenda</h2>
-            <div id="listaAgenda">
-              <!-- Lista de eventos será carregada aqui -->
-            </div>
+      <!-- ORAÇÃO -->
+      <div id="sec-oracao" class="section-content">
+        <div class="card">
+          <div class="card-head"><h3><i class="fas fa-hands-praying" style="color:var(--primary)"></i> Pedidos de Oração</h3></div>
+          <div class="card-body">
+            <div class="table-wrap"><table>
+              <thead><tr><th>Nome</th><th>Pedido</th><th>Data</th><th>Status</th><th>Ação</th></tr></thead>
+              <tbody id="bodyOracao"><tr><td colspan="5" style="text-align:center;color:var(--muted);padding:2rem">Carregando...</td></tr></tbody>
+            </table></div>
           </div>
         </div>
       </div>
 
-      <!-- Contatos Tab -->
-      <div id="contatos" class="tab-content">
-        <h2 style="margin-bottom: 1.5rem; color: var(--light);">Gerenciar Contatos</h2>
-        
-        <div class="cards-grid">
-          <!-- Adicionar Contato -->
-          <div class="admin-card">
-            <h2><i class="fas fa-user-plus"></i> Adicionar Contato</h2>
-            <form id="contatoForm">
-              <div class="form-group">
-                <label for="contatoNome">Nome</label>
-                <input type="text" id="contatoNome" required placeholder="Nome completo">
-              </div>
-              <div class="form-group">
-                <label for="contatoCargo">Cargo</label>
-                <input type="text" id="contatoCargo" required placeholder="Cargo/ministério">
-              </div>
-              <div class="form-group">
-                <label for="contatoNumero">Número</label>
-                <input type="text" id="contatoNumero" required placeholder="Telefone/WhatsApp">
-              </div>
-              <button type="submit" class="btn btn-success">
-                <i class="fas fa-plus"></i> Adicionar Contato
-              </button>
-            </form>
-          </div>
-
-          <!-- Lista de Contatos -->
-          <div class="admin-card">
-            <h2><i class="fas fa-address-book"></i> Lista de Contatos</h2>
-            <div id="listaContatos">
-              <!-- Lista de contatos será carregada aqui -->
-            </div>
+      <!-- ACONSELHAMENTO -->
+      <div id="sec-aconselhamento" class="section-content">
+        <div class="card">
+          <div class="card-head"><h3><i class="fas fa-comments" style="color:var(--primary)"></i> Solicitações de Aconselhamento</h3></div>
+          <div class="card-body">
+            <div class="table-wrap"><table>
+              <thead><tr><th>Nome</th><th>Telefone</th><th>Área</th><th>Data</th><th>Status</th><th>Ação</th></tr></thead>
+              <tbody id="bodyAconselhamento"><tr><td colspan="6" style="text-align:center;color:var(--muted);padding:2rem">Carregando...</td></tr></tbody>
+            </table></div>
           </div>
         </div>
       </div>
 
-      <!-- Eventos Tab -->
-      <div id="eventos" class="tab-content">
-        <h2 style="margin-bottom: 1.5rem; color: var(--light);">Eventos Especiais</h2>
-        
-        <div class="cards-grid">
-          <!-- Configurações do Evento -->
-          <div class="admin-card">
-            <h2><i class="fas fa-cog"></i> Configurações do Evento</h2>
-            <div class="toggle-switch">
-              <span>Evento Ativo:</span>
-              <label class="switch">
-                <input type="checkbox" id="eventoAtivo">
-                <span class="slider"></span>
-              </label>
+      <!-- AGENDA -->
+      <div id="sec-agenda" class="section-content">
+        <div class="card">
+          <div class="card-head"><h3><i class="fas fa-plus" style="color:var(--primary)"></i> Adicionar Evento</h3></div>
+          <div class="card-body">
+            <div class="form-grid">
+              <div class="fg"><label>Título</label><input type="text" id="agTitulo" placeholder="Nome do culto/evento"></div>
+              <div class="fg"><label>Tipo</label><select id="agTipo"><option value="recorrente">Recorrente</option><option value="especial">Especial</option></select></div>
+              <div class="fg full"><label>Horário</label><input type="text" id="agHorario" placeholder="Ex: Quarta-feira às 20h"></div>
+              <div class="fg full"><label>Descrição</label><textarea id="agDesc" rows="2" placeholder="Descrição breve"></textarea></div>
+              <div class="fg"><label>Ícone (FontAwesome)</label><input type="text" id="agIcone" value="fas fa-church" placeholder="fas fa-church"></div>
             </div>
-            <form id="eventosEspeciaisForm">
-              <div class="form-group">
-                <label for="eventoTitulo">Título do Evento</label>
-                <input type="text" id="eventoTitulo" required placeholder="Nome do evento especial">
-              </div>
-              <div class="form-group">
-                <label for="eventoPeriodo">Período</label>
-                <input type="text" id="eventoPeriodo" required placeholder="Ex: 01 a 12 de Janeiro de 2026">
-              </div>
-              <div class="form-group">
-                <label for="eventoTema">Tema</label>
-                <input type="text" id="eventoTema" required placeholder="Ex: 2026 ANO APOSTÓLICO CONECTANDO AS GERAÇÕES">
-              </div>
-              <div class="form-group">
-                <label for="eventoVersiculo">Versículo</label>
-                <textarea id="eventoVersiculo" required placeholder="Versículo base do evento"></textarea>
-              </div>
-              <div class="form-group">
-                <label for="eventoReferencia">Referência</label>
-                <input type="text" id="eventoReferencia" required placeholder="Referência bíblica">
-              </div>
-              <div class="form-group">
-                <label for="eventoDescricao">Descrição</label>
-                <textarea id="eventoDescricao" required placeholder="Descrição completa do evento"></textarea>
-              </div>
-              <button type="submit" class="btn btn-primary">
-                <i class="fas fa-save"></i> Atualizar Evento
-              </button>
-            </form>
+            <div style="margin-top:1rem"><button class="btn btn-primary" onclick="adicionarAgenda()"><i class="fas fa-plus"></i> Adicionar</button></div>
           </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3><i class="fas fa-calendar" style="color:var(--primary)"></i> Agenda Atual</h3></div>
+          <div class="card-body"><div id="listaAgenda"></div></div>
+        </div>
+      </div>
 
-          <!-- Inscrições -->
-          <div class="admin-card">
-            <h2><i class="fas fa-users"></i> Inscrições Confirmadas</h2>
-            <div style="margin-bottom: 1rem;">
-              <h3 style="color: var(--light);">Total: <span id="totalInscricoes">0</span> inscrições</h3>
+      <!-- EVENTOS ESPECIAIS -->
+      <div id="sec-eventos" class="section-content">
+        <div class="card">
+          <div class="card-head">
+            <h3><i class="fas fa-star" style="color:var(--primary)"></i> Evento Especial</h3>
+            <div class="toggle-wrap">
+              <span style="font-size:.82rem;color:var(--muted)">Ativo</span>
+              <div class="toggle" id="eventoToggle" onclick="toggleEvento()"></div>
             </div>
-            <div id="listaInscricoes" style="max-height: 500px; overflow-y: auto;">
-              <!-- Lista de inscrições -->
+          </div>
+          <div class="card-body">
+            <div class="form-grid">
+              <div class="fg"><label>Título</label><input type="text" id="evTitulo"></div>
+              <div class="fg"><label>Período</label><input type="text" id="evPeriodo" placeholder="Janeiro 2026"></div>
+              <div class="fg full"><label>Tema / Subtítulo</label><input type="text" id="evTema"></div>
+              <div class="fg full"><label>Descrição</label><textarea id="evDesc" rows="3"></textarea></div>
+              <div class="fg"><label>Versículo</label><input type="text" id="evVersiculo" placeholder="Texto do versículo"></div>
+              <div class="fg"><label>Referência</label><input type="text" id="evVersiculoRef" placeholder="Provérbios 3:9"></div>
             </div>
+            <div style="margin-top:1rem"><button class="btn btn-primary btn-block" onclick="salvarEventos()"><i class="fas fa-save"></i> Salvar</button></div>
           </div>
         </div>
       </div>
 
-      <!-- Configurações Tab -->
-      <div id="configuracoes" class="tab-content">
-        <h2 style="margin-bottom: 1.5rem; color: var(--light);">Configurações do Sistema</h2>
-        
-        <div class="cards-grid">
-          <!-- Segurança -->
-          <div class="admin-card">
-            <h2><i class="fas fa-shield-alt"></i> Segurança</h2>
-            <form id="configForm">
-              <div class="form-group">
-                <label for="novaSenha">Nova Senha</label>
-                <input type="password" id="novaSenha" placeholder="Deixe em branco para manter atual">
-              </div>
-              <div class="form-group">
-                <label for="confirmarSenha">Confirmar Nova Senha</label>
-                <input type="password" id="confirmarSenha" placeholder="Confirme a nova senha">
-              </div>
-              <button type="submit" class="btn btn-warning">
-                <i class="fas fa-key"></i> Alterar Senha
-              </button>
-            </form>
-          </div>
-
-          <!-- Informações do Sistema -->
-          <div class="admin-card">
-            <h2><i class="fas fa-info-circle"></i> Informações do Sistema</h2>
-            <div style="display: flex; flex-direction: column; gap: 1rem;">
-              <div>
-                <strong style="color: var(--primary);">Versão:</strong>
-                <span style="color: var(--light);">1.0.0</span>
-              </div>
-              <div>
-                <strong style="color: var(--primary);">Última Atualização:</strong>
-                <span style="color: var(--light);" id="lastUpdate">Carregando...</span>
-              </div>
-              <div>
-                <strong style="color: var(--primary);">Status:</strong>
-                <span class="badge badge-success">Online</span>
-              </div>
+      <!-- CONTATOS -->
+      <div id="sec-contatos" class="section-content">
+        <div class="card">
+          <div class="card-head"><h3><i class="fas fa-plus" style="color:var(--primary)"></i> Adicionar Contato</h3></div>
+          <div class="card-body">
+            <div class="form-grid cols3">
+              <div class="fg"><label>Nome</label><input type="text" id="ctNome" placeholder="Nome completo"></div>
+              <div class="fg"><label>Cargo</label><input type="text" id="ctCargo" placeholder="Ex: Pastor, Líder..."></div>
+              <div class="fg"><label>Telefone</label><input type="text" id="ctNumero" placeholder="+55 11 99999-9999"></div>
             </div>
+            <div style="margin-top:.8rem"><button class="btn btn-primary" onclick="adicionarContato()"><i class="fas fa-plus"></i> Adicionar</button></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3><i class="fas fa-address-book" style="color:var(--primary)"></i> Líderes Cadastrados</h3></div>
+          <div class="card-body"><div id="listaContatos"></div></div>
+        </div>
+      </div>
+
+      <!-- LINKS -->
+      <div id="sec-links" class="section-content">
+        <div class="card">
+          <div class="card-head"><h3><i class="fas fa-link" style="color:var(--primary)"></i> Links do Sistema</h3></div>
+          <div class="card-body">
+            <div class="form-grid col1">
+              <div class="fg"><label><i class="fas fa-pray"></i> Formulário de Oração</label><input type="url" id="lOracao"></div>
+              <div class="fg"><label><i class="fas fa-comments"></i> Formulário de Aconselhamento</label><input type="url" id="lAconselhamento"></div>
+              <div class="fg"><label><i class="fas fa-user-plus"></i> Formulário de Visitante</label><input type="url" id="lVisitante"></div>
+              <div class="fg"><label><i class="fab fa-youtube"></i> Canal YouTube</label><input type="url" id="lYoutube"></div>
+              <div class="fg"><label><i class="fab fa-instagram"></i> Instagram</label><input type="url" id="lInstagram"></div>
+              <div class="fg"><label><i class="fab fa-whatsapp"></i> WhatsApp</label><input type="url" id="lWhatsapp"></div>
+            </div>
+            <div style="margin-top:1rem"><button class="btn btn-primary btn-block" onclick="salvarLinks()"><i class="fas fa-save"></i> Salvar Links</button></div>
           </div>
         </div>
       </div>
+
+      <!-- BACKUP -->
+      <div id="sec-backup" class="section-content">
+        <div class="card">
+          <div class="card-head"><h3><i class="fas fa-database" style="color:var(--primary)"></i> Backup dos Dados</h3></div>
+          <div class="card-body">
+            <p style="color:var(--muted);font-size:.9rem;margin-bottom:1rem">Faça backup de todos os dados do sistema antes de fazer alterações importantes.</p>
+            <button class="btn btn-success" onclick="fazerBackup()"><i class="fas fa-download"></i> Criar Backup Agora</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3><i class="fas fa-shield-halved" style="color:var(--primary)"></i> Segurança</h3></div>
+          <div class="card-body">
+            <div class="alert alert-info"><i class="fas fa-info-circle"></i> A senha do admin é definida pela variável de ambiente <strong>ADMIN_PASSWORD</strong> no Render.</div>
+            <p style="color:var(--muted);font-size:.85rem">Para alterar a senha: acesse o painel do Render → seu serviço → Environment → edite ADMIN_PASSWORD.</p>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end content -->
+  </main>
+</div><!-- end admin-layout -->
+
+<script>
+const TOKEN_KEY = 'aviva_admin_token';
+let token = localStorage.getItem(TOKEN_KEY);
+let dadosGlobal = {};
+
+// ===== AUTH =====
+async function fazerLogin() {
+  const senha = document.getElementById('senhaInput').value;
+  const btn = document.getElementById('btnLogin');
+  const err = document.getElementById('loginError');
+  btn.disabled = true; btn.textContent = 'Entrando...';
+  err.style.display = 'none';
+  try {
+    const r = await fetch('/api/admin/login', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ senha })
+    });
+    if (!r.ok) throw new Error();
+    const d = await r.json();
+    token = d.token;
+    localStorage.setItem(TOKEN_KEY, token);
+    iniciarAdmin();
+  } catch {
+    err.style.display = 'block';
+    btn.disabled = false; btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Entrar';
+  }
+}
+
+function logout() {
+  fetch('/api/admin/logout', { method:'POST', headers:{'x-admin-token':token} });
+  localStorage.removeItem(TOKEN_KEY);
+  location.reload();
+}
+
+async function verificarAuth() {
+  if (!token) return false;
+  const r = await fetch('/api/admin/verify', { headers:{'x-admin-token':token} });
+  return r.ok;
+}
+
+async function init() {
+  if (token && await verificarAuth()) {
+    iniciarAdmin();
+  } else {
+    document.getElementById('loginScreen').style.display = 'flex';
+  }
+}
+
+function iniciarAdmin() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('adminLayout').style.display = 'flex';
+  carregarTudo();
+  ir('dashboard');
+}
+
+// ===== NAVEGAÇÃO =====
+const titulos = {
+  dashboard:'Dashboard',versiculo:'Versículo do Dia',palavra:'Palavra da Semana',
+  meditacao:'Meditações Diárias',estudos:'Estudos Bíblicos',visitantes:'Visitantes',
+  oracao:'Pedidos de Oração',aconselhamento:'Aconselhamento',agenda:'Agenda',
+  eventos:'Eventos Especiais',contatos:'Líderes / Contatos',links:'Links',backup:'Backup'
+};
+
+function ir(sec) {
+  document.querySelectorAll('.section-content').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const el = document.getElementById('sec-'+sec);
+  if (el) el.classList.add('active');
+  document.querySelector(`.nav-item[onclick="ir('${sec}')"]`)?.classList.add('active');
+  document.getElementById('topbarTitle').textContent = titulos[sec]||sec;
+  fecharSidebar();
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('show');
+}
+function fecharSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('show');
+}
+
+// ===== HELPERS =====
+function api(url, opts={}) {
+  return fetch(url, { ...opts, headers: { 'Content-Type':'application/json', 'x-admin-token':token, ...(opts.headers||{}) } });
+}
+
+function msg(txt, tipo='success') {
+  const el = document.getElementById('msg');
+  const cores = {success:'alert-success',danger:'alert-danger',info:'alert-info',warning:'alert-warning'};
+  el.className = 'alert ' + (cores[tipo]||'alert-info');
+  el.innerHTML = `<i class="fas fa-${tipo==='success'?'check-circle':'exclamation-circle'}"></i> ${txt}`;
+  el.style.display = 'flex';
+  setTimeout(()=>el.style.display='none', 3500);
+}
+
+function fmtData(d) {
+  if (!d) return '-';
+  try { return new Date(d).toLocaleDateString('pt-BR'); } catch { return d; }
+}
+
+function fmtDataHora(d) {
+  if (!d) return '-';
+  try { return new Date(d).toLocaleString('pt-BR'); } catch { return d; }
+}
+
+// ===== CARREGAR TUDO =====
+async function carregarTudo() {
+  try {
+    const r = await api('/api/data');
+    dadosGlobal = await r.json();
+    preencherVersiculo();
+    preencherPalavra();
+    preencherLinks();
+    preencherEventos();
+    renderMeditacoes();
+    renderAgenda();
+    renderContatos();
+    await carregarEstudos();
+    await carregarVisitantes();
+    await carregarOracao();
+    await carregarAconselhamento();
+    atualizarStats();
+  } catch(e) { console.error(e); }
+}
+
+function atualizarStats() {
+  document.getElementById('stMeditacoes').textContent = dadosGlobal.meditacaoDiaria?.length||0;
+  document.getElementById('stAgenda').textContent = dadosGlobal.agenda?.length||0;
+}
+
+// ===== VERSÍCULO =====
+function preencherVersiculo() {
+  const v = dadosGlobal.versiculo||{};
+  document.getElementById('vTexto').value = v.texto||'';
+  document.getElementById('vRef').value = v.referencia||'';
+}
+async function salvarVersiculo() {
+  const r = await api('/api/versiculo',{method:'POST',body:JSON.stringify({texto:document.getElementById('vTexto').value,referencia:document.getElementById('vRef').value})});
+  r.ok ? msg('Versículo atualizado!') : msg('Erro ao salvar','danger');
+}
+
+// ===== PALAVRA DA SEMANA =====
+function preencherPalavra() {
+  const p = dadosGlobal.palavraSemana||{};
+  document.getElementById('pTitulo').value = p.titulo||'';
+  document.getElementById('pYoutube').value = dadosGlobal.links?.youtube||'';
+  document.getElementById('pMensagem').value = p.mensagem||'';
+}
+async function salvarPalavra() {
+  const r = await api('/api/palavra-semana',{method:'POST',body:JSON.stringify({titulo:document.getElementById('pTitulo').value,mensagem:document.getElementById('pMensagem').value})});
+  r.ok ? msg('Palavra da semana salva!') : msg('Erro ao salvar','danger');
+}
+
+// ===== MEDITAÇÕES =====
+function toggleMidiaInput() {
+  const t = document.getElementById('mTipo').value;
+  document.getElementById('mYoutubeWrap').style.display = t==='youtube'?'':'none';
+  document.getElementById('mUploadWrap').style.display = t==='upload'?'':'none';
+}
+
+async function adicionarMeditacao() {
+  const tipo = document.getElementById('mTipo').value;
+  let url = '';
+  if (tipo==='upload') {
+    const file = document.getElementById('mFile').files[0];
+    if (!file) { msg('Selecione um arquivo','warning'); return; }
+    const fd = new FormData();
+    fd.append('video',file);
+    fd.append('titulo',document.getElementById('mTitulo').value);
+    fd.append('duracao',document.getElementById('mDuracao').value);
+    fd.append('descricao',document.getElementById('mDesc').value);
+    fd.append('categoria',document.getElementById('mCategoria').value);
+    const r = await fetch('/api/upload-video',{method:'POST',headers:{'x-admin-token':token},body:fd});
+    if (r.ok) { msg('Vídeo enviado!'); dadosGlobal = (await (await api('/api/data')).json()); renderMeditacoes(); } else msg('Erro no upload','danger');
+    return;
+  }
+  url = document.getElementById('mUrl').value;
+  const body = {
+    titulo: document.getElementById('mTitulo').value,
+    duracao: document.getElementById('mDuracao').value||'1 min',
+    descricao: document.getElementById('mDesc').value,
+    categoria: document.getElementById('mCategoria').value,
+    tipo, url,
+    data: new Date().toISOString().split('T')[0]
+  };
+  if (!body.titulo||!url) { msg('Preencha título e link','warning'); return; }
+  const lista = [body, ...(dadosGlobal.meditacaoDiaria||[])];
+  lista.forEach((m,i)=>m.id=m.id||(Date.now()+i).toString());
+  const r = await api('/api/meditacao',{method:'POST',body:JSON.stringify(lista)});
+  if (r.ok) { dadosGlobal.meditacaoDiaria=lista; renderMeditacoes(); msg('Meditação adicionada!'); document.getElementById('mTitulo').value='';document.getElementById('mUrl').value='';document.getElementById('mDesc').value=''; } else msg('Erro','danger');
+}
+
+function renderMeditacoes() {
+  const lista = dadosGlobal.meditacaoDiaria||[];
+  document.getElementById('cntMeditacoes').textContent = lista.length+' publicadas';
+  document.getElementById('stMeditacoes').textContent = lista.length;
+  const c = document.getElementById('listaMeditacoes');
+  if (!lista.length) { c.innerHTML='<p style="color:var(--muted);text-align:center;padding:1rem">Nenhuma meditação</p>'; return; }
+  c.innerHTML = lista.map(m=>`
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:.8rem;background:#f8fafc;border-radius:10px;margin-bottom:.5rem;border:1px solid var(--border)">
+      <div>
+        <strong style="font-size:.9rem">${m.titulo}</strong>
+        <div style="font-size:.76rem;color:var(--muted);margin-top:.2rem">${m.categoria} • ${m.duracao} • ${fmtData(m.data)}</div>
+      </div>
+      <button class="btn btn-danger btn-sm" onclick="deletarMeditacao('${m.id}')"><i class="fas fa-trash"></i></button>
     </div>
-  </div>
+  `).join('');
+}
 
-  <script>
-    // Sistema de Autenticação
-    const ADMIN_PASSWORD = 'aviva2024';
+async function deletarMeditacao(id) {
+  if (!confirm('Deletar esta meditação?')) return;
+  const r = await api('/api/video/'+id, {method:'DELETE'});
+  if (r.ok) { dadosGlobal.meditacaoDiaria = dadosGlobal.meditacaoDiaria.filter(m=>m.id!=id); renderMeditacoes(); msg('Deletada!'); } else msg('Erro','danger');
+}
 
-    // Elementos do DOM
-    const loginScreen = document.getElementById('loginScreen');
-    const adminPanel = document.getElementById('adminPanel');
-    const messageContainer = document.getElementById('messageContainer');
-    const logoutBtn = document.getElementById('logoutBtn');
-    
-    // Formulários
-    const loginForm = document.getElementById('loginForm');
-    const versiculoForm = document.getElementById('versiculoForm');
-    const palavraSemanaForm = document.getElementById('palavraSemanaForm');
-    const linksForm = document.getElementById('linksForm');
-    const eventosEspeciaisForm = document.getElementById('eventosEspeciaisForm');
-    const agendaForm = document.getElementById('agendaForm');
-    const contatoForm = document.getElementById('contatoForm');
-    const configForm = document.getElementById('configForm');
-    const meditacaoForm = document.getElementById('meditacaoForm');
-    
-    // Campos da agenda
-    const eventoTipo = document.getElementById('eventoTipo');
-    const dataField = document.getElementById('dataField');
-    const eventoAtivo = document.getElementById('eventoAtivo');
+// ===== ESTUDOS =====
+async function carregarEstudos() {
+  const r = await api('/api/estudos');
+  const lista = await r.json();
+  renderEstudos(lista);
+  document.getElementById('stEstudos').textContent = lista.length;
+}
 
-    // Variáveis para upload de vídeo
-    let videoFile = null;
+function renderEstudos(lista) {
+  const c = document.getElementById('listaEstudos');
+  if (!lista.length) { c.innerHTML='<p style="color:var(--muted);text-align:center;padding:1rem">Nenhum estudo publicado</p>'; return; }
+  c.innerHTML = lista.map(e=>`
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:.8rem;background:#f8fafc;border-radius:10px;margin-bottom:.5rem;border:1px solid var(--border)">
+      <div>
+        <strong style="font-size:.9rem">${e.titulo}</strong>
+        <div style="font-size:.76rem;color:var(--muted);margin-top:.2rem">${e.categoria} • ${e.autor||'AVIVA'} • ${fmtData(e.data)}</div>
+      </div>
+      <button class="btn btn-danger btn-sm" onclick="deletarEstudo('${e.id}')"><i class="fas fa-trash"></i></button>
+    </div>
+  `).join('');
+}
 
-    // Sistema de Abas
-    function switchTab(tabName) {
-      // Esconder todas as abas
-      document.querySelectorAll('.tab-content').forEach(tab => {
-        tab.classList.remove('active');
-      });
-      
-      // Remover classe active de todas as tabs
-      document.querySelectorAll('.tab').forEach(tab => {
-        tab.classList.remove('active');
-      });
-      
-      // Mostrar aba selecionada
-      document.getElementById(tabName).classList.add('active');
-      
-      // Ativar tab correspondente
-      document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
-    }
+async function adicionarEstudo() {
+  const body = {
+    titulo: document.getElementById('eTitulo').value,
+    subtitulo: document.getElementById('eSubtitulo').value,
+    autor: document.getElementById('eAutor').value,
+    categoria: document.getElementById('eCategoria').value,
+    descricao: document.getElementById('eDesc').value,
+    conteudo: document.getElementById('eConteudo').value,
+    url: document.getElementById('eUrl').value,
+    destaque: document.getElementById('eDestaque').checked,
+    data: new Date().toISOString().split('T')[0]
+  };
+  if (!body.titulo||!body.conteudo) { msg('Preencha título e conteúdo','warning'); return; }
+  const r = await api('/api/estudos',{method:'POST',body:JSON.stringify(body)});
+  if (r.ok) { msg('Estudo publicado!'); await carregarEstudos(); document.getElementById('eTitulo').value='';document.getElementById('eConteudo').value='';document.getElementById('eDesc').value=''; } else msg('Erro','danger');
+}
 
-    // Verificar se usuário já está logado
-    function checkAuth() {
-      const isLoggedIn = localStorage.getItem('aviva_admin_loggedin');
-      if (isLoggedIn === 'true') {
-        showAdminPanel();
-      } else {
-        showLoginScreen();
-      }
-    }
+async function deletarEstudo(id) {
+  if (!confirm('Deletar este estudo?')) return;
+  const r = await api('/api/estudos/'+id,{method:'DELETE'});
+  r.ok ? (msg('Deletado!'), carregarEstudos()) : msg('Erro','danger');
+}
 
-    function showLoginScreen() {
-      loginScreen.classList.remove('hidden');
-      adminPanel.classList.add('hidden');
-    }
+// ===== VISITANTES =====
+async function carregarVisitantes() {
+  const r = await api('/api/visitantes');
+  const lista = await r.json();
+  document.getElementById('stVisitantes').textContent = lista.length;
+  document.getElementById('cntVisitantes').textContent = lista.length+' cadastrados';
+  const body = document.getElementById('bodyVisitantes');
+  if (!lista.length) { body.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:2rem">Nenhum visitante ainda</td></tr>'; return; }
+  body.innerHTML = lista.map(v=>`
+    <tr>
+      <td><strong>${v.nome}</strong></td>
+      <td><a href="https://wa.me/55${v.telefone?.replace(/\D/g,'')}?text=Olá ${encodeURIComponent(v.nome)}, bem-vindo à AVIVA!" target="_blank" style="color:var(--success)"><i class="fab fa-whatsapp"></i> ${v.telefone||'-'}</a></td>
+      <td>${v.bairro||'-'}</td>
+      <td>${fmtData(v.dataChegada)}</td>
+      <td>${v.querWhatsapp?'<span style="color:var(--success)"><i class="fas fa-check"></i></span>':'<span style="color:var(--muted)"><i class="fas fa-times"></i></span>'}</td>
+      <td><span class="badge badge-${v.status||'novo'}">${v.status||'novo'}</span></td>
+      <td>
+        <select style="padding:.3rem .5rem;border:1px solid var(--border);border-radius:6px;font-size:.78rem" onchange="atualizarStatusVisitante('${v.id}',this.value)">
+          <option ${v.status==='novo'?'selected':''} value="novo">Novo</option>
+          <option ${v.status==='contatado'?'selected':''} value="contatado">Contatado</option>
+          <option ${v.status==='integrado'?'selected':''} value="integrado">Integrado</option>
+        </select>
+      </td>
+    </tr>
+  `).join('');
+}
 
-    function showAdminPanel() {
-      loginScreen.classList.add('hidden');
-      adminPanel.classList.remove('hidden');
-      loadData();
-      
-      // Atualizar data da última atualização
-      document.getElementById('lastUpdate').textContent = new Date().toLocaleString('pt-BR');
-    }
+async function atualizarStatusVisitante(id, status) {
+  await api('/api/visitantes/'+id+'/status',{method:'PUT',body:JSON.stringify({status})});
+  msg('Status atualizado!');
+}
 
-    // Login
-    loginForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const senha = document.getElementById('senha').value;
-      
-      if (senha === ADMIN_PASSWORD) {
-        localStorage.setItem('aviva_admin_loggedin', 'true');
-        showAdminPanel();
-        showMessage('Login realizado com sucesso!', 'success');
-      } else {
-        showMessage('Senha incorreta!', 'error');
-      }
-    });
+// ===== ORAÇÃO =====
+async function carregarOracao() {
+  const r = await api('/api/pedidos-oracao');
+  const lista = await r.json();
+  document.getElementById('stOracao').textContent = lista.length;
+  const body = document.getElementById('bodyOracao');
+  if (!lista.length) { body.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:2rem">Nenhum pedido</td></tr>'; return; }
+  body.innerHTML = lista.map(p=>`
+    <tr>
+      <td><strong>${p.anonimo?'Anônimo':p.nome}</strong>${p.telefone?`<br><small style="color:var(--muted)">${p.telefone}</small>`:''}</td>
+      <td style="max-width:280px;white-space:pre-wrap;font-size:.83rem">${p.pedido}</td>
+      <td>${fmtData(p.data)}</td>
+      <td><span class="badge badge-${p.status||'pendente'}">${p.status||'pendente'}</span></td>
+      <td>
+        <select style="padding:.3rem .5rem;border:1px solid var(--border);border-radius:6px;font-size:.78rem" onchange="atualizarStatusOracao('${p.id}',this.value)">
+          <option ${p.status==='pendente'?'selected':''} value="pendente">Pendente</option>
+          <option ${p.status==='respondido'?'selected':''} value="respondido">Orou</option>
+        </select>
+      </td>
+    </tr>
+  `).join('');
+}
 
-    // Logout
-    logoutBtn.addEventListener('click', () => {
-      localStorage.removeItem('aviva_admin_loggedin');
-      showLoginScreen();
-      showMessage('Logout realizado com sucesso!', 'success');
-    });
+async function atualizarStatusOracao(id, status) {
+  await api('/api/pedidos-oracao/'+id+'/status',{method:'PUT',body:JSON.stringify({status})});
+  msg('Status atualizado!');
+}
 
-    // Mostrar/ocultar campo de data baseado no tipo de evento
-    eventoTipo.addEventListener('change', function() {
-      dataField.style.display = this.value === 'especial' ? 'block' : 'none';
-    });
+// ===== ACONSELHAMENTO =====
+async function carregarAconselhamento() {
+  const r = await api('/api/aconselhamento');
+  const lista = await r.json();
+  const body = document.getElementById('bodyAconselhamento');
+  if (!lista.length) { body.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:2rem">Nenhuma solicitação</td></tr>'; return; }
+  body.innerHTML = lista.map(p=>`
+    <tr>
+      <td><strong>${p.nome}</strong></td>
+      <td><a href="https://wa.me/55${p.telefone?.replace(/\D/g,'')}" target="_blank" style="color:var(--success)"><i class="fab fa-whatsapp"></i> ${p.telefone}</a></td>
+      <td>${p.area}</td>
+      <td>${fmtData(p.data)}</td>
+      <td><span class="badge badge-${p.status||'pendente'}">${p.status||'pendente'}</span></td>
+      <td>
+        <select style="padding:.3rem .5rem;border:1px solid var(--border);border-radius:6px;font-size:.78rem" onchange="atualizarStatusAcons('${p.id}',this.value)">
+          <option ${p.status==='pendente'?'selected':''} value="pendente">Pendente</option>
+          <option ${p.status==='respondido'?'selected':''} value="respondido">Contatado</option>
+        </select>
+      </td>
+    </tr>
+  `).join('');
+}
 
-    // Preview de vídeo
-    document.getElementById('videoFile').addEventListener('change', function(e) {
-      const file = e.target.files[0];
-      if (file) {
-        videoFile = file;
-        const preview = document.getElementById('videoPreview');
-        preview.src = URL.createObjectURL(file);
-        preview.style.display = 'block';
-        showMessage('Vídeo selecionado: ' + file.name, 'success');
-        
-        // Mostrar barra de progresso para arquivos grandes
-        if (file.size > 50 * 1024 * 1024) { // 50MB
-          document.getElementById('progressBar').style.display = 'block';
-        }
-      }
-    });
+async function atualizarStatusAcons(id, status) {
+  await api('/api/aconselhamento/'+id+'/status',{method:'PUT',body:JSON.stringify({status})});
+  msg('Status atualizado!');
+}
 
-    // Função para mostrar mensagens
-    function showMessage(message, type = 'success') {
-      const messageEl = document.createElement('div');
-      messageEl.className = `message ${type}`;
-      messageEl.innerHTML = `
-        <i class="fas fa-${type === 'success' ? 'check' : type === 'error' ? 'exclamation-triangle' : 'exclamation-circle'}"></i>
-        ${message}
-      `;
-      messageContainer.appendChild(messageEl);
-      
-      setTimeout(() => {
-        messageEl.remove();
-      }, 5000);
-    }
+// ===== AGENDA =====
+async function adicionarAgenda() {
+  const item = {
+    id: Date.now().toString(),
+    titulo: document.getElementById('agTitulo').value,
+    tipo: document.getElementById('agTipo').value,
+    horario: document.getElementById('agHorario').value,
+    descricao: document.getElementById('agDesc').value,
+    icone: document.getElementById('agIcone').value||'fas fa-church'
+  };
+  if (!item.titulo) { msg('Digite o título','warning'); return; }
+  const lista = [item, ...(dadosGlobal.agenda||[])];
+  const r = await api('/api/agenda',{method:'POST',body:JSON.stringify(lista)});
+  if (r.ok) { dadosGlobal.agenda=lista; renderAgenda(); msg('Evento adicionado!'); document.getElementById('agTitulo').value='';document.getElementById('agHorario').value='';document.getElementById('agDesc').value=''; } else msg('Erro','danger');
+}
 
-    // Carregar dados iniciais
-    async function loadData() {
-      try {
-        const response = await fetch('/api/data');
-        const data = await response.json();
-        
-        // Preencher versículo
-        document.getElementById('versiculoTexto').value = data.versiculo.texto;
-        document.getElementById('versiculoReferencia').value = data.versiculo.referencia;
-        
-        // Preencher palavra da semana
-        document.getElementById('palavraTitulo').value = data.palavraSemana.titulo;
-        document.getElementById('palavraMensagem').value = data.palavraSemana.mensagem;
-        
-        // Preencher links
-        if (data.links) {
-          document.getElementById('linkOracao').value = data.links.oracao || '';
-          document.getElementById('linkAconselhamento').value = data.links.aconselhamento || '';
-          document.getElementById('linkVisitante').value = data.links.visitante || '';
-          document.getElementById('linkYouTube').value = data.links.youtube || '';
-        }
-        
-        // Preencher eventos especiais
-        if (data.eventosEspeciais) {
-          eventoAtivo.checked = data.eventosEspeciais.ativo || false;
-          document.getElementById('eventoTitulo').value = data.eventosEspeciais.titulo || '';
-          document.getElementById('eventoPeriodo').value = data.eventosEspeciais.periodo || '';
-          document.getElementById('eventoTema').value = data.eventosEspeciais.tema || '';
-          document.getElementById('eventoVersiculo').value = data.eventosEspeciais.versiculo?.texto || '';
-          document.getElementById('eventoReferencia').value = data.eventosEspeciais.versiculo?.referencia || '';
-          document.getElementById('eventoDescricao').value = data.eventosEspeciais.descricao || '';
-        }
-        
-        // Carregar estatísticas
-        renderStats(data);
-        
-        // Carregar agenda
-        renderAgenda(data.agenda);
-        
-        // Carregar contatos
-        renderContatos(data.contatos);
-        
-        // Carregar links
-        renderLinks(data.links || {});
-        
-        // Carregar inscrições
-        renderInscricoes(data.eventosEspeciais?.inscricoes || []);
-        
-        // Carregar meditação diária
-        renderMeditacao(data.meditacaoDiaria || []);
-        
-        // Carregar atividade recente
-        renderRecentActivity(data);
-        
-      } catch (error) {
-        showMessage('Erro ao carregar dados: ' + error.message, 'error');
-      }
-    }
+function renderAgenda() {
+  const lista = dadosGlobal.agenda||[];
+  document.getElementById('stAgenda').textContent = lista.length;
+  const c = document.getElementById('listaAgenda');
+  if (!lista.length) { c.innerHTML='<p style="color:var(--muted);text-align:center;padding:1rem">Nenhum evento na agenda</p>'; return; }
+  c.innerHTML = lista.map(a=>`
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:.8rem;background:#f8fafc;border-radius:10px;margin-bottom:.5rem;border:1px solid var(--border)">
+      <div style="display:flex;align-items:center;gap:.7rem">
+        <div style="width:36px;height:36px;background:var(--primary-light);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--primary)"><i class="${a.icone||'fas fa-church'}"></i></div>
+        <div><strong style="font-size:.88rem">${a.titulo}</strong><div style="font-size:.76rem;color:var(--muted)">${a.horario}</div></div>
+      </div>
+      <button class="btn btn-danger btn-sm" onclick="deletarAgenda('${a.id}')"><i class="fas fa-trash"></i></button>
+    </div>
+  `).join('');
+}
 
-    // Renderizar estatísticas
-    function renderStats(data) {
-      const statsContainer = document.getElementById('statsContainer');
-      const totalInscricoes = data.eventosEspeciais?.inscricoes?.length || 0;
-      const totalVideos = data.meditacaoDiaria?.length || 0;
-      const totalContatos = data.contatos?.length || 0;
-      const totalEventos = data.agenda?.length || 0;
+async function deletarAgenda(id) {
+  dadosGlobal.agenda = dadosGlobal.agenda.filter(a=>a.id!=id);
+  await api('/api/agenda',{method:'POST',body:JSON.stringify(dadosGlobal.agenda)});
+  renderAgenda(); msg('Removido!');
+}
 
-      statsContainer.innerHTML = `
-        <div class="stat-card">
-          <div class="stat-icon">
-            <i class="fas fa-users"></i>
-          </div>
-          <div class="stat-number">${totalInscricoes}</div>
-          <div class="stat-label">Inscrições</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">
-            <i class="fas fa-video"></i>
-          </div>
-          <div class="stat-number">${totalVideos}</div>
-          <div class="stat-label">Vídeos</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">
-            <i class="fas fa-address-book"></i>
-          </div>
-          <div class="stat-number">${totalContatos}</div>
-          <div class="stat-label">Líderes</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">
-            <i class="fas fa-calendar"></i>
-          </div>
-          <div class="stat-number">${totalEventos}</div>
-          <div class="stat-label">Eventos</div>
-        </div>
-      `;
-    }
+// ===== EVENTOS ESPECIAIS =====
+function preencherEventos() {
+  const ev = dadosGlobal.eventosEspeciais||{};
+  const tog = document.getElementById('eventoToggle');
+  if (ev.ativo) tog.classList.add('on'); else tog.classList.remove('on');
+  document.getElementById('evTitulo').value = ev.titulo||'';
+  document.getElementById('evPeriodo').value = ev.periodo||'';
+  document.getElementById('evTema').value = ev.tema||'';
+  document.getElementById('evDesc').value = ev.descricao||'';
+  document.getElementById('evVersiculo').value = ev.versiculo?.texto||'';
+  document.getElementById('evVersiculoRef').value = ev.versiculo?.referencia||'';
+}
 
-    // Renderizar atividade recente
-    function renderRecentActivity(data) {
-      const activityContainer = document.getElementById('recentActivity');
-      const activities = [];
-      
-      // Adicionar atividades baseadas nos dados
-      if (data.meditacaoDiaria && data.meditacaoDiaria.length > 0) {
-        const latestVideo = data.meditacaoDiaria[0];
-        activities.push({
-          icon: 'fas fa-video',
-          text: `Vídeo "${latestVideo.titulo}" adicionado`,
-          time: 'Recentemente'
-        });
-      }
-      
-      if (data.eventosEspeciais?.inscricoes && data.eventosEspeciais.inscricoes.length > 0) {
-        activities.push({
-          icon: 'fas fa-user-plus',
-          text: `${data.eventosEspeciais.inscricoes.length} nova(s) inscrição(ões)`,
-          time: 'Hoje'
-        });
-      }
-      
-      if (data.agenda && data.agenda.length > 0) {
-        activities.push({
-          icon: 'fas fa-calendar-plus',
-          text: 'Eventos da agenda atualizados',
-          time: 'Esta semana'
-        });
-      }
-      
-      // Se não houver atividades, mostrar mensagem
-      if (activities.length === 0) {
-        activityContainer.innerHTML = '<p style="color: var(--gray); text-align: center;">Nenhuma atividade recente</p>';
-        return;
-      }
-      
-      activityContainer.innerHTML = activities.map(activity => `
-        <div class="list-item">
-          <div class="item-header">
-            <div class="item-content">
-              <h4><i class="${activity.icon}"></i> ${activity.text}</h4>
-              <p>${activity.time}</p>
-            </div>
-          </div>
-        </div>
-      `).join('');
-    }
+function toggleEvento() {
+  const tog = document.getElementById('eventoToggle');
+  tog.classList.toggle('on');
+}
 
-    // Renderizar agenda
-    function renderAgenda(agenda) {
-      const listaAgenda = document.getElementById('listaAgenda');
-      
-      if (agenda.length === 0) {
-        listaAgenda.innerHTML = '<p style="color: var(--gray); text-align: center;">Nenhum evento cadastrado</p>';
-        return;
-      }
-      
-      listaAgenda.innerHTML = agenda.map((evento, index) => `
-        <div class="list-item">
-          <div class="item-header">
-            <div class="item-content">
-              <h4>${evento.titulo}</h4>
-              <p>${evento.horario} • ${evento.descricao}</p>
-              ${evento.data ? `<p><small class="badge badge-info"><i class="fas fa-calendar-day"></i> ${evento.data}</small></p>` : ''}
-            </div>
-            <div class="item-actions">
-              <button type="button" class="btn btn-danger btn-small" onclick="removerEvento(${index})">
-                <i class="fas fa-trash"></i>
-              </button>
-            </div>
-          </div>
-        </div>
-      `).join('');
-    }
+async function salvarEventos() {
+  const ev = {
+    ativo: document.getElementById('eventoToggle').classList.contains('on'),
+    titulo: document.getElementById('evTitulo').value,
+    periodo: document.getElementById('evPeriodo').value,
+    tema: document.getElementById('evTema').value,
+    descricao: document.getElementById('evDesc').value,
+    versiculo: { texto: document.getElementById('evVersiculo').value, referencia: document.getElementById('evVersiculoRef').value },
+    inscricoes: dadosGlobal.eventosEspeciais?.inscricoes||[]
+  };
+  const r = await api('/api/eventos-especiais',{method:'POST',body:JSON.stringify(ev)});
+  r.ok ? msg('Eventos especiais salvos!') : msg('Erro','danger');
+}
 
-    // Renderizar contatos
-    function renderContatos(contatos) {
-      const listaContatos = document.getElementById('listaContatos');
-      
-      if (contatos.length === 0) {
-        listaContatos.innerHTML = '<p style="color: var(--gray); text-align: center;">Nenhum contato cadastrado</p>';
-        return;
-      }
-      
-      listaContatos.innerHTML = contatos.map((contato, index) => `
-        <div class="list-item">
-          <div class="item-header">
-            <div class="item-content">
-              <h4>${contato.nome}</h4>
-              <p>${contato.cargo}</p>
-              <p><small>${contato.numero}</small></p>
-            </div>
-            <div class="item-actions">
-              <button type="button" class="btn btn-danger btn-small" onclick="removerContato(${index})">
-                <i class="fas fa-trash"></i>
-              </button>
-            </div>
-          </div>
-        </div>
-      `).join('');
-    }
+// ===== CONTATOS =====
+async function adicionarContato() {
+  const ct = { id: Date.now(), nome: document.getElementById('ctNome').value, cargo: document.getElementById('ctCargo').value, numero: document.getElementById('ctNumero').value };
+  if (!ct.nome) { msg('Digite o nome','warning'); return; }
+  const lista = [...(dadosGlobal.contatos||[]), ct];
+  const r = await api('/api/contatos',{method:'POST',body:JSON.stringify(lista)});
+  if (r.ok) { dadosGlobal.contatos=lista; renderContatos(); msg('Contato adicionado!'); document.getElementById('ctNome').value='';document.getElementById('ctCargo').value='';document.getElementById('ctNumero').value=''; } else msg('Erro','danger');
+}
 
-    // Renderizar links
-    function renderLinks(links) {
-      const listaLinks = document.getElementById('listaLinks');
-      const linksData = [
-        { nome: 'Oração', url: links.oracao, id: 'oracao' },
-        { nome: 'Aconselhamento', url: links.aconselhamento, id: 'aconselhamento' },
-        { nome: 'Visitante', url: links.visitante, id: 'visitante' },
-        { nome: 'YouTube', url: links.youtube, id: 'youtube' }
-      ];
-      
-      listaLinks.innerHTML = linksData.map(link => {
-        if (!link.url) return '';
-        return `
-          <div class="list-item">
-            <div class="item-header">
-              <div class="item-content">
-                <h4>${link.nome}</h4>
-                <p style="word-break: break-all;">${link.url}</p>
-              </div>
-              <div class="item-actions">
-                <a href="${link.url}" target="_blank" class="btn btn-success btn-small">
-                  <i class="fas fa-external-link-alt"></i>
-                </a>
-              </div>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
+function renderContatos() {
+  const lista = dadosGlobal.contatos||[];
+  const c = document.getElementById('listaContatos');
+  if (!lista.length) { c.innerHTML='<p style="color:var(--muted);text-align:center;padding:1rem">Nenhum contato</p>'; return; }
+  c.innerHTML = `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:.7rem">` + lista.map(ct=>`
+    <div style="padding:.8rem;background:#f8fafc;border-radius:10px;border:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+      <div>
+        <strong style="font-size:.88rem">${ct.nome}</strong>
+        <div style="font-size:.76rem;color:var(--muted)">${ct.cargo}</div>
+        <div style="font-size:.76rem;color:var(--success)">${ct.numero}</div>
+      </div>
+      <button class="btn btn-danger btn-sm" onclick="deletarContato(${ct.id})"><i class="fas fa-trash"></i></button>
+    </div>
+  `).join('') + '</div>';
+}
 
-    // Renderizar inscrições
-    function renderInscricoes(inscricoes) {
-      const listaInscricoes = document.getElementById('listaInscricoes');
-      const totalInscricoes = document.getElementById('totalInscricoes');
-      
-      totalInscricoes.textContent = inscricoes.length;
-      
-      if (inscricoes.length === 0) {
-        listaInscricoes.innerHTML = '<p style="color: var(--gray); text-align: center;">Nenhuma inscrição confirmada</p>';
-        return;
-      }
-      
-      listaInscricoes.innerHTML = inscricoes.map((inscricao, index) => {
-        const data = new Date(inscricao.dataInscricao).toLocaleDateString('pt-BR');
-        return `
-          <div class="list-item">
-            <div class="item-header">
-              <div class="item-content">
-                <h4>${inscricao.nome}</h4>
-                <p><strong>Telefone:</strong> ${inscricao.telefone}</p>
-                <p><strong>E-mail:</strong> ${inscricao.email || 'Não informado'}</p>
-                <p><strong>Pessoas:</strong> ${inscricao.quantidade}</p>
-                <p><small>Inscrito em: ${data}</small></p>
-              </div>
-              <div class="item-actions">
-                <button type="button" class="btn btn-danger btn-small" onclick="removerInscricao('${inscricao.id}')">
-                  <i class="fas fa-trash"></i>
-                </button>
-              </div>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
+async function deletarContato(id) {
+  dadosGlobal.contatos = dadosGlobal.contatos.filter(c=>c.id!=id);
+  await api('/api/contatos',{method:'POST',body:JSON.stringify(dadosGlobal.contatos)});
+  renderContatos(); msg('Removido!');
+}
 
-    // Renderizar meditação diária
-    function renderMeditacao(videos) {
-      const listaVideos = document.getElementById('listaVideos');
-      
-      if (videos.length === 0) {
-        listaVideos.innerHTML = '<p style="color: var(--gray); text-align: center;">Nenhum vídeo cadastrado</p>';
-        return;
-      }
-      
-      listaVideos.innerHTML = videos.map(video => `
-        <div class="list-item">
-          <div class="item-header">
-            <div class="item-content">
-              <h4>${video.titulo}</h4>
-              <p>${video.descricao}</p>
-              <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
-                <span class="badge badge-info"><i class="fas fa-clock"></i> ${video.duracao}</span>
-                <span class="badge badge-success"><i class="fas fa-tag"></i> ${video.categoria}</span>
-                <span class="badge badge-warning"><i class="fas fa-${video.tipo === 'upload' ? 'upload' : 'youtube'}"></i> ${video.tipo === 'upload' ? 'Upload' : 'YouTube'}</span>
-              </div>
-            </div>
-            <div class="item-actions">
-              <button type="button" class="btn btn-danger btn-small" onclick="removerVideo(${video.id})">
-                <i class="fas fa-trash"></i>
-              </button>
-            </div>
-          </div>
-        </div>
-      `).join('');
-    }
+// ===== LINKS =====
+function preencherLinks() {
+  const l = dadosGlobal.links||{};
+  document.getElementById('lOracao').value = l.oracao||'';
+  document.getElementById('lAconselhamento').value = l.aconselhamento||'';
+  document.getElementById('lVisitante').value = l.visitante||'';
+  document.getElementById('lYoutube').value = l.youtube||'';
+  document.getElementById('lInstagram').value = l.instagram||'';
+  document.getElementById('lWhatsapp').value = l.whatsapp||'';
+}
+async function salvarLinks() {
+  const links = {
+    oracao: document.getElementById('lOracao').value,
+    aconselhamento: document.getElementById('lAconselhamento').value,
+    visitante: document.getElementById('lVisitante').value,
+    youtube: document.getElementById('lYoutube').value,
+    instagram: document.getElementById('lInstagram').value,
+    whatsapp: document.getElementById('lWhatsapp').value
+  };
+  const r = await api('/api/links',{method:'POST',body:JSON.stringify(links)});
+  r.ok ? msg('Links salvos!') : msg('Erro','danger');
+}
 
-    // Funções para remover itens (mantidas do código anterior)
-    async function removerEvento(index) {
-      try {
-        const response = await fetch('/api/data');
-        const data = await response.json();
-        
-        data.agenda.splice(index, 1);
-        
-        const updateResponse = await fetch('/api/agenda', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data.agenda)
-        });
-        
-        if (updateResponse.ok) {
-          renderAgenda(data.agenda);
-          renderStats(data);
-          renderRecentActivity(data);
-          showMessage('Evento removido com sucesso');
-        }
-      } catch (error) {
-        showMessage('Erro ao remover evento: ' + error.message, 'error');
-      }
-    }
+// ===== BACKUP =====
+async function fazerBackup() {
+  const r = await api('/api/backup',{method:'POST'});
+  r.ok ? msg('Backup criado com sucesso!') : msg('Erro no backup','danger');
+}
 
-    async function removerContato(index) {
-      try {
-        const response = await fetch('/api/data');
-        const data = await response.json();
-        
-        data.contatos.splice(index, 1);
-        
-        const updateResponse = await fetch('/api/contatos', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data.contatos)
-        });
-        
-        if (updateResponse.ok) {
-          renderContatos(data.contatos);
-          renderStats(data);
-          renderRecentActivity(data);
-          showMessage('Contato removido com sucesso');
-        }
-      } catch (error) {
-        showMessage('Erro ao remover contato: ' + error.message, 'error');
-      }
-    }
-
-    async function removerInscricao(id) {
-      try {
-        const response = await fetch('/api/data');
-        const data = await response.json();
-        
-        data.eventosEspeciais.inscricoes = data.eventosEspeciais.inscricoes.filter(insc => insc.id !== id);
-        
-        const updateResponse = await fetch('/api/eventos-especiais', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data.eventosEspeciais)
-        });
-        
-        if (updateResponse.ok) {
-          renderInscricoes(data.eventosEspeciais.inscricoes);
-          renderStats(data);
-          renderRecentActivity(data);
-          showMessage('Inscrição removida com sucesso');
-        }
-      } catch (error) {
-        showMessage('Erro ao remover inscrição: ' + error.message, 'error');
-      }
-    }
-
-    async function removerVideo(videoId) {
-      try {
-        const response = await fetch(`/api/video/${videoId}`, {
-          method: 'DELETE'
-        });
-        
-        if (response.ok) {
-          const dataResponse = await fetch('/api/data');
-          const data = await dataResponse.json();
-          renderMeditacao(data.meditacaoDiaria || []);
-          renderStats(data);
-          renderRecentActivity(data);
-          showMessage('Vídeo removido com sucesso');
-        }
-      } catch (error) {
-        showMessage('Erro ao remover vídeo: ' + error.message, 'error');
-      }
-    }
-
-    // Event Listeners para formulários (mantidos do código anterior)
-    versiculoForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const versiculoData = {
-        texto: document.getElementById('versiculoTexto').value,
-        referencia: document.getElementById('versiculoReferencia').value
-      };
-      
-      try {
-        const response = await fetch('/api/versiculo', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(versiculoData)
-        });
-        
-        if (response.ok) {
-          showMessage('Versículo atualizado com sucesso!');
-        }
-      } catch (error) {
-        showMessage('Erro ao atualizar versículo: ' + error.message, 'error');
-      }
-    });
-
-    palavraSemanaForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const palavraData = {
-        titulo: document.getElementById('palavraTitulo').value,
-        mensagem: document.getElementById('palavraMensagem').value
-      };
-      
-      try {
-        const response = await fetch('/api/palavra-semana', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(palavraData)
-        });
-        
-        if (response.ok) {
-          showMessage('Palavra da semana atualizada com sucesso!');
-        }
-      } catch (error) {
-        showMessage('Erro ao atualizar palavra da semana: ' + error.message, 'error');
-      }
-    });
-
-    linksForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const linksData = {
-        oracao: document.getElementById('linkOracao').value,
-        aconselhamento: document.getElementById('linkAconselhamento').value,
-        visitante: document.getElementById('linkVisitante').value,
-        youtube: document.getElementById('linkYouTube').value
-      };
-      
-      try {
-        const response = await fetch('/api/data');
-        const data = await response.json();
-        
-        data.links = linksData;
-        
-        const updateResponse = await fetch('/api/links', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data.links)
-        });
-        
-        if (updateResponse.ok) {
-          renderLinks(data.links);
-          showMessage('Links atualizados com sucesso!');
-        }
-      } catch (error) {
-        showMessage('Erro ao atualizar links: ' + error.message, 'error');
-      }
-    });
-
-    eventosEspeciaisForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const eventosData = {
-        ativo: eventoAtivo.checked,
-        titulo: document.getElementById('eventoTitulo').value,
-        periodo: document.getElementById('eventoPeriodo').value,
-        tema: document.getElementById('eventoTema').value,
-        versiculo: {
-          texto: document.getElementById('eventoVersiculo').value,
-          referencia: document.getElementById('eventoReferencia').value
-        },
-        descricao: document.getElementById('eventoDescricao').value,
-        inscricoes: []
-      };
-      
-      try {
-        const response = await fetch('/api/data');
-        const data = await response.json();
-        
-        // Manter as inscrições existentes
-        if (data.eventosEspeciais && data.eventosEspeciais.inscricoes) {
-          eventosData.inscricoes = data.eventosEspeciais.inscricoes;
-        }
-        
-        const updateResponse = await fetch('/api/eventos-especiais', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(eventosData)
-        });
-        
-        if (updateResponse.ok) {
-          showMessage('Evento especial atualizado com sucesso!');
-        }
-      } catch (error) {
-        showMessage('Erro ao atualizar evento especial: ' + error.message, 'error');
-      }
-    });
-
-    meditacaoForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const titulo = document.getElementById('videoTitulo').value;
-      const duracao = document.getElementById('videoDuracao').value;
-      const descricao = document.getElementById('videoDescricao').value;
-      const categoria = document.getElementById('videoCategoria').value;
-      const url = document.getElementById('videoUrl').value;
-
-      try {
-        let videoData;
-
-        if (videoFile) {
-          // Upload de arquivo com progresso
-          const formData = new FormData();
-          formData.append('video', videoFile);
-          formData.append('titulo', titulo);
-          formData.append('duracao', duracao);
-          formData.append('descricao', descricao);
-          formData.append('categoria', categoria);
-
-          const uploadResponse = await fetch('/api/upload-video', {
-            method: 'POST',
-            body: formData
-          });
-
-          if (!uploadResponse.ok) {
-            throw new Error('Erro no upload do vídeo');
-          }
-
-          const result = await uploadResponse.json();
-          videoData = result.video;
-        } else if (url) {
-          // Vídeo do YouTube
-          const response = await fetch('/api/data');
-          const data = await response.json();
-          
-          videoData = {
-            id: Date.now(),
-            titulo: titulo,
-            duracao: duracao,
-            descricao: descricao,
-            categoria: categoria,
-            tipo: "youtube",
-            url: url,
-            data: new Date().toISOString().split('T')[0]
-          };
-
-          if (!data.meditacaoDiaria) {
-            data.meditacaoDiaria = [];
-          }
-          
-          data.meditacaoDiaria.push(videoData);
-          
-          const updateResponse = await fetch('/api/meditacao', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data.meditacaoDiaria)
-          });
-          
-          if (!updateResponse.ok) {
-            throw new Error('Erro ao salvar vídeo');
-          }
-        } else {
-          showMessage('Selecione um arquivo de vídeo ou informe uma URL do YouTube', 'error');
-          return;
-        }
-
-        // Recarregar dados
-        const dataResponse = await fetch('/api/data');
-        const data = await dataResponse.json();
-        
-        renderMeditacao(data.meditacaoDiaria || []);
-        renderStats(data);
-        renderRecentActivity(data);
-        meditacaoForm.reset();
-        document.getElementById('videoPreview').style.display = 'none';
-        document.getElementById('progressBar').style.display = 'none';
-        videoFile = null;
-        showMessage('Vídeo adicionado com sucesso!');
-        
-      } catch (error) {
-        showMessage('Erro ao adicionar vídeo: ' + error.message, 'error');
-      }
-    });
-
-    agendaForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const eventoData = {
-        tipo: document.getElementById('eventoTipo').value,
-        titulo: document.getElementById('agendaTitulo').value,
-        horario: document.getElementById('agendaHorario').value,
-        descricao: document.getElementById('agendaDescricao').value
-      };
-      
-      if (eventoData.tipo === 'especial') {
-        eventoData.data = document.getElementById('eventoData').value;
-      }
-      
-      try {
-        const response = await fetch('/api/data');
-        const data = await response.json();
-        
-        data.agenda.push(eventoData);
-        
-        const updateResponse = await fetch('/api/agenda', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data.agenda)
-        });
-        
-        if (updateResponse.ok) {
-          renderAgenda(data.agenda);
-          renderStats(data);
-          renderRecentActivity(data);
-          agendaForm.reset();
-          dataField.style.display = 'none';
-          showMessage('Evento adicionado com sucesso!');
-        }
-      } catch (error) {
-        showMessage('Erro ao adicionar evento: ' + error.message, 'error');
-      }
-    });
-
-    contatoForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const contatoData = {
-        nome: document.getElementById('contatoNome').value,
-        cargo: document.getElementById('contatoCargo').value,
-        numero: document.getElementById('contatoNumero').value
-      };
-      
-      try {
-        const response = await fetch('/api/data');
-        const data = await response.json();
-        
-        data.contatos.push(contatoData);
-        
-        const updateResponse = await fetch('/api/contatos', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data.contatos)
-        });
-        
-        if (updateResponse.ok) {
-          renderContatos(data.contatos);
-          renderStats(data);
-          renderRecentActivity(data);
-          contatoForm.reset();
-          showMessage('Contato adicionado com sucesso!');
-        }
-      } catch (error) {
-        showMessage('Erro ao adicionar contato: ' + error.message, 'error');
-      }
-    });
-
-    configForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const novaSenha = document.getElementById('novaSenha').value;
-      const confirmarSenha = document.getElementById('confirmarSenha').value;
-      
-      if (novaSenha && novaSenha !== confirmarSenha) {
-        showMessage('As senhas não coincidem!', 'error');
-        return;
-      }
-      
-      if (novaSenha) {
-        // Aqui você implementaria a mudança de senha no servidor
-        showMessage('Funcionalidade de alteração de senha será implementada no servidor', 'warning');
-        configForm.reset();
-      } else {
-        showMessage('Digite uma nova senha para alterar', 'warning');
-      }
-    });
-
-    // Event Listeners para as abas
-    document.querySelectorAll('.tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        const tabName = tab.getAttribute('data-tab');
-        switchTab(tabName);
-      });
-    });
-
-    // Inicializar
-    document.addEventListener('DOMContentLoaded', checkAuth);
-  </script>
+// ===== START =====
+init();
+</script>
 </body>
 </html>

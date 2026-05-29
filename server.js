@@ -6,12 +6,27 @@ const fs = require('fs').promises;
 const fsSync = require('fs');
 const multer = require('multer');
 const cors = require('cors');
+const crypto = require('crypto');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// ================= AUTH ====================
+const adminSessions = new Map();
+const SESSION_DURATION = 8 * 60 * 60 * 1000; // 8h
 
-// Adicione isto ANTES de tudo no server.js
-const KEEP_ALIVE_INTERVAL = 10 * 60 * 1000; // 10 minutos
+function requireAdmin(req, res, next) {
+  const token = req.headers['x-admin-token'];
+  if (!token) return res.status(401).json({ error: 'Não autorizado' });
+  const session = adminSessions.get(token);
+  if (!session || Date.now() > session.expires) {
+    adminSessions.delete(token);
+    return res.status(401).json({ error: 'Sessão expirada' });
+  }
+  session.expires = Date.now() + SESSION_DURATION;
+  next();
+}
+
+const KEEP_ALIVE_INTERVAL = 10 * 60 * 1000;
 
 // Função para manter o servidor ativo
 function startKeepAlive() {
@@ -141,7 +156,7 @@ O fim será melhor quando mantivermos nossa fé, nossa esperança e nosso amor e
     oracao: "https://forms.gle/oracao",
     aconselhamento: "https://forms.gle/aconselhamento",
     visitante: "https://forms.gle/visitante",
-    youtube: "https://www.youtube.com/c/CristoAVIVAEsperan%C3%A7a",
+    youtube: "https://www.youtube.com/c/CristoAVIVAEsperan%C3%A7a/streams",
     facebook: "https://www.facebook.com/MCVEOFICIAL",
     instagram: "https://www.instagram.com/mcvesede",
     whatsapp: "https://wa.me/5511991167256"
@@ -173,19 +188,26 @@ O fim será melhor quando mantivermos nossa fé, nossa esperança e nosso amor e
       categoria: "Paz",
       data: new Date().toISOString().split('T')[0],
       views: 0
-    },
-    {
-      id: (Date.now() + 1).toString(),
-      titulo: "Renovação Espiritual", 
-      duracao: "2 min",
-      descricao: "Momento de renovação e conexão com Deus.",
-      tipo: "youtube",
-      url: "https://www.youtube.com/embed/0vrS1-MJus4",
-      categoria: "Renovação",
-      data: new Date().toISOString().split('T')[0],
-      views: 0
     }
-  ]
+  ],
+  estudos: [
+    {
+      id: Date.now().toString(),
+      titulo: "Frutos do Espírito - O Amor",
+      subtitulo: "Série: Frutos do Espírito | Parte 1",
+      descricao: "Descubra o significado profundo do amor ágape na vida cristã.",
+      conteudo: "O amor é o primeiro e mais importante fruto do Espírito Santo (Gálatas 5:22). O apóstolo Paulo nos ensina em 1 Coríntios 13 que sem amor, todos os dons e sacrifícios não valem nada.\n\nO amor ágape é diferente do amor humano comum. É um amor incondicional, que não busca o próprio interesse, mas o bem do outro. É o amor de Deus derramado em nossos corações.\n\n**Como cultivar o amor:**\n1. Passe tempo na presença de Deus através da oração\n2. Leia e medite na Palavra de Deus diariamente\n3. Pratique atos de bondade mesmo quando não tiver vontade\n4. Perdoe como Cristo te perdoou\n\n**Versículo para meditar:** 'O amor é paciente, é bondoso; o amor não arde em ciúmes, não se ufana, não se ensoberbece.' (1 Coríntios 13:4)",
+      autor: "Pastor Ideir Noronha",
+      categoria: "Série",
+      tipo: "texto",
+      url: "",
+      destaque: true,
+      data: new Date().toISOString().split('T')[0]
+    }
+  ],
+  visitantes: [],
+  pedidosOracao: [],
+  pedidosAconselhamento: []
 };
 
 // ================= FUNÇÕES DE ARQUIVO =================
@@ -237,32 +259,161 @@ app.get('/sw.js', (req, res) => {
 });
 
 app.get('/manifest.json', (req, res) => {
-  res.setHeader('Content-Type', 'application/json');
-  const manifest = {
-    name: "AVIVA - Portal dos Membros",
-    short_name: "AVIVA",
-    description: "Portal do Ministério Cristo a Viva Esperança",
-    start_url: "/",
-    display: "standalone",
-    orientation: "portrait",
-    background_color: "#0f172a",
-    theme_color: "#1e293b",
-    icons: [
-      {
-        src: "/logo.jpeg",
-        sizes: "192x192",
-        type: "image/jpeg"
-      },
-      {
-        src: "/logo.jpeg",
-        sizes: "512x512",
-        type: "image/jpeg"
-      }
-    ],
-    categories: ["lifestyle", "religious"],
-    lang: "pt-BR"
-  };
-  res.json(manifest);
+  res.setHeader('Content-Type', 'application/manifest+json');
+  res.sendFile(path.join(__dirname, 'public', 'manifest.json'));
+});
+
+// ================= AUTH ROUTES =================
+app.post('/api/admin/login', (req, res) => {
+  const { senha } = req.body;
+  const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'aviva2024';
+  if (senha !== ADMIN_PASSWORD) {
+    return res.status(401).json({ error: 'Senha incorreta' });
+  }
+  const token = crypto.randomBytes(32).toString('hex');
+  adminSessions.set(token, { expires: Date.now() + SESSION_DURATION });
+  res.json({ token, expiresIn: SESSION_DURATION });
+});
+
+app.post('/api/admin/logout', requireAdmin, (req, res) => {
+  adminSessions.delete(req.headers['x-admin-token']);
+  res.json({ success: true });
+});
+
+app.get('/api/admin/verify', (req, res) => {
+  const token = req.headers['x-admin-token'];
+  const session = adminSessions.get(token);
+  if (!session || Date.now() > session.expires) {
+    return res.status(401).json({ valid: false });
+  }
+  res.json({ valid: true });
+});
+
+// ================= ESTUDOS API =================
+app.get('/api/estudos', async (req, res) => {
+  try {
+    const data = await loadData();
+    res.json(data.estudos || []);
+  } catch (err) { res.status(500).json({ error: 'Erro ao carregar estudos' }); }
+});
+
+app.post('/api/estudos', requireAdmin, async (req, res) => {
+  try {
+    const data = await loadData();
+    if (!data.estudos) data.estudos = [];
+    const estudo = { ...req.body, id: Date.now().toString(), data: req.body.data || new Date().toISOString().split('T')[0] };
+    data.estudos.unshift(estudo);
+    await saveData(data);
+    res.json({ success: true, estudo });
+  } catch (err) { res.status(500).json({ error: 'Erro ao salvar estudo' }); }
+});
+
+app.put('/api/estudos/:id', requireAdmin, async (req, res) => {
+  try {
+    const data = await loadData();
+    const idx = data.estudos.findIndex(e => e.id == req.params.id);
+    if (idx === -1) return res.status(404).json({ error: 'Estudo não encontrado' });
+    data.estudos[idx] = { ...data.estudos[idx], ...req.body };
+    await saveData(data);
+    res.json({ success: true });
+  } catch (err) { res.status(500).json({ error: 'Erro ao atualizar estudo' }); }
+});
+
+app.delete('/api/estudos/:id', requireAdmin, async (req, res) => {
+  try {
+    const data = await loadData();
+    data.estudos = data.estudos.filter(e => e.id != req.params.id);
+    await saveData(data);
+    res.json({ success: true });
+  } catch (err) { res.status(500).json({ error: 'Erro ao deletar estudo' }); }
+});
+
+// ================= VISITANTES API =================
+app.post('/api/visitantes', async (req, res) => {
+  try {
+    const data = await loadData();
+    if (!data.visitantes) data.visitantes = [];
+    const visitante = { ...req.body, id: Date.now().toString(), dataChegada: new Date().toISOString(), status: 'novo' };
+    data.visitantes.unshift(visitante);
+    await saveData(data);
+    res.json({ success: true, message: 'Bem-vindo(a) à família AVIVA!' });
+  } catch (err) { res.status(500).json({ error: 'Erro ao registrar visitante' }); }
+});
+
+app.get('/api/visitantes', requireAdmin, async (req, res) => {
+  try {
+    const data = await loadData();
+    res.json(data.visitantes || []);
+  } catch (err) { res.status(500).json({ error: 'Erro ao carregar visitantes' }); }
+});
+
+app.put('/api/visitantes/:id/status', requireAdmin, async (req, res) => {
+  try {
+    const data = await loadData();
+    const v = data.visitantes.find(v => v.id == req.params.id);
+    if (!v) return res.status(404).json({ error: 'Não encontrado' });
+    v.status = req.body.status;
+    await saveData(data);
+    res.json({ success: true });
+  } catch (err) { res.status(500).json({ error: 'Erro ao atualizar status' }); }
+});
+
+// ================= PEDIDOS DE ORAÇÃO API =================
+app.post('/api/pedidos-oracao', async (req, res) => {
+  try {
+    const data = await loadData();
+    if (!data.pedidosOracao) data.pedidosOracao = [];
+    data.pedidosOracao.unshift({ ...req.body, id: Date.now().toString(), data: new Date().toISOString(), status: 'pendente' });
+    await saveData(data);
+    res.json({ success: true, message: 'Seu pedido foi recebido. Oraremos por você!' });
+  } catch (err) { res.status(500).json({ error: 'Erro ao salvar pedido' }); }
+});
+
+app.get('/api/pedidos-oracao', requireAdmin, async (req, res) => {
+  try {
+    const data = await loadData();
+    res.json(data.pedidosOracao || []);
+  } catch (err) { res.status(500).json({ error: 'Erro ao carregar pedidos' }); }
+});
+
+app.put('/api/pedidos-oracao/:id/status', requireAdmin, async (req, res) => {
+  try {
+    const data = await loadData();
+    const p = data.pedidosOracao.find(p => p.id == req.params.id);
+    if (!p) return res.status(404).json({ error: 'Não encontrado' });
+    p.status = req.body.status;
+    await saveData(data);
+    res.json({ success: true });
+  } catch (err) { res.status(500).json({ error: 'Erro ao atualizar' }); }
+});
+
+// ================= PEDIDOS ACONSELHAMENTO API =================
+app.post('/api/aconselhamento', async (req, res) => {
+  try {
+    const data = await loadData();
+    if (!data.pedidosAconselhamento) data.pedidosAconselhamento = [];
+    data.pedidosAconselhamento.unshift({ ...req.body, id: Date.now().toString(), data: new Date().toISOString(), status: 'pendente' });
+    await saveData(data);
+    res.json({ success: true, message: 'Sua solicitação foi recebida. Logo entraremos em contato!' });
+  } catch (err) { res.status(500).json({ error: 'Erro ao salvar solicitação' }); }
+});
+
+app.get('/api/aconselhamento', requireAdmin, async (req, res) => {
+  try {
+    const data = await loadData();
+    res.json(data.pedidosAconselhamento || []);
+  } catch (err) { res.status(500).json({ error: 'Erro ao carregar solicitações' }); }
+});
+
+app.put('/api/aconselhamento/:id/status', requireAdmin, async (req, res) => {
+  try {
+    const data = await loadData();
+    const p = (data.pedidosAconselhamento || []).find(p => p.id == req.params.id);
+    if (!p) return res.status(404).json({ error: 'Não encontrado' });
+    p.status = req.body.status;
+    await saveData(data);
+    res.json({ success: true });
+  } catch (err) { res.status(500).json({ error: 'Erro ao atualizar' }); }
 });
 
 // ================= ROTAS API =================
@@ -325,7 +476,7 @@ app.get('/api/contatos', async (req, res) => {
 });
 
 // POST para atualizar dados
-app.post('/api/versiculo', async (req, res) => {
+app.post('/api/versiculo', requireAdmin, async (req, res) => {
   try {
     const data = await loadData();
     data.versiculo = {
@@ -339,7 +490,7 @@ app.post('/api/versiculo', async (req, res) => {
   }
 });
 
-app.post('/api/palavra-semana', async (req, res) => {
+app.post('/api/palavra-semana', requireAdmin, async (req, res) => {
   try {
     const data = await loadData();
     data.palavraSemana = {
@@ -353,7 +504,7 @@ app.post('/api/palavra-semana', async (req, res) => {
   }
 });
 
-app.post('/api/agenda', async (req, res) => {
+app.post('/api/agenda', requireAdmin, async (req, res) => {
   try {
     const data = await loadData();
     data.agenda = req.body.map(item => ({
@@ -367,7 +518,7 @@ app.post('/api/agenda', async (req, res) => {
   }
 });
 
-app.post('/api/contatos', async (req, res) => {
+app.post('/api/contatos', requireAdmin, async (req, res) => {
   try {
     const data = await loadData();
     data.contatos = req.body.map((item, index) => ({
@@ -381,7 +532,7 @@ app.post('/api/contatos', async (req, res) => {
   }
 });
 
-app.post('/api/links', async (req, res) => {
+app.post('/api/links', requireAdmin, async (req, res) => {
   try {
     const data = await loadData();
     data.links = req.body;
@@ -392,7 +543,7 @@ app.post('/api/links', async (req, res) => {
   }
 });
 
-app.post('/api/eventos-especiais', async (req, res) => {
+app.post('/api/eventos-especiais', requireAdmin, async (req, res) => {
   try {
     const data = await loadData();
     data.eventosEspeciais = req.body;
@@ -442,7 +593,7 @@ app.get('/api/inscricoes', async (req, res) => {
 });
 
 // POST meditação diária
-app.post('/api/meditacao', async (req, res) => {
+app.post('/api/meditacao', requireAdmin, async (req, res) => {
   try {
     const data = await loadData();
     data.meditacaoDiaria = req.body.map(item => ({
@@ -458,7 +609,7 @@ app.post('/api/meditacao', async (req, res) => {
 });
 
 // POST upload de vídeo
-app.post('/api/upload-video', upload.single('video'), async (req, res) => {
+app.post('/api/upload-video', requireAdmin, upload.single('video'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: "Nenhum arquivo enviado" });
@@ -497,7 +648,7 @@ app.post('/api/upload-video', upload.single('video'), async (req, res) => {
 });
 
 // DELETE vídeo
-app.delete('/api/video/:id', async (req, res) => {
+app.delete('/api/video/:id', requireAdmin, async (req, res) => {
   try {
     const data = await loadData();
     const videoIndex = data.meditacaoDiaria.findIndex(v => v.id == req.params.id);
@@ -547,7 +698,7 @@ app.post('/api/video/:id/view', async (req, res) => {
 });
 
 // POST backup de dados
-app.post('/api/backup', async (req, res) => {
+app.post('/api/backup', requireAdmin, async (req, res) => {
   try {
     const data = await loadData();
     const backupDir = path.join(__dirname, 'backups');
@@ -599,7 +750,15 @@ app.get('/admin', (req, res) => {
 });
 
 app.get('/meditacao', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'meditacao.html'));
+  res.sendFile(path.join(__dirname, 'public', 'meditacao-diaria.html'));
+});
+
+app.get('/estudos', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'estudos.html'));
+});
+
+app.get('/celulas', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'celulas.html'));
 });
 
 // Health check

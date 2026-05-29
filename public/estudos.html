@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Estudos Bíblicos - AVIVA</title>
+  <meta name="theme-color" content="#2563eb"/>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --primary:#2563eb;--primary-dark:#1d4ed8;--primary-light:#dbeafe;
+      --text:#1f2937;--muted:#6b7280;--bg:#f1f5f9;--card:#fff;--border:#e5e7eb;
+      --shadow:0 4px 12px rgba(0,0,0,.08);--shadow-lg:0 10px 24px rgba(0,0,0,.1);
+    }
+    body{font-family:'Montserrat',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased}
+    a{text-decoration:none;color:inherit}
+
+    /* Header */
+    .page-header{background:linear-gradient(135deg,#1e3a8a,#1d4ed8,#2563eb);padding:1.5rem 1rem;text-align:center;box-shadow:0 4px 20px rgba(37,99,235,.3)}
+    .back-btn{display:inline-flex;align-items:center;gap:.5rem;color:rgba(255,255,255,.9);padding:.55rem 1.1rem;border-radius:50px;background:rgba(255,255,255,.15);font-weight:600;font-size:.85rem;transition:.25s;margin-bottom:1rem}
+    .back-btn:hover{background:rgba(255,255,255,.25)}
+    .page-header h1{font-family:'Playfair Display',serif;font-size:2rem;color:#fff;margin-bottom:.3rem}
+    .page-header p{color:rgba(255,255,255,.8);font-size:.95rem}
+
+    .container{max-width:1100px;margin:0 auto;padding:1.5rem 1rem}
+
+    /* Filtros */
+    .filtros-bar{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1.5rem;align-items:center}
+    .filtro-btn{padding:.5rem 1.1rem;border-radius:50px;border:1px solid var(--border);background:#fff;color:var(--muted);font-weight:600;font-size:.85rem;cursor:pointer;transition:.2s;font-family:'Montserrat',sans-serif}
+    .filtro-btn.active,.filtro-btn:hover{background:var(--primary);color:#fff;border-color:var(--primary)}
+    .search-bar{flex:1;min-width:200px;position:relative}
+    .search-bar input{width:100%;padding:.6rem 1rem .6rem 2.5rem;border:1px solid var(--border);border-radius:50px;background:#fff;font-family:'Montserrat',sans-serif;font-size:.9rem;color:var(--text)}
+    .search-bar input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+    .search-bar i{position:absolute;left:.9rem;top:50%;transform:translateY(-50%);color:var(--muted);font-size:.9rem}
+
+    /* Grid */
+    .estudos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.2rem}
+    .estudo-card{background:var(--card);border-radius:16px;overflow:hidden;border:1px solid var(--border);box-shadow:var(--shadow);transition:.25s;cursor:pointer;position:relative}
+    .estudo-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:var(--primary)}
+    .estudo-card.destaque{border-color:var(--primary);border-width:2px}
+    .card-badge-destaque{position:absolute;top:12px;right:12px;background:var(--primary);color:#fff;padding:.2rem .7rem;border-radius:20px;font-size:.7rem;font-weight:700}
+    .card-header{background:linear-gradient(135deg,var(--primary),var(--primary-dark));padding:1.5rem;min-height:120px;display:flex;flex-direction:column;justify-content:flex-end}
+    .card-categoria{background:rgba(255,255,255,.2);color:#fff;padding:.2rem .7rem;border-radius:12px;font-size:.7rem;font-weight:700;text-transform:uppercase;display:inline-block;margin-bottom:.6rem}
+    .card-titulo{font-family:'Playfair Display',serif;font-size:1.15rem;color:#fff;font-weight:700;line-height:1.3}
+    .card-body{padding:1.2rem}
+    .card-subtitulo{font-size:.82rem;color:var(--primary);font-weight:600;margin-bottom:.5rem}
+    .card-descricao{font-size:.88rem;color:var(--muted);line-height:1.6;margin-bottom:1rem;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+    .card-meta{display:flex;gap:1rem;font-size:.78rem;color:var(--muted);margin-bottom:.8rem}
+    .card-meta i{color:var(--primary);margin-right:.3rem}
+    .btn-ler{width:100%;padding:.7rem;background:var(--primary);color:#fff;border:none;border-radius:8px;font-weight:600;font-size:.88rem;cursor:pointer;font-family:'Montserrat',sans-serif;transition:.2s;display:flex;align-items:center;justify-content:center;gap:.4rem}
+    .btn-ler:hover{background:var(--primary-dark)}
+
+    /* Modal */
+    .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1000;overflow-y:auto;padding:1rem}
+    .modal-inner{background:#fff;border-radius:18px;max-width:720px;margin:2rem auto;padding:0;overflow:hidden;box-shadow:0 25px 50px rgba(0,0,0,.2)}
+    .modal-hero{background:linear-gradient(135deg,var(--primary),var(--primary-dark));padding:2rem;position:relative}
+    .modal-close{position:absolute;top:14px;right:18px;background:rgba(255,255,255,.2);border:none;color:#fff;width:34px;height:34px;border-radius:50%;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s}
+    .modal-close:hover{background:rgba(255,255,255,.35)}
+    .modal-categoria{background:rgba(255,255,255,.2);color:#fff;padding:.2rem .8rem;border-radius:12px;font-size:.72rem;font-weight:700;text-transform:uppercase;display:inline-block;margin-bottom:.6rem}
+    .modal-titulo{font-family:'Playfair Display',serif;font-size:1.7rem;color:#fff;margin-bottom:.3rem;line-height:1.2}
+    .modal-subtitulo{color:rgba(255,255,255,.8);font-size:.95rem}
+    .modal-body{padding:1.8rem}
+    .modal-meta{display:flex;gap:1.5rem;flex-wrap:wrap;padding:.8rem 1rem;background:#f8fafc;border-radius:10px;margin-bottom:1.5rem;font-size:.82rem;color:var(--muted)}
+    .modal-meta span i{color:var(--primary);margin-right:.3rem}
+    .modal-conteudo{line-height:1.9;color:var(--text);font-size:.95rem;white-space:pre-wrap}
+    .modal-conteudo strong{font-weight:700;color:var(--text)}
+    .modal-url{display:inline-flex;align-items:center;gap:.5rem;margin-top:1.2rem;padding:.7rem 1.2rem;background:var(--primary-light);color:var(--primary);border-radius:8px;font-weight:600;font-size:.9rem;transition:.2s}
+    .modal-url:hover{background:var(--primary);color:#fff}
+
+    /* Empty */
+    .empty{text-align:center;padding:4rem 1rem;color:var(--muted)}
+    .empty i{font-size:3rem;margin-bottom:1rem;opacity:.4;display:block;color:var(--primary)}
+
+    /* Loading */
+    .loading{text-align:center;padding:3rem;color:var(--muted)}
+    .spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 1rem}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    @media(max-width:600px){
+      .page-header h1{font-size:1.6rem}
+      .estudos-grid{grid-template-columns:1fr}
+      .modal-titulo{font-size:1.4rem}
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <a href="/" class="back-btn"><i class="fas fa-arrow-left"></i> Voltar</a>
+  <h1>Estudos Bíblicos</h1>
+  <p>Materiais de crescimento espiritual para você</p>
+</div>
+
+<div class="container">
+  <div class="filtros-bar">
+    <div class="search-bar">
+      <i class="fas fa-search"></i>
+      <input type="text" id="searchInput" placeholder="Buscar estudos..." oninput="filtrar()">
+    </div>
+    <button class="filtro-btn active" onclick="setCategoria('')">Todos</button>
+    <button class="filtro-btn" onclick="setCategoria('Série')">Série</button>
+    <button class="filtro-btn" onclick="setCategoria('Devocional')">Devocional</button>
+    <button class="filtro-btn" onclick="setCategoria('Livro Bíblico')">Livro Bíblico</button>
+    <button class="filtro-btn" onclick="setCategoria('Temático')">Temático</button>
+  </div>
+
+  <div id="estudosContainer" class="estudos-grid">
+    <div class="loading"><div class="spinner"></div><p>Carregando estudos...</p></div>
+  </div>
+</div>
+
+<!-- Modal Leitura -->
+<div id="modalEstudo" class="modal" onclick="if(event.target===this)fecharModal()">
+  <div class="modal-inner">
+    <div class="modal-hero">
+      <button class="modal-close" onclick="fecharModal()"><i class="fas fa-times"></i></button>
+      <div class="modal-categoria" id="mCategoria"></div>
+      <h2 class="modal-titulo" id="mTitulo"></h2>
+      <p class="modal-subtitulo" id="mSubtitulo"></p>
+    </div>
+    <div class="modal-body">
+      <div class="modal-meta">
+        <span><i class="fas fa-user"></i><span id="mAutor"></span></span>
+        <span><i class="fas fa-calendar"></i><span id="mData"></span></span>
+      </div>
+      <div class="modal-conteudo" id="mConteudo"></div>
+      <a id="mUrl" class="modal-url" target="_blank" style="display:none">
+        <i class="fas fa-external-link-alt"></i> Ver Material Completo
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+let todos = [], catAtual = '', modal;
+
+document.addEventListener('DOMContentLoaded', async () => {
+  modal = document.getElementById('modalEstudo');
+  await carregar();
+});
+
+async function carregar() {
+  try {
+    const r = await fetch('/api/estudos');
+    todos = await r.json();
+    renderizar();
+  } catch {
+    document.getElementById('estudosContainer').innerHTML =
+      '<div class="empty"><i class="fas fa-exclamation-triangle"></i><p>Erro ao carregar.</p></div>';
+  }
+}
+
+function setCategoria(cat) {
+  catAtual = cat;
+  document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  filtrar();
+}
+
+function filtrar() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  const filtrados = todos.filter(e =>
+    (!catAtual || e.categoria === catAtual) &&
+    (!q || e.titulo.toLowerCase().includes(q) || e.descricao.toLowerCase().includes(q))
+  );
+  renderizar(filtrados);
+}
+
+function renderizar(lista = todos) {
+  const c = document.getElementById('estudosContainer');
+  if (!lista.length) {
+    c.innerHTML = '<div class="empty"><i class="fas fa-book-open"></i><p>Nenhum estudo encontrado.</p></div>';
+    return;
+  }
+  c.innerHTML = lista.map(e => `
+    <div class="estudo-card${e.destaque?' destaque':''}" onclick="abrirEstudo('${e.id}')">
+      ${e.destaque?'<div class="card-badge-destaque"><i class="fas fa-star"></i> Destaque</div>':''}
+      <div class="card-header">
+        <div class="card-categoria">${e.categoria||'Estudo'}</div>
+        <div class="card-titulo">${e.titulo}</div>
+      </div>
+      <div class="card-body">
+        ${e.subtitulo?`<div class="card-subtitulo">${e.subtitulo}</div>`:''}
+        <p class="card-descricao">${e.descricao}</p>
+        <div class="card-meta">
+          <span><i class="fas fa-user"></i>${e.autor||'AVIVA'}</span>
+          <span><i class="fas fa-calendar"></i>${fmtData(e.data)}</span>
+        </div>
+        <button class="btn-ler"><i class="fas fa-book-open"></i> Ler Estudo</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function abrirEstudo(id) {
+  const e = todos.find(x => x.id == id);
+  if (!e) return;
+  document.getElementById('mCategoria').textContent = e.categoria || 'Estudo';
+  document.getElementById('mTitulo').textContent = e.titulo;
+  document.getElementById('mSubtitulo').textContent = e.subtitulo || '';
+  document.getElementById('mAutor').textContent = e.autor || 'AVIVA';
+  document.getElementById('mData').textContent = fmtData(e.data);
+  document.getElementById('mConteudo').textContent = e.conteudo || e.descricao;
+  const link = document.getElementById('mUrl');
+  if (e.url) { link.href = e.url; link.style.display = 'inline-flex'; }
+  else { link.style.display = 'none'; }
+  modal.style.display = 'block';
+  document.body.style.overflow = 'hidden';
+}
+
+function fecharModal() {
+  modal.style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => { if(e.key==='Escape') fecharModal(); });
+
+function fmtData(d) {
+  if (!d) return '';
+  try { return new Date(d).toLocaleDateString('pt-BR'); } catch { return d; }
+}
+</script>
+</body>
+</html>

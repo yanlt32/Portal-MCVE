@@ -7,15 +7,16 @@
   <meta name="description" content="Portal do Ministério Cristo a Viva Esperança"/>
   
   <!-- Meta tags PWA -->
-  <meta name="theme-color" content="#1e293b"/>
+  <meta name="theme-color" content="#2563eb"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
   <meta name="apple-mobile-web-app-title" content="AVIVA"/>
   <meta name="mobile-web-app-capable" content="yes"/>
   <meta name="application-name" content="AVIVA"/>
-  
+
   <!-- Favicon e ícones PWA -->
-  <link rel="shortcut icon" href="logo.jpeg" type="image/x-icon">
+  <link rel="shortcut icon" href="icons/icon-192x192.png" type="image/png">
+  <link rel="apple-touch-icon" href="icons/icon-192x192.png">
   <link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192x192.png">
   <link rel="apple-touch-icon" sizes="512x512" href="icons/icon-512x512.png">
   
@@ -100,29 +101,29 @@
           </div>
           <h3>Pedido de Oração</h3>
           <p>Compartilhe seus pedidos de oração. Nossa equipe intercessora vai orar por você.</p>
-          <a href="#" id="linkOracao" target="_blank" class="btn btn-small">
+          <button onclick="abrirModalOracao()" class="btn btn-small">
             <i class="fas fa-pray"></i> Enviar Pedido
-          </a>
+          </button>
         </div>
-        
+
         <div class="feature-card">
           <div class="feature-icon">
             <i class="fas fa-user-friends"></i>
           </div>
           <h3>Aconselhamento</h3>
           <p>Precisa de orientação espiritual? Agende um momento com nossos líderes.</p>
-          <a href="#" id="linkAconselhamento" target="_blank" class="btn btn-small">
+          <button onclick="abrirModalAconselhamento()" class="btn btn-small">
             <i class="fas fa-comments"></i> Solicitar
-          </a>
+          </button>
         </div>
-        
+
         <div class="feature-card">
           <div class="feature-icon">
             <i class="fas fa-book-bible"></i>
           </div>
           <h3>Estudos Bíblicos</h3>
           <p>Acesse nossos estudos e materiais para crescimento espiritual.</p>
-          <a href="#" class="btn btn-small">
+          <a href="/estudos" class="btn btn-small">
             <i class="fas fa-book-open"></i> Acessar
           </a>
         </div>
@@ -153,7 +154,7 @@
         <button id="openModal" class="btn">
           <i class="fas fa-book-open"></i> Ler Mensagem Completa
         </button>
-        <a href="#" id="linkYouTube" target="_blank" class="btn">
+        <a href="https://www.youtube.com/c/CristoAVIVAEsperan%C3%A7a/streams" id="linkYouTube" target="_blank" class="btn">
           <i class="fas fa-play-circle"></i> Assistir Pregação
         </a>
       </div>
@@ -174,24 +175,60 @@
     <!-- Visitante - Primeira Vez -->
     <div class="section">
       <h2>É a sua primeira vez na AVIVA?</h2>
-      <p style="text-align:center; margin-bottom:1.5rem; font-size: 1.2rem; line-height: 1.6;">
-        Queremos te conhecer e te acolher como família! Preencha nosso formulário de visitante.
+      <p style="text-align:center; margin-bottom:1.5rem; color: var(--text-muted);">
+        Queremos te conhecer e te acolher como família!
       </p>
-      <div style="text-align: center;">
-        <a href="#" id="linkVisitante" target="_blank" class="btn">
-          <i class="fas fa-user-plus"></i> Sou visitante – Preencher formulário
-        </a>
+      <div style="max-width:480px; margin:0 auto;">
+        <form id="formVisitante" onsubmit="enviarVisitante(event)">
+          <div class="form-group">
+            <label>Seu nome completo</label>
+            <input type="text" id="vNome" placeholder="Como podemos te chamar?" required>
+          </div>
+          <div class="form-group">
+            <label>Telefone / WhatsApp</label>
+            <input type="tel" id="vTelefone" placeholder="(11) 99999-9999" required>
+          </div>
+          <div class="form-group">
+            <label>E-mail (opcional)</label>
+            <input type="email" id="vEmail" placeholder="seu@email.com">
+          </div>
+          <div class="form-group">
+            <label>Bairro onde mora</label>
+            <input type="text" id="vBairro" placeholder="Ex: Vila Antonieta">
+          </div>
+          <div class="form-group">
+            <label>Como conheceu a AVIVA?</label>
+            <select id="vComoConheceu">
+              <option value="">Selecione...</option>
+              <option>Instagram / Redes Sociais</option>
+              <option>Indicação de amigo/familiar</option>
+              <option>Passei em frente</option>
+              <option>YouTube</option>
+              <option>Outro</option>
+            </select>
+          </div>
+          <div style="display:flex; gap:1rem; margin-bottom:1rem; flex-wrap:wrap;">
+            <label style="display:flex; align-items:center; gap:0.5rem; font-size:0.9rem; cursor:pointer;">
+              <input type="checkbox" id="vQuerVisita"> Quero receber uma visita
+            </label>
+            <label style="display:flex; align-items:center; gap:0.5rem; font-size:0.9rem; cursor:pointer;">
+              <input type="checkbox" id="vQuerWhatsapp" checked> Entrar no grupo do WhatsApp
+            </label>
+          </div>
+          <button type="submit" class="btn" style="width:100%;">
+            <i class="fas fa-user-plus"></i> Me Cadastrar como Visitante
+          </button>
+        </form>
+        <div id="visitanteSucesso" style="display:none; text-align:center; padding:1.5rem; background:#f0fdf4; border-radius:12px; border:1px solid #86efac; margin-top:1rem;">
+          <i class="fas fa-check-circle" style="color:#22c55e; font-size:2.5rem; margin-bottom:0.5rem; display:block;"></i>
+          <strong style="color:#166534;">Bem-vindo(a) à família AVIVA!</strong>
+          <p style="color:#166534; font-size:0.9rem; margin-top:0.3rem;">Entraremos em contato em breve.</p>
+        </div>
       </div>
-      <div class="badge-container">
-        <span class="badge">
-          <i class="fas fa-home"></i> Visita em casa
-        </span>
-        <span class="badge">
-          <i class="fab fa-whatsapp"></i> Grupo no WhatsApp
-        </span>
-        <span class="badge">
-          <i class="fas fa-hands"></i> Discipulado
-        </span>
+      <div class="badge-container" style="margin-top:1.5rem;">
+        <span class="badge"><i class="fas fa-home"></i> Visita em casa</span>
+        <span class="badge"><i class="fab fa-whatsapp"></i> Grupo no WhatsApp</span>
+        <span class="badge"><i class="fas fa-hands"></i> Discipulado</span>
       </div>
     </div>
 
@@ -223,7 +260,7 @@
         </div>
       </div>
       <div style="text-align: center; margin-top: 1.5rem;">
-        <a href="https://www.mcve.com.br" style="color:#ffffff; font-size:1.1rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem;">
+        <a href="https://www.mcve.com.br" target="_blank" style="color:var(--primary); font-size:1rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem;">
           <i class="fas fa-globe"></i> www.mcve.com.br
         </a>
       </div>
@@ -392,12 +429,6 @@
       </a>
     </div>
 
-    <!-- Link para Admin -->
-    <div class="admin-link">
-      <a href="/admin">
-        <i class="fas fa-cog"></i> Acessar Painel Administrativo
-      </a>
-    </div>
 
   </div>
 
@@ -470,8 +501,161 @@
     Feito com amor para a obra do Senhor</p>
   </footer>
 
+  <!-- Modal Pedido de Oração -->
+  <div id="modalOracao" class="modal">
+    <div class="modal-content" style="max-width:480px;">
+      <span class="close-modal" onclick="fecharModal('modalOracao')">&times;</span>
+      <div class="modal-header">
+        <h2><i class="fas fa-hands-praying" style="color:var(--primary);margin-right:0.5rem;"></i>Pedido de Oração</h2>
+        <p>Nossa equipe intercessora vai orar por você</p>
+      </div>
+      <form onsubmit="enviarOracao(event)">
+        <div class="form-group">
+          <label>Seu nome</label>
+          <input type="text" id="orNome" placeholder="Como podemos te chamar?" required>
+        </div>
+        <div class="form-group">
+          <label>Telefone / WhatsApp</label>
+          <input type="tel" id="orTelefone" placeholder="(11) 99999-9999">
+        </div>
+        <div class="form-group">
+          <label>Seu pedido de oração</label>
+          <textarea id="orPedido" rows="4" placeholder="Compartilhe aqui o que está no seu coração..." required></textarea>
+        </div>
+        <div class="form-group">
+          <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;">
+            <input type="checkbox" id="orAnonimo"> Manter anônimo
+          </label>
+        </div>
+        <button type="submit" class="btn" style="width:100%;">
+          <i class="fas fa-pray"></i> Enviar Pedido
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Aconselhamento -->
+  <div id="modalAconselhamento" class="modal">
+    <div class="modal-content" style="max-width:480px;">
+      <span class="close-modal" onclick="fecharModal('modalAconselhamento')">&times;</span>
+      <div class="modal-header">
+        <h2><i class="fas fa-user-friends" style="color:var(--primary);margin-right:0.5rem;"></i>Solicitar Aconselhamento</h2>
+        <p>Nossos líderes estão aqui para te ajudar</p>
+      </div>
+      <form onsubmit="enviarAconselhamento(event)">
+        <div class="form-group">
+          <label>Seu nome completo</label>
+          <input type="text" id="acNome" placeholder="Nome completo" required>
+        </div>
+        <div class="form-group">
+          <label>Telefone / WhatsApp</label>
+          <input type="tel" id="acTelefone" placeholder="(11) 99999-9999" required>
+        </div>
+        <div class="form-group">
+          <label>Área que precisa de ajuda</label>
+          <select id="acArea" required>
+            <option value="">Selecione...</option>
+            <option>Relacionamento / Casamento</option>
+            <option>Família</option>
+            <option>Saúde emocional</option>
+            <option>Questões espirituais</option>
+            <option>Finanças</option>
+            <option>Outro</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Descreva brevemente (opcional)</label>
+          <textarea id="acDescricao" rows="3" placeholder="O que está acontecendo?"></textarea>
+        </div>
+        <button type="submit" class="btn" style="width:100%;">
+          <i class="fas fa-comments"></i> Enviar Solicitação
+        </button>
+      </form>
+    </div>
+  </div>
+
   <!-- Scripts -->
   <script src="script.js"></script>
-  <script src="app.js"></script>
+  <script>
+    function abrirModalOracao() { document.getElementById('modalOracao').style.display = 'block'; }
+    function abrirModalAconselhamento() { document.getElementById('modalAconselhamento').style.display = 'block'; }
+    function fecharModal(id) { document.getElementById(id).style.display = 'none'; }
+
+    async function enviarOracao(e) {
+      e.preventDefault();
+      const btn = e.target.querySelector('button[type=submit]');
+      btn.disabled = true; btn.textContent = 'Enviando...';
+      try {
+        await fetch('/api/pedidos-oracao', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            nome: document.getElementById('orAnonimo').checked ? 'Anônimo' : document.getElementById('orNome').value,
+            telefone: document.getElementById('orTelefone').value,
+            pedido: document.getElementById('orPedido').value,
+            anonimo: document.getElementById('orAnonimo').checked
+          })
+        });
+        fecharModal('modalOracao');
+        alert('Seu pedido foi recebido! Oraremos por você. 🙏');
+        e.target.reset();
+      } catch { alert('Erro ao enviar. Tente novamente.'); }
+      btn.disabled = false; btn.innerHTML = '<i class="fas fa-pray"></i> Enviar Pedido';
+    }
+
+    async function enviarAconselhamento(e) {
+      e.preventDefault();
+      const btn = e.target.querySelector('button[type=submit]');
+      btn.disabled = true; btn.textContent = 'Enviando...';
+      try {
+        await fetch('/api/aconselhamento', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            nome: document.getElementById('acNome').value,
+            telefone: document.getElementById('acTelefone').value,
+            area: document.getElementById('acArea').value,
+            descricao: document.getElementById('acDescricao').value
+          })
+        });
+        fecharModal('modalAconselhamento');
+        alert('Solicitação recebida! Entraremos em contato em breve. 💙');
+        e.target.reset();
+      } catch { alert('Erro ao enviar. Tente novamente.'); }
+      btn.disabled = false; btn.innerHTML = '<i class="fas fa-comments"></i> Enviar Solicitação';
+    }
+
+    async function enviarVisitante(e) {
+      e.preventDefault();
+      const btn = e.target.querySelector('button[type=submit]');
+      btn.disabled = true; btn.textContent = 'Enviando...';
+      try {
+        await fetch('/api/visitantes', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            nome: document.getElementById('vNome').value,
+            telefone: document.getElementById('vTelefone').value,
+            email: document.getElementById('vEmail').value,
+            bairro: document.getElementById('vBairro').value,
+            comoConheceu: document.getElementById('vComoConheceu').value,
+            querVisita: document.getElementById('vQuerVisita').checked,
+            querWhatsapp: document.getElementById('vQuerWhatsapp').checked
+          })
+        });
+        e.target.style.display = 'none';
+        document.getElementById('visitanteSucesso').style.display = 'block';
+      } catch { alert('Erro ao enviar. Tente novamente.'); }
+      btn.disabled = false;
+    }
+
+    // Fechar modais ao clicar fora
+    window.addEventListener('click', e => {
+      ['modalOracao','modalAconselhamento'].forEach(id => {
+        const m = document.getElementById(id);
+        if (e.target === m) fecharModal(id);
+      });
+    });
+  </script>
 </body>
 </html>

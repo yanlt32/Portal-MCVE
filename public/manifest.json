@@ -1,51 +1,75 @@
 {
-  "name": "AVIVA - Portal dos Membros",
+  "name": "AVIVA - Ministério Cristo a Viva Esperança",
   "short_name": "AVIVA",
-  "description": "Portal do Ministério Cristo a Viva Esperança",
+  "description": "Portal oficial do Ministério Cristo a Viva Esperança. Acesse palavra da semana, meditações, agenda de cultos, pedidos de oração e muito mais.",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#0f172a",
-  "theme_color": "#1e293b",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
   "icons": [
     {
-      "src": "/icon-192x192.png",
+      "src": "/icons/icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
-      "src": "/icon-512x512.png",
+      "src": "/icons/icon-192x192-maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512x512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ],
-  "categories": ["lifestyle", "religious", "education"],
+  "categories": ["lifestyle", "social"],
   "lang": "pt-BR",
   "dir": "ltr",
   "scope": "/",
+  "id": "/",
   "prefer_related_applications": false,
   "related_applications": [],
-  "screenshots": [],
+  "screenshots": [
+    {
+      "src": "/screenshots/screenshot-mobile.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Tela principal do app AVIVA"
+    }
+  ],
   "shortcuts": [
     {
       "name": "Palavra da Semana",
       "short_name": "Palavra",
       "description": "Leia a palavra da semana",
-      "url": "/#palavra-semana"
+      "url": "/#palavra-semana",
+      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
     },
     {
       "name": "Meditação Diária",
       "short_name": "Meditação",
       "description": "Assista meditações diárias",
-      "url": "/meditacao"
+      "url": "/meditacao",
+      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
     },
     {
-      "name": "Eventos",
-      "short_name": "Eventos",
-      "description": "Veja a agenda de eventos",
-      "url": "/#agenda"
+      "name": "Pedido de Oração",
+      "short_name": "Oração",
+      "description": "Envie seu pedido de oração",
+      "url": "/#oracao",
+      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
     }
   ]
 }
